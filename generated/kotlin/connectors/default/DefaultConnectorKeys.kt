@@ -22,6 +22,76 @@ import com.google.firebase.dataconnect.serializers.UUIDSerializer
 import com.google.firebase.dataconnect.serializers.TimestampSerializer
 
 
+  @Serializable
+  public data class DepartmentKey(
+  
+    val id:
+    java.util.UUID
+  ) {
+    
+    
+  }
+
+  @Serializable
+  public data class MapKey(
+  
+    val id:
+    java.util.UUID
+  ) {
+    
+    
+  }
+
+  @Serializable
+  public data class ProductKey(
+  
+    val id:
+    java.util.UUID
+  ) {
+    
+    
+  }
+
+  @Serializable
+  public data class ShelfKey(
+  
+    val id:
+    java.util.UUID
+  ) {
+    
+    
+  }
+
+  @Serializable
+  public data class StoreKey(
+  
+    val id:
+    java.util.UUID
+  ) {
+    
+    
+  }
+
+  @Serializable
+  public data class TillKey(
+  
+    val id:
+    java.util.UUID
+  ) {
+    
+    
+  }
+
+  @Serializable
+  public data class WallBlockKey(
+  
+    val id:
+    java.util.UUID
+  ) {
+    
+    
+  }
+
 
 // The lines below are used by the code generator to ensure that this file is deleted if it is no
 // longer needed. Any files in this directory that contain the lines below will be deleted by the

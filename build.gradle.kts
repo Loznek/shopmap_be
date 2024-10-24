@@ -9,6 +9,7 @@ plugins {
     kotlin("jvm") version "2.0.20"
     id("io.ktor.plugin") version "2.3.12"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.20"
+    //id("com.google.gms.google-services") version "4.4.2" apply false
 }
 
 group = "com.example"
@@ -23,6 +24,7 @@ application {
 }
 
 repositories {
+    google()
     mavenCentral()
 }
 
@@ -35,6 +37,12 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     testImplementation("io.ktor:ktor-client-content-negotiation-jvm")
     implementation("org.postgresql:postgresql:$postgres_version")
+    implementation("com.google.firebase:firebase-dataconnect:16.0.0-beta01")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core")
+    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+    //implementation("com.google.firebase:firebase-analytics")
+    //implementation("com.google.firebase:firebase-auth:23.0.0") // Optional
     implementation("com.h2database:h2:$h2_version")
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")

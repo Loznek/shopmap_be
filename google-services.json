@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "169779529407",
+    "project_id": "onlab-test-be",
+    "storage_bucket": "onlab-test-be.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:169779529407:android:43b8983884538636b0a80a",
+        "android_client_info": {
+          "package_name": "com.example"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDO4TiiyXAZp4TDKKeIUS7dA6bJVQrYfn0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

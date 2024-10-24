@@ -1,0 +1,226 @@
+extend type Mutation {
+  """
+  ✨ Insert a single Department into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  department_insert(data: Department_Data!): Department_KeyOutput! @fdc_generated(from: "Department", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single Map into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  map_insert(data: Map_Data!): Map_KeyOutput! @fdc_generated(from: "Map", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single Product into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  product_insert(data: Product_Data!): Product_KeyOutput! @fdc_generated(from: "Product", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single Shelf into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  shelf_insert(data: Shelf_Data!): Shelf_KeyOutput! @fdc_generated(from: "Shelf", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single Store into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  store_insert(data: Store_Data!): Store_KeyOutput! @fdc_generated(from: "Store", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single Till into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  till_insert(data: Till_Data!): Till_KeyOutput! @fdc_generated(from: "Till", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single WallBlock into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  wall_block_insert(data: WallBlock_Data!): WallBlock_KeyOutput! @fdc_generated(from: "WallBlock", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert Department entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  department_insertMany(data: [Department_Data!]!): [Department_KeyOutput!]! @fdc_generated(from: "Department", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert Map entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  map_insertMany(data: [Map_Data!]!): [Map_KeyOutput!]! @fdc_generated(from: "Map", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert Product entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  product_insertMany(data: [Product_Data!]!): [Product_KeyOutput!]! @fdc_generated(from: "Product", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert Shelf entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  shelf_insertMany(data: [Shelf_Data!]!): [Shelf_KeyOutput!]! @fdc_generated(from: "Shelf", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert Store entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  store_insertMany(data: [Store_Data!]!): [Store_KeyOutput!]! @fdc_generated(from: "Store", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert Till entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  till_insertMany(data: [Till_Data!]!): [Till_KeyOutput!]! @fdc_generated(from: "Till", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert WallBlock entries into the table. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  wall_block_insertMany(data: [WallBlock_Data!]!): [WallBlock_KeyOutput!]! @fdc_generated(from: "WallBlock", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert or update a single Department into the table, based on the primary key. Returns the key of the newly inserted Department.
+  """
+  department_upsert(data: Department_Data!): Department_KeyOutput! @fdc_generated(from: "Department", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single Map into the table, based on the primary key. Returns the key of the newly inserted Map.
+  """
+  map_upsert(data: Map_Data!): Map_KeyOutput! @fdc_generated(from: "Map", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single Product into the table, based on the primary key. Returns the key of the newly inserted Product.
+  """
+  product_upsert(data: Product_Data!): Product_KeyOutput! @fdc_generated(from: "Product", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single Shelf into the table, based on the primary key. Returns the key of the newly inserted Shelf.
+  """
+  shelf_upsert(data: Shelf_Data!): Shelf_KeyOutput! @fdc_generated(from: "Shelf", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single Store into the table, based on the primary key. Returns the key of the newly inserted Store.
+  """
+  store_upsert(data: Store_Data!): Store_KeyOutput! @fdc_generated(from: "Store", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single Till into the table, based on the primary key. Returns the key of the newly inserted Till.
+  """
+  till_upsert(data: Till_Data!): Till_KeyOutput! @fdc_generated(from: "Till", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single WallBlock into the table, based on the primary key. Returns the key of the newly inserted WallBlock.
+  """
+  wall_block_upsert(data: WallBlock_Data!): WallBlock_KeyOutput! @fdc_generated(from: "WallBlock", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update Department entries into the table, based on the primary key. Returns the key of the newly inserted Department.
+  """
+  department_upsertMany(data: [Department_Data!]): [Department_KeyOutput!]! @fdc_generated(from: "Department", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update Map entries into the table, based on the primary key. Returns the key of the newly inserted Map.
+  """
+  map_upsertMany(data: [Map_Data!]): [Map_KeyOutput!]! @fdc_generated(from: "Map", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update Product entries into the table, based on the primary key. Returns the key of the newly inserted Product.
+  """
+  product_upsertMany(data: [Product_Data!]): [Product_KeyOutput!]! @fdc_generated(from: "Product", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update Shelf entries into the table, based on the primary key. Returns the key of the newly inserted Shelf.
+  """
+  shelf_upsertMany(data: [Shelf_Data!]): [Shelf_KeyOutput!]! @fdc_generated(from: "Shelf", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update Store entries into the table, based on the primary key. Returns the key of the newly inserted Store.
+  """
+  store_upsertMany(data: [Store_Data!]): [Store_KeyOutput!]! @fdc_generated(from: "Store", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update Till entries into the table, based on the primary key. Returns the key of the newly inserted Till.
+  """
+  till_upsertMany(data: [Till_Data!]): [Till_KeyOutput!]! @fdc_generated(from: "Till", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update WallBlock entries into the table, based on the primary key. Returns the key of the newly inserted WallBlock.
+  """
+  wall_block_upsertMany(data: [WallBlock_Data!]): [WallBlock_KeyOutput!]! @fdc_generated(from: "WallBlock", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Update a single Department based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  department_update(id: UUID, key: Department_Key, data: Department_Data!): Department_KeyOutput @fdc_generated(from: "Department", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single Map based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  map_update(id: UUID, key: Map_Key, data: Map_Data!): Map_KeyOutput @fdc_generated(from: "Map", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single Product based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  product_update(id: UUID, key: Product_Key, data: Product_Data!): Product_KeyOutput @fdc_generated(from: "Product", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single Shelf based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  shelf_update(id: UUID, key: Shelf_Key, data: Shelf_Data!): Shelf_KeyOutput @fdc_generated(from: "Shelf", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single Store based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  store_update(id: UUID, key: Store_Key, data: Store_Data!): Store_KeyOutput @fdc_generated(from: "Store", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single Till based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  till_update(id: UUID, key: Till_Key, data: Till_Data!): Till_KeyOutput @fdc_generated(from: "Till", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single WallBlock based on `id` or `key`, setting columns specified in `data`. Returns `null` if not found.
+  """
+  wall_block_update(id: UUID, key: WallBlock_Key, data: WallBlock_Data!): WallBlock_KeyOutput @fdc_generated(from: "WallBlock", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update Department entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  department_updateMany(where: Department_Filter, all: Boolean = false, data: Department_Data!): Int! @fdc_generated(from: "Department", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update Map entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  map_updateMany(where: Map_Filter, all: Boolean = false, data: Map_Data!): Int! @fdc_generated(from: "Map", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update Product entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  product_updateMany(where: Product_Filter, all: Boolean = false, data: Product_Data!): Int! @fdc_generated(from: "Product", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update Shelf entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  shelf_updateMany(where: Shelf_Filter, all: Boolean = false, data: Shelf_Data!): Int! @fdc_generated(from: "Shelf", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update Store entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  store_updateMany(where: Store_Filter, all: Boolean = false, data: Store_Data!): Int! @fdc_generated(from: "Store", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update Till entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  till_updateMany(where: Till_Filter, all: Boolean = false, data: Till_Data!): Int! @fdc_generated(from: "Till", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update WallBlock entries matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  wall_block_updateMany(where: WallBlock_Filter, all: Boolean = false, data: WallBlock_Data!): Int! @fdc_generated(from: "WallBlock", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Delete a single Department based on `id` or `key` and return its key (or `null` if not found).
+  """
+  department_delete(id: UUID, key: Department_Key): Department_KeyOutput @fdc_generated(from: "Department", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single Map based on `id` or `key` and return its key (or `null` if not found).
+  """
+  map_delete(id: UUID, key: Map_Key): Map_KeyOutput @fdc_generated(from: "Map", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single Product based on `id` or `key` and return its key (or `null` if not found).
+  """
+  product_delete(id: UUID, key: Product_Key): Product_KeyOutput @fdc_generated(from: "Product", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single Shelf based on `id` or `key` and return its key (or `null` if not found).
+  """
+  shelf_delete(id: UUID, key: Shelf_Key): Shelf_KeyOutput @fdc_generated(from: "Shelf", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single Store based on `id` or `key` and return its key (or `null` if not found).
+  """
+  store_delete(id: UUID, key: Store_Key): Store_KeyOutput @fdc_generated(from: "Store", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single Till based on `id` or `key` and return its key (or `null` if not found).
+  """
+  till_delete(id: UUID, key: Till_Key): Till_KeyOutput @fdc_generated(from: "Till", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single WallBlock based on `id` or `key` and return its key (or `null` if not found).
+  """
+  wall_block_delete(id: UUID, key: WallBlock_Key): WallBlock_KeyOutput @fdc_generated(from: "WallBlock", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete Department entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  department_deleteMany(where: Department_Filter, all: Boolean = false): Int! @fdc_generated(from: "Department", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete Map entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  map_deleteMany(where: Map_Filter, all: Boolean = false): Int! @fdc_generated(from: "Map", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete Product entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  product_deleteMany(where: Product_Filter, all: Boolean = false): Int! @fdc_generated(from: "Product", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete Shelf entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  shelf_deleteMany(where: Shelf_Filter, all: Boolean = false): Int! @fdc_generated(from: "Shelf", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete Store entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  store_deleteMany(where: Store_Filter, all: Boolean = false): Int! @fdc_generated(from: "Store", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete Till entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  till_deleteMany(where: Till_Filter, all: Boolean = false): Int! @fdc_generated(from: "Till", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete WallBlock entries matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  wall_block_deleteMany(where: WallBlock_Filter, all: Boolean = false): Int! @fdc_generated(from: "WallBlock", purpose: DELETE_MULTIPLE)
+}

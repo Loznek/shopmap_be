@@ -1,3 +1,99 @@
+mutation CreateStore($name: String!, $location: String!) {
+  store_insert(data: { name: $name, location: $location })
+}
+
+mutation CreateDepartment($type: String!, $name: String!, $width: Int!, $height: Int!, $startX: Int!, $startY: Int!, $map: UUID!) {
+  department_insert(data: { type: $type, name: $name, width: $width, height: $height, startX: $startX, startY: $startY, map: { id: $map } })
+}
+
+mutation CreateMap($store: UUID!, $width: Int!, $height: Int!, $entranceX: Int!, $entranceY: Int!, $exitX: Int!, $exitY: Int!) {
+  map_insert(data: { store: { id: $store }, width: $width, height: $height, entranceX: $entranceX, entranceY: $entranceY, exitX: $exitX, exitY: $exitY })
+}
+mutation CreateWallBlock($map: UUID!, $width: Int!, $height: Int!, $startX: Int!, $startY: Int!) {
+ wall_block_insert(data: { map: { id: $map }, width: $width, height: $height, startX: $startX, startY: $startY })
+}
+mutation CreateTill($map: UUID!, $width: Int!, $height: Int!, $startX: Int!, $startY: Int!) {
+  till_insert(data: { map: { id: $map }, width: $width, height: $height, startX: $startX, startY: $startY })
+}
+
+mutation CreateProduct($name: String!, $size: Int!, $shelf: UUID!, $price: Int!) {
+  product_insert(data: { name: $name, size: $size, shelf: { id: $shelf }, price: $price })
+}
+mutation CreateShelf($department: UUID!, $width: Int!, $height: Int!, $startX: Int!, $startY: Int!) {
+  shelf_insert(data: { department: { id: $department }, width: $width, height: $height, startX: $startX, startY: $startY })
+}
+
+mutation DeleteDepartment($id: UUID!) {
+  department_delete(key: { id: $id })
+}
+mutation DeleteMap($id: UUID!) {
+  map_delete(key: { id: $id })
+}
+mutation DeleteProduct($id: UUID!) {
+  product_delete(key: { id: $id })
+}
+mutation DeleteShelf($id: UUID!) {
+  shelf_delete(key: { id: $id })
+}
+mutation DeleteStore($id: UUID!) {
+  store_delete(key: { id: $id })
+}
+mutation DeleteTill($id: UUID!) {
+  till_delete(key: { id: $id })
+}
+mutation DeleteWallBlock($id: UUID!) {
+  wall_block_delete(key: { id: $id })
+}
+
+mutation UpdateDepartment($id: UUID!, $type: String, $name: String, $width: Int, $height: Int, $startX: Int, $startY: Int, $map: UUID) {
+  department_update(
+    key: {id: $id },
+      data: { type: $type, name: $name, width: $width, height: $height, startX: $startX, startY: $startY, map: { id: $map } }
+    )
+}
+
+mutation UpdateMap($id: UUID!, $store: UUID, $width: Int, $height: Int, $entranceX: Int, $entranceY: Int, $exitX: Int, $exitY: Int) {
+  map_update(
+    key: { id: $id },
+    data: { store: { id: $store }, width: $width, height: $height, entranceX: $entranceX, entranceY: $entranceY, exitX: $exitX, exitY: $exitY }
+  )
+}
+
+mutation UpdateProduct($id: UUID!, $name: String, $size: Int, $shelf: UUID, $price: Int) {
+  product_update(
+    key: { id: $id },
+    data: { name: $name, size: $size, shelf: { id: $shelf }, price: $price }
+  )
+}
+
+mutation UpdateShelf($id: UUID!, $department: UUID, $width: Int, $height: Int, $startX: Int, $startY: Int) {
+  shelf_update(
+    key: { id: $id },
+    data: { department: { id: $department }, width: $width, height: $height, startX: $startX, startY: $startY }
+  )
+}
+
+mutation UpdateStore($id: UUID!, $name: String, $location: String) {
+  store_update(
+    key: { id: $id },
+    data: { name: $name, location: $location }
+  )
+}
+
+mutation UpdateTill($id: UUID!, $map: UUID, $width: Int, $height: Int, $startX: Int, $startY: Int) {
+  till_update(
+    key: { id: $id },
+    data: { map: { id: $map }, width: $width, height: $height, startX: $startX, startY: $startY }
+  )
+}
+
+mutation UpdateWallBlock($id: UUID!, $map: UUID, $width: Int, $height: Int, $startX: Int, $startY: Int) {
+  wall_block_update(
+    key: { id: $id },
+    data: { map: { id: $map }, width: $width, height: $height, startX: $startX, startY: $startY }
+  )
+}
+
 # # Example mutations for a simple movie app
 
 # # Create a movie based on user input

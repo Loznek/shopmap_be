@@ -1,0 +1,18 @@
+extend type Department {
+  mapId: UUID! @fdc_generated(from: "Department.map", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Map {
+  storeId: UUID! @fdc_generated(from: "Map.store", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Product {
+  shelfId: UUID! @fdc_generated(from: "Product.shelf", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Shelf {
+  departmentId: UUID! @fdc_generated(from: "Shelf.department", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Till {
+  mapId: UUID! @fdc_generated(from: "Till.map", purpose: IMPLICIT_REF_FIELD)
+}
+extend type WallBlock {
+  mapId: UUID! @fdc_generated(from: "WallBlock.map", purpose: IMPLICIT_REF_FIELD)
+}

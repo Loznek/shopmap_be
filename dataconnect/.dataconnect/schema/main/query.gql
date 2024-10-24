@@ -1,0 +1,58 @@
+extend type Query {
+  """
+  ✨ Look up a single Department based on `id` or `key` and return selected fields (or `null` if not found).
+  """
+  department(id: UUID, key: Department_Key): Department @fdc_generated(from: "Department", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single Map based on `id` or `key` and return selected fields (or `null` if not found).
+  """
+  map(id: UUID, key: Map_Key): Map @fdc_generated(from: "Map", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single Product based on `id` or `key` and return selected fields (or `null` if not found).
+  """
+  product(id: UUID, key: Product_Key): Product @fdc_generated(from: "Product", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single Shelf based on `id` or `key` and return selected fields (or `null` if not found).
+  """
+  shelf(id: UUID, key: Shelf_Key): Shelf @fdc_generated(from: "Shelf", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single Store based on `id` or `key` and return selected fields (or `null` if not found).
+  """
+  store(id: UUID, key: Store_Key): Store @fdc_generated(from: "Store", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single Till based on `id` or `key` and return selected fields (or `null` if not found).
+  """
+  till(id: UUID, key: Till_Key): Till @fdc_generated(from: "Till", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single WallBlock based on `id` or `key` and return selected fields (or `null` if not found).
+  """
+  wall_block(id: UUID, key: WallBlock_Key): WallBlock @fdc_generated(from: "WallBlock", purpose: QUERY_SINGLE)
+  """
+  ✨ List Department entries in the table, optionally filtered by `where` conditions.
+  """
+  departments(where: Department_Filter, orderBy: [Department_Order!], offset: Int, limit: Int = 100): [Department!]! @fdc_generated(from: "Department", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List Map entries in the table, optionally filtered by `where` conditions.
+  """
+  maps(where: Map_Filter, orderBy: [Map_Order!], offset: Int, limit: Int = 100): [Map!]! @fdc_generated(from: "Map", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List Product entries in the table, optionally filtered by `where` conditions.
+  """
+  products(where: Product_Filter, orderBy: [Product_Order!], offset: Int, limit: Int = 100): [Product!]! @fdc_generated(from: "Product", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List Shelf entries in the table, optionally filtered by `where` conditions.
+  """
+  shelves(where: Shelf_Filter, orderBy: [Shelf_Order!], offset: Int, limit: Int = 100): [Shelf!]! @fdc_generated(from: "Shelf", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List Store entries in the table, optionally filtered by `where` conditions.
+  """
+  stores(where: Store_Filter, orderBy: [Store_Order!], offset: Int, limit: Int = 100): [Store!]! @fdc_generated(from: "Store", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List Till entries in the table, optionally filtered by `where` conditions.
+  """
+  tills(where: Till_Filter, orderBy: [Till_Order!], offset: Int, limit: Int = 100): [Till!]! @fdc_generated(from: "Till", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List WallBlock entries in the table, optionally filtered by `where` conditions.
+  """
+  wall_blocks(where: WallBlock_Filter, orderBy: [WallBlock_Order!], offset: Int, limit: Int = 100): [WallBlock!]! @fdc_generated(from: "WallBlock", purpose: QUERY_MULTIPLE)
+}

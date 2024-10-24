@@ -1,5 +1,5 @@
-connectorId: default
+connectorId: shopmap
 generate:
   kotlinSdk:
-    outputDir: ..\..\generated\kotlin
-    package: connectors.default
+    outputDir: ..\..\src\main\kotlin\com\example\
+    package: connectors.shopmap

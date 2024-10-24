@@ -1,3 +1,67 @@
+query GetMap($id: UUID!) {
+  map(id: $id) {
+    id,
+    store {
+      id,
+      name,
+      location
+    },
+    width,
+    height,
+    entranceX,
+    entranceY,
+    exitX,
+    exitY,
+  }
+}
+
+query getStore($id: UUID!) {
+  store(id: $id) {
+    id,
+    name,
+    location,
+  }
+}
+
+query getDepartmentsOnMap($map: UUID!) {
+    map( id: $map)  {
+    departments_on_map {
+        id,
+        name,
+        width,
+        height,
+        startX,
+        startY
+        }
+    }
+}
+
+query getTillsOnMap($map: UUID!) {
+    map( id: $map)  {
+    tills_on_map {
+        id,
+        width,
+        height,
+        startX,
+        startY
+        }
+    }
+}
+
+query getWallBlocksOnMap($map: UUID!) {
+    map( id: $map)  {
+    wall_blocks_on_map {
+        id,
+        width,
+        height,
+        startX,
+        startY
+        }
+    }
+}
+
+
+
 # # Example queries for a simple movie app.
 
 # # @auth() directives control who can call each operation.

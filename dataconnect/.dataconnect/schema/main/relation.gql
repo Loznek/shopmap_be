@@ -1,0 +1,32 @@
+extend type Department {
+  """
+  ✨ List Shelf entries in a one-to-many relationship with this object (i.e. where `Shelf.department` equals this object).
+  """
+  shelves_on_department(where: Shelf_Filter, orderBy: [Shelf_Order!], offset: Int, limit: Int = 100): [Shelf!]! @fdc_generated(from: "Shelf.department", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+}
+extend type Map {
+  """
+  ✨ List Department entries in a one-to-many relationship with this object (i.e. where `Department.map` equals this object).
+  """
+  departments_on_map(where: Department_Filter, orderBy: [Department_Order!], offset: Int, limit: Int = 100): [Department!]! @fdc_generated(from: "Department.map", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List Till entries in a one-to-many relationship with this object (i.e. where `Till.map` equals this object).
+  """
+  tills_on_map(where: Till_Filter, orderBy: [Till_Order!], offset: Int, limit: Int = 100): [Till!]! @fdc_generated(from: "Till.map", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List WallBlock entries in a one-to-many relationship with this object (i.e. where `WallBlock.map` equals this object).
+  """
+  wall_blocks_on_map(where: WallBlock_Filter, orderBy: [WallBlock_Order!], offset: Int, limit: Int = 100): [WallBlock!]! @fdc_generated(from: "WallBlock.map", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+}
+extend type Shelf {
+  """
+  ✨ List Product entries in a one-to-many relationship with this object (i.e. where `Product.shelf` equals this object).
+  """
+  products_on_shelf(where: Product_Filter, orderBy: [Product_Order!], offset: Int, limit: Int = 100): [Product!]! @fdc_generated(from: "Product.shelf", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+}
+extend type Store {
+  """
+  ✨ List Map entries in a one-to-many relationship with this object (i.e. where `Map.store` equals this object).
+  """
+  maps_on_store(where: Map_Filter, orderBy: [Map_Order!], offset: Int, limit: Int = 100): [Map!]! @fdc_generated(from: "Map.store", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+}

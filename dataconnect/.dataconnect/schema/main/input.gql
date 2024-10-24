@@ -1,0 +1,966 @@
+"""
+✨ Department_KeyOutput includes the primary key fields of Department
+"""
+scalar Department_KeyOutput
+"""
+✨ Map_KeyOutput includes the primary key fields of Map
+"""
+scalar Map_KeyOutput
+"""
+✨ Product_KeyOutput includes the primary key fields of Product
+"""
+scalar Product_KeyOutput
+"""
+✨ Shelf_KeyOutput includes the primary key fields of Shelf
+"""
+scalar Shelf_KeyOutput
+"""
+✨ Store_KeyOutput includes the primary key fields of Store
+"""
+scalar Store_KeyOutput
+"""
+✨ Till_KeyOutput includes the primary key fields of Till
+"""
+scalar Till_KeyOutput
+"""
+✨ WallBlock_KeyOutput includes the primary key fields of WallBlock
+"""
+scalar WallBlock_KeyOutput
+"""
+✨ Generated Data input type based on Department
+"""
+input Department_Data {
+  """
+  ✨
+  """
+  id: UUID
+  """
+  ✨ _expr server value of id
+  """
+  id_expr: UUID_Expr
+  """
+  ✨
+  """
+  mapId: UUID
+  """
+  ✨ _expr server value of mapId
+  """
+  mapId_expr: UUID_Expr
+  """
+  ✨
+  """
+  map: Map_Key
+  """
+  ✨
+  """
+  height: Int
+  """
+  ✨
+  """
+  name: String
+  """
+  ✨ _expr server value of name
+  """
+  name_expr: String_Expr
+  """
+  ✨
+  """
+  startX: Int
+  """
+  ✨
+  """
+  startY: Int
+  """
+  ✨
+  """
+  type: String
+  """
+  ✨ _expr server value of type
+  """
+  type_expr: String_Expr
+  """
+  ✨
+  """
+  width: Int
+}
+"""
+✨ Generated Filter input type based on Department
+"""
+input Department_Filter {
+  _and: [Department_Filter!]
+  _not: Department_Filter
+  _or: [Department_Filter!]
+  """
+  ✨
+  """
+  id: UUID_Filter
+  """
+  ✨
+  """
+  mapId: UUID_Filter
+  """
+  ✨
+  """
+  map: Map_Filter
+  """
+  ✨
+  """
+  height: Int_Filter
+  """
+  ✨
+  """
+  name: String_Filter
+  """
+  ✨
+  """
+  startX: Int_Filter
+  """
+  ✨
+  """
+  startY: Int_Filter
+  """
+  ✨
+  """
+  type: String_Filter
+  """
+  ✨
+  """
+  width: Int_Filter
+  """
+  ✨
+  """
+  shelves_on_department: Shelf_ListFilter
+}
+"""
+✨ Generated Key input type based on Department
+"""
+input Department_Key {
+  """
+  ✨
+  """
+  id: UUID
+  """
+  ✨ _expr server value of id
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated ListFilter input type based on Department
+"""
+input Department_ListFilter {
+  count: Int_Filter = {gt:0}
+  exist: Department_Filter
+}
+"""
+✨ Generated Order input type based on Department
+"""
+input Department_Order {
+  """
+  ✨
+  """
+  id: OrderDirection
+  """
+  ✨
+  """
+  mapId: OrderDirection
+  """
+  ✨
+  """
+  map: Map_Order
+  """
+  ✨
+  """
+  height: OrderDirection
+  """
+  ✨
+  """
+  name: OrderDirection
+  """
+  ✨
+  """
+  startX: OrderDirection
+  """
+  ✨
+  """
+  startY: OrderDirection
+  """
+  ✨
+  """
+  type: OrderDirection
+  """
+  ✨
+  """
+  width: OrderDirection
+}
+"""
+✨ Generated Data input type based on Map
+"""
+input Map_Data {
+  """
+  ✨
+  """
+  id: UUID
+  """
+  ✨ _expr server value of id
+  """
+  id_expr: UUID_Expr
+  """
+  ✨
+  """
+  storeId: UUID
+  """
+  ✨ _expr server value of storeId
+  """
+  storeId_expr: UUID_Expr
+  """
+  ✨
+  """
+  store: Store_Key
+  """
+  ✨
+  """
+  entranceX: Int
+  """
+  ✨
+  """
+  entranceY: Int
+  """
+  ✨
+  """
+  exitX: Int
+  """
+  ✨
+  """
+  exitY: Int
+  """
+  ✨
+  """
+  height: Int
+  """
+  ✨
+  """
+  width: Int
+}
+"""
+✨ Generated Filter input type based on Map
+"""
+input Map_Filter {
+  _and: [Map_Filter!]
+  _not: Map_Filter
+  _or: [Map_Filter!]
+  """
+  ✨
+  """
+  id: UUID_Filter
+  """
+  ✨
+  """
+  storeId: UUID_Filter
+  """
+  ✨
+  """
+  store: Store_Filter
+  """
+  ✨
+  """
+  entranceX: Int_Filter
+  """
+  ✨
+  """
+  entranceY: Int_Filter
+  """
+  ✨
+  """
+  exitX: Int_Filter
+  """
+  ✨
+  """
+  exitY: Int_Filter
+  """
+  ✨
+  """
+  height: Int_Filter
+  """
+  ✨
+  """
+  width: Int_Filter
+  """
+  ✨
+  """
+  departments_on_map: Department_ListFilter
+  """
+  ✨
+  """
+  tills_on_map: Till_ListFilter
+  """
+  ✨
+  """
+  wall_blocks_on_map: WallBlock_ListFilter
+}
+"""
+✨ Generated Key input type based on Map
+"""
+input Map_Key {
+  """
+  ✨
+  """
+  id: UUID
+  """
+  ✨ _expr server value of id
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated ListFilter input type based on Map
+"""
+input Map_ListFilter {
+  count: Int_Filter = {gt:0}
+  exist: Map_Filter
+}
+"""
+✨ Generated Order input type based on Map
+"""
+input Map_Order {
+  """
+  ✨
+  """
+  id: OrderDirection
+  """
+  ✨
+  """
+  storeId: OrderDirection
+  """
+  ✨
+  """
+  store: Store_Order
+  """
+  ✨
+  """
+  entranceX: OrderDirection
+  """
+  ✨
+  """
+  entranceY: OrderDirection
+  """
+  ✨
+  """
+  exitX: OrderDirection
+  """
+  ✨
+  """
+  exitY: OrderDirection
+  """
+  ✨
+  """
+  height: OrderDirection
+  """
+  ✨
+  """
+  width: OrderDirection
+}
+"""
+✨ Generated Data input type based on Product
+"""
+input Product_Data {
+  """
+  ✨
+  """
+  id: UUID
+  """
+  ✨ _expr server value of id
+  """
+  id_expr: UUID_Expr
+  """
+  ✨
+  """
+  shelfId: UUID
+  """
+  ✨ _expr server value of shelfId
+  """
+  shelfId_expr: UUID_Expr
+  """
+  ✨
+  """
+  shelf: Shelf_Key
+  """
+  ✨
+  """
+  name: String
+  """
+  ✨ _expr server value of name
+  """
+  name_expr: String_Expr
+  """
+  ✨
+  """
+  price: Int
+  """
+  ✨
+  """
+  size: Int
+}
+"""
+✨ Generated Filter input type based on Product
+"""
+input Product_Filter {
+  _and: [Product_Filter!]
+  _not: Product_Filter
+  _or: [Product_Filter!]
+  """
+  ✨
+  """
+  id: UUID_Filter
+  """
+  ✨
+  """
+  shelfId: UUID_Filter
+  """
+  ✨
+  """
+  shelf: Shelf_Filter
+  """
+  ✨
+  """
+  name: String_Filter
+  """
+  ✨
+  """
+  price: Int_Filter
+  """
+  ✨
+  """
+  size: Int_Filter
+}
+"""
+✨ Generated Key input type based on Product
+"""
+input Product_Key {
+  """
+  ✨
+  """
+  id: UUID
+  """
+  ✨ _expr server value of id
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated ListFilter input type based on Product
+"""
+input Product_ListFilter {
+  count: Int_Filter = {gt:0}
+  exist: Product_Filter
+}
+"""
+✨ Generated Order input type based on Product
+"""
+input Product_Order {
+  """
+  ✨
+  """
+  id: OrderDirection
+  """
+  ✨
+  """
+  shelfId: OrderDirection
+  """
+  ✨
+  """
+  shelf: Shelf_Order
+  """
+  ✨
+  """
+  name: OrderDirection
+  """
+  ✨
+  """
+  price: OrderDirection
+  """
+  ✨
+  """
+  size: OrderDirection
+}
+"""
+✨ Generated Data input type based on Shelf
+"""
+input Shelf_Data {
+  """
+  ✨
+  """
+  id: UUID
+  """
+  ✨ _expr server value of id
+  """
+  id_expr: UUID_Expr
+  """
+  ✨
+  """
+  departmentId: UUID
+  """
+  ✨ _expr server value of departmentId
+  """
+  departmentId_expr: UUID_Expr
+  """
+  ✨
+  """
+  department: Department_Key
+  """
+  ✨
+  """
+  height: Int
+  """
+  ✨
+  """
+  startX: Int
+  """
+  ✨
+  """
+  startY: Int
+  """
+  ✨
+  """
+  width: Int
+}
+"""
+✨ Generated Filter input type based on Shelf
+"""
+input Shelf_Filter {
+  _and: [Shelf_Filter!]
+  _not: Shelf_Filter
+  _or: [Shelf_Filter!]
+  """
+  ✨
+  """
+  id: UUID_Filter
+  """
+  ✨
+  """
+  departmentId: UUID_Filter
+  """
+  ✨
+  """
+  department: Department_Filter
+  """
+  ✨
+  """
+  height: Int_Filter
+  """
+  ✨
+  """
+  startX: Int_Filter
+  """
+  ✨
+  """
+  startY: Int_Filter
+  """
+  ✨
+  """
+  width: Int_Filter
+  """
+  ✨
+  """
+  products_on_shelf: Product_ListFilter
+}
+"""
+✨ Generated Key input type based on Shelf
+"""
+input Shelf_Key {
+  """
+  ✨
+  """
+  id: UUID
+  """
+  ✨ _expr server value of id
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated ListFilter input type based on Shelf
+"""
+input Shelf_ListFilter {
+  count: Int_Filter = {gt:0}
+  exist: Shelf_Filter
+}
+"""
+✨ Generated Order input type based on Shelf
+"""
+input Shelf_Order {
+  """
+  ✨
+  """
+  id: OrderDirection
+  """
+  ✨
+  """
+  departmentId: OrderDirection
+  """
+  ✨
+  """
+  department: Department_Order
+  """
+  ✨
+  """
+  height: OrderDirection
+  """
+  ✨
+  """
+  startX: OrderDirection
+  """
+  ✨
+  """
+  startY: OrderDirection
+  """
+  ✨
+  """
+  width: OrderDirection
+}
+"""
+✨ Generated Data input type based on Store
+"""
+input Store_Data {
+  """
+  ✨
+  """
+  id: UUID
+  """
+  ✨ _expr server value of id
+  """
+  id_expr: UUID_Expr
+  """
+  ✨
+  """
+  location: String
+  """
+  ✨ _expr server value of location
+  """
+  location_expr: String_Expr
+  """
+  ✨
+  """
+  name: String
+  """
+  ✨ _expr server value of name
+  """
+  name_expr: String_Expr
+}
+"""
+✨ Generated Filter input type based on Store
+"""
+input Store_Filter {
+  _and: [Store_Filter!]
+  _not: Store_Filter
+  _or: [Store_Filter!]
+  """
+  ✨
+  """
+  id: UUID_Filter
+  """
+  ✨
+  """
+  location: String_Filter
+  """
+  ✨
+  """
+  name: String_Filter
+  """
+  ✨
+  """
+  maps_on_store: Map_ListFilter
+}
+"""
+✨ Generated Key input type based on Store
+"""
+input Store_Key {
+  """
+  ✨
+  """
+  id: UUID
+  """
+  ✨ _expr server value of id
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated ListFilter input type based on Store
+"""
+input Store_ListFilter {
+  count: Int_Filter = {gt:0}
+  exist: Store_Filter
+}
+"""
+✨ Generated Order input type based on Store
+"""
+input Store_Order {
+  """
+  ✨
+  """
+  id: OrderDirection
+  """
+  ✨
+  """
+  location: OrderDirection
+  """
+  ✨
+  """
+  name: OrderDirection
+}
+"""
+✨ Generated Data input type based on Till
+"""
+input Till_Data {
+  """
+  ✨
+  """
+  id: UUID
+  """
+  ✨ _expr server value of id
+  """
+  id_expr: UUID_Expr
+  """
+  ✨
+  """
+  mapId: UUID
+  """
+  ✨ _expr server value of mapId
+  """
+  mapId_expr: UUID_Expr
+  """
+  ✨
+  """
+  map: Map_Key
+  """
+  ✨
+  """
+  height: Int
+  """
+  ✨
+  """
+  startX: Int
+  """
+  ✨
+  """
+  startY: Int
+  """
+  ✨
+  """
+  width: Int
+}
+"""
+✨ Generated Filter input type based on Till
+"""
+input Till_Filter {
+  _and: [Till_Filter!]
+  _not: Till_Filter
+  _or: [Till_Filter!]
+  """
+  ✨
+  """
+  id: UUID_Filter
+  """
+  ✨
+  """
+  mapId: UUID_Filter
+  """
+  ✨
+  """
+  map: Map_Filter
+  """
+  ✨
+  """
+  height: Int_Filter
+  """
+  ✨
+  """
+  startX: Int_Filter
+  """
+  ✨
+  """
+  startY: Int_Filter
+  """
+  ✨
+  """
+  width: Int_Filter
+}
+"""
+✨ Generated Key input type based on Till
+"""
+input Till_Key {
+  """
+  ✨
+  """
+  id: UUID
+  """
+  ✨ _expr server value of id
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated ListFilter input type based on Till
+"""
+input Till_ListFilter {
+  count: Int_Filter = {gt:0}
+  exist: Till_Filter
+}
+"""
+✨ Generated Order input type based on Till
+"""
+input Till_Order {
+  """
+  ✨
+  """
+  id: OrderDirection
+  """
+  ✨
+  """
+  mapId: OrderDirection
+  """
+  ✨
+  """
+  map: Map_Order
+  """
+  ✨
+  """
+  height: OrderDirection
+  """
+  ✨
+  """
+  startX: OrderDirection
+  """
+  ✨
+  """
+  startY: OrderDirection
+  """
+  ✨
+  """
+  width: OrderDirection
+}
+"""
+✨ Generated Data input type based on WallBlock
+"""
+input WallBlock_Data {
+  """
+  ✨
+  """
+  id: UUID
+  """
+  ✨ _expr server value of id
+  """
+  id_expr: UUID_Expr
+  """
+  ✨
+  """
+  mapId: UUID
+  """
+  ✨ _expr server value of mapId
+  """
+  mapId_expr: UUID_Expr
+  """
+  ✨
+  """
+  map: Map_Key
+  """
+  ✨
+  """
+  height: Int
+  """
+  ✨
+  """
+  startX: Int
+  """
+  ✨
+  """
+  startY: Int
+  """
+  ✨
+  """
+  width: Int
+}
+"""
+✨ Generated Filter input type based on WallBlock
+"""
+input WallBlock_Filter {
+  _and: [WallBlock_Filter!]
+  _not: WallBlock_Filter
+  _or: [WallBlock_Filter!]
+  """
+  ✨
+  """
+  id: UUID_Filter
+  """
+  ✨
+  """
+  mapId: UUID_Filter
+  """
+  ✨
+  """
+  map: Map_Filter
+  """
+  ✨
+  """
+  height: Int_Filter
+  """
+  ✨
+  """
+  startX: Int_Filter
+  """
+  ✨
+  """
+  startY: Int_Filter
+  """
+  ✨
+  """
+  width: Int_Filter
+}
+"""
+✨ Generated Key input type based on WallBlock
+"""
+input WallBlock_Key {
+  """
+  ✨
+  """
+  id: UUID
+  """
+  ✨ _expr server value of id
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated ListFilter input type based on WallBlock
+"""
+input WallBlock_ListFilter {
+  count: Int_Filter = {gt:0}
+  exist: WallBlock_Filter
+}
+"""
+✨ Generated Order input type based on WallBlock
+"""
+input WallBlock_Order {
+  """
+  ✨
+  """
+  id: OrderDirection
+  """
+  ✨
+  """
+  mapId: OrderDirection
+  """
+  ✨
+  """
+  map: Map_Order
+  """
+  ✨
+  """
+  height: OrderDirection
+  """
+  ✨
+  """
+  startX: OrderDirection
+  """
+  ✨
+  """
+  startY: OrderDirection
+  """
+  ✨
+  """
+  width: OrderDirection
+}
