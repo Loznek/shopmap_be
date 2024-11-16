@@ -10,6 +10,7 @@ class PostgresDepartmentRepository: DepartmentRepository{
         DepartmentDAO.find{(DepartmentTable.mapId eq mapId)}.map(::daoToModel)
     }
 
+
     override suspend fun addDepartment(department: Department) : Unit = suspendTransaction {
         DepartmentDAO.new {
             width = department.width
@@ -27,5 +28,17 @@ class PostgresDepartmentRepository: DepartmentRepository{
             DepartmentTable.id eq id
         }
         rowsDeleted == 1
+    }
+
+    override suspend fun updateDepartment(department: Department) {
+        suspendTransaction {
+            val departmentDAO = department.id?.let { DepartmentDAO.findById(it) } ?: return@suspendTransaction
+            departmentDAO.width = department.width
+            departmentDAO.height = department.height
+            departmentDAO.startX = department.startX
+            departmentDAO.startY = department.startY
+            departmentDAO.mapId = department.mapId
+            departmentDAO.name = department.name
+        }
     }
 }

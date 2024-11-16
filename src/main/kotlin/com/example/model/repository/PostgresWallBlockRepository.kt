@@ -27,5 +27,19 @@ class PostgresWallBlockRepository: WallBlockRepository {
         rowsDeleted == 1
     }
 
+    override suspend fun updateWallBlock(wallBlock: WallBlock) {
+        suspendTransaction {
+            val wallBlockDAO = wallBlock.id?.let { WallBlockDAO.findById(it) } ?: return@suspendTransaction
+            wallBlockDAO.width = wallBlock.width
+            wallBlockDAO.height = wallBlock.height
+            wallBlockDAO.startX = wallBlock.startX
+            wallBlockDAO.startY = wallBlock.startY
+            wallBlockDAO.mapId = wallBlock.mapId
+        }
+    }
+
+
+
+
 
 }

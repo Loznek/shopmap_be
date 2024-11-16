@@ -1,6 +1,7 @@
 package com.example.plugins
 
 
+import com.example.algorithms.PositionChecker
 import com.example.model.entity.*
 import com.example.model.entity.Map
 import com.example.model.repository.*
@@ -28,11 +29,25 @@ fun Application.configureSerialization(departmentRepository: PostgresDepartmentR
                 call.respond(HttpStatusCode.NoContent)
             }
 
+            put("/{id}") {
+                val department = call.receive<Department>()
+
+                val checked = PositionChecker.checkNewBlockposition(department.startX, department.startY, department.width, department.height, wallBlockRepository.wallBlocksByMap(department.mapId), departmentRepository.departmentsByMap(department.mapId), tillRepository.tillsByMap(department.mapId), mapRepository.mapById(department.mapId)!!)
+                if(!checked) call.respond(HttpStatusCode.BadRequest, "Invalid position")
+                else {
+                    departmentRepository.updateDepartment(department)
+                    call.respond(HttpStatusCode.NoContent)
+                }
+            }
             post {
                 try {
                     val department = call.receive<Department>()
-                   departmentRepository.addDepartment(department)
-                    call.respond(HttpStatusCode.NoContent)
+                    val checked = PositionChecker.checkNewBlockposition(department.startX, department.startY, department.width, department.height, wallBlockRepository.wallBlocksByMap(department.mapId), departmentRepository.departmentsByMap(department.mapId), tillRepository.tillsByMap(department.mapId), mapRepository.mapById(department.mapId)!!)
+                    if(!checked) call.respond(HttpStatusCode.BadRequest, "Invalid position")
+                    else{
+                        departmentRepository.addDepartment(department)
+                        call.respond(HttpStatusCode.NoContent)
+                    }
                 } catch (ex: IllegalStateException) {
                     call.respond(HttpStatusCode.BadRequest)
                 } catch (ex: JsonConvertException) {
@@ -40,7 +55,12 @@ fun Application.configureSerialization(departmentRepository: PostgresDepartmentR
                 }
             }
         }
-
+/*
+Blokk mozgatása/létrehozása: belső alg, ami csekoolja, hogy mehet-e oda
+Amikor letrejon egy Bolt, annak kell legyen egy bejarata, egy kijarata es egy kasszaja
+Az utolsot ezekbol sose lehet torolni
+Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menni, es kozben pedig pontokat kell erinteni
+ */
         route("/maps") {
             get("/{id}") {
                 val map = mapRepository.mapById(call.parameters["id"]?.toInt() ?: 0)
@@ -53,6 +73,22 @@ fun Application.configureSerialization(departmentRepository: PostgresDepartmentR
                     mapRepository.removeMap(map)
                 }
                 call.respond(HttpStatusCode.NoContent)
+            }
+
+
+
+            put("/{id}") {
+                val map = call.receive<Map>()
+                val checked = PositionChecker.checkNewMapSizes(map.width, map.height, wallBlockRepository.wallBlocksByMap(map.id!!), departmentRepository.departmentsByMap(map.id!!), tillRepository.tillsByMap(map.id!!), mapRepository.mapById(map.id!!)!!)
+                if(checked) {
+                    mapRepository.updateMap(map)
+                    call.respond(HttpStatusCode.NoContent)
+                } else {
+                    call.respond(HttpStatusCode.BadRequest, "Map resizing would cause collision")
+                }
+                //PositionChecker.checkNewBlockposition(map, wallBlockRepository.wallBlocksByMap(map.id), departmentRepository.departmentsByMap(map.id), tillRepository.tillsByMap(map.id), map)
+                //mapRepository.updateMap(map)
+
             }
 
             post {
@@ -72,6 +108,16 @@ fun Application.configureSerialization(departmentRepository: PostgresDepartmentR
                     val wallBlocks = wallBlockRepository.wallBlocksByMap(call.parameters["mapId"]?.toInt() ?: 0)
                     call.respond(wallBlocks)
                 }
+                put("/{id}") {
+                    val wallBlock = call.receive<WallBlock>()
+
+                    val checked = PositionChecker.checkNewBlockposition(wallBlock.startX, wallBlock.startY, wallBlock.width, wallBlock.height, wallBlockRepository.wallBlocksByMap(wallBlock.mapId), departmentRepository.departmentsByMap(wallBlock.mapId), tillRepository.tillsByMap(wallBlock.mapId), mapRepository.mapById(wallBlock.mapId)!!)
+                    if(!checked) call.respond(HttpStatusCode.BadRequest)
+                    else {
+                        wallBlockRepository.updateWallBlock(wallBlock)
+                        call.respond(HttpStatusCode.NoContent)
+                    }
+                }
 
                 delete("/{wallBlockId}") {
                     wallBlockRepository.removeWallBlockById(call.parameters["wallBlockId"]?.toInt() ?: 0)
@@ -81,8 +127,12 @@ fun Application.configureSerialization(departmentRepository: PostgresDepartmentR
                 post {
                     try {
                         val wallBlock = call.receive<WallBlock>()
-                        wallBlockRepository.addWallBlock(wallBlock)
-                        call.respond(HttpStatusCode.NoContent)
+                        val checked = PositionChecker.checkNewBlockposition(wallBlock.startX, wallBlock.startY, wallBlock.width, wallBlock.height, wallBlockRepository.wallBlocksByMap(wallBlock.mapId), departmentRepository.departmentsByMap(wallBlock.mapId), tillRepository.tillsByMap(wallBlock.mapId), mapRepository.mapById(wallBlock.mapId)!!)
+                        if(!checked) call.respond(HttpStatusCode.BadRequest, "Invalid position")
+                        else {
+                            wallBlockRepository.addWallBlock(wallBlock)
+                            call.respond(HttpStatusCode.NoContent)
+                        }
                     } catch (ex: IllegalStateException) {
                         call.respond(HttpStatusCode.BadRequest)
                     } catch (ex: JsonConvertException) {
@@ -101,11 +151,28 @@ fun Application.configureSerialization(departmentRepository: PostgresDepartmentR
                 call.respond(HttpStatusCode.NoContent)
             }
 
+            put("/{id}") {
+                val till = call.receive<Till>()
+
+                val checked = PositionChecker.checkNewBlockposition(till.startX, till.startY, till.width, till.height, wallBlockRepository.wallBlocksByMap(till.mapId), departmentRepository.departmentsByMap(till.mapId), tillRepository.tillsByMap(till.mapId), mapRepository.mapById(till.mapId)!!)
+                if(!checked) call.respond(HttpStatusCode.BadRequest, "Invalid position")
+                else{
+                    tillRepository.updateTill(till)
+                    call.respond(HttpStatusCode.NoContent)
+                }
+
+            }
+
             post {
                 try {
                     val till = call.receive<Till>()
-                    tillRepository.addTill(till)
-                    call.respond(HttpStatusCode.NoContent)
+                    val checked = PositionChecker.checkNewBlockposition(till.startX, till.startY, till.width, till.height, wallBlockRepository.wallBlocksByMap(till.mapId), departmentRepository.departmentsByMap(till.mapId), tillRepository.tillsByMap(till.mapId), mapRepository.mapById(till.mapId)!!)
+                    if(!checked) call.respond(HttpStatusCode.BadRequest, "Invalid position")
+                    else{
+                        tillRepository.addTill(till)
+                        call.respond(HttpStatusCode.NoContent)
+                    }
+
                 } catch (ex: IllegalStateException) {
                     call.respond(HttpStatusCode.BadRequest)
                 } catch (ex: JsonConvertException) {
@@ -146,5 +213,9 @@ fun Application.configureSerialization(departmentRepository: PostgresDepartmentR
             }
         }
 
+
+
     }
+
+
 }

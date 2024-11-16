@@ -16,8 +16,8 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
         val name = varchar("name", 50)
         val width = double("width")
         val height = double("height")
-        val startX = double("startX")
-        val startY = double("startY")
+        val startX = double("startx")
+        val startY = double("starty")
     }
 
     class DepartmentDAO(id: EntityID<Int>) : IntEntity(id) {

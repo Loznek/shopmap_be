@@ -15,8 +15,8 @@ object WallBlockTable : IntIdTable("wall_block") {
     val mapId = integer("mapid")
     val width = double("width")
     val height = double("height")
-    val startX = double("startX")
-    val startY = double("startY")
+    val startX = double("startx")
+    val startY = double("starty")
 }
 
 class WallBlockDAO(id: EntityID<Int>) : IntEntity(id) {

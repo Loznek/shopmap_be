@@ -15,8 +15,8 @@ object TillTable : IntIdTable("till") {
     val mapId = integer("mapid")
     val width = double("width")
     val height = double("height")
-    val startX = double("startX")
-    val startY = double("startY")
+    val startX = double("startx")
+    val startY = double("starty")
 }
 
 class TillDAO(id: EntityID<Int>) : IntEntity(id) {
