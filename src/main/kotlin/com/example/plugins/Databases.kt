@@ -13,7 +13,7 @@ fun Application.configureDatabases() {
     Database.connect(
         "jdbc:postgresql://localhost:5432/postgres",
         user = "postgres",
-        password = "postgerAdmin"
+        password = "Darius44"
     )
 }
 
