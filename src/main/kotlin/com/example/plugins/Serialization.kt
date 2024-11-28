@@ -33,11 +33,12 @@ fun Application.configureSerialization(departmentRepository: PostgresDepartmentR
                     tills,
                     wallBlocks,
                     departments,
-                    route.DepartmentIds
+                    route.departmentIds
                 )
                 call.respond(path)
 
             }
+        }
             route("/departments") {
                 get("/{mapId}") {
                     val departments = departmentRepository.departmentsByMap(
@@ -307,4 +308,3 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
 
 
     }
-}

@@ -1,6 +1,9 @@
 package com.example.DTO
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 class RoutePlanning (
     val mapId: Int,
-    val DepartmentIds: List<Int>,
+    val departmentIds: List<Int>,
 )

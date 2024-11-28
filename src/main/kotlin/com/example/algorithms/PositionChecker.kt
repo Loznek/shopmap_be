@@ -8,10 +8,10 @@ import com.example.model.entity.Map
 object PositionChecker {
 
     fun checkNewBlockposition(startX:Double , startY:Double , width:Double , height:Double, wallblocks: List<WallBlock>, departments: List<Department>, tills: List<Till>, map: Map): Boolean {
-        if (startX < 0 || startY < 0 || width < 0 || height < 0) {
+        if (startX <= 0 || startY <= 0 || width <= 0 || height <= 0) {
             return false
         }
-        if (startX + width > map.width || startY + height > map.height) {
+        if (startX + width > map.width+1 || startY + height > map.height+1) {
             return false
         }
         for (block in wallblocks) {

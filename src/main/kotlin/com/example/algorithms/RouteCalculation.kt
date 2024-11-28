@@ -19,7 +19,7 @@ class RouteCalculation {
         val irrelevantDepartments = allDepartments.filter { it.id !in destinationDepartmentIds }
         val relevantDepartments = allDepartments.filter { it.id in destinationDepartmentIds }
         val destinationPoints = relevantDepartments.map { department ->
-            Triple(department.id, department.startX + department.width, department.startY)
+            Triple(department.id, department.startX + department.width-1, department.startY)
         }.toMutableList()
 
         val points = mutableListOf<Pair<Int, Int>>()
@@ -63,9 +63,10 @@ class RouteCalculation {
 
         }
 
-        finalPath.addAll(shortestPath)
-
-        var currentPoint = destinationPoints[shortestPathDestinaionId].second.toInt() to destinationPoints[shortestPathDestinaionId].third.toInt()
+        finalPath.addAll(shortestPath.dropLast(1))
+        var currentIndex = destinationPoints.indexOfFirst { it.first == shortestPathDestinaionId }
+        var currentPoint = destinationPoints[currentIndex].second.toInt() to destinationPoints[currentIndex].third.toInt()
+        destinationPoints.removeAt(currentIndex)
 
         while (destinationPoints.isNotEmpty()) {
             var shortestPath = mutableListOf<Pair<Int, Int>>()
@@ -90,7 +91,7 @@ class RouteCalculation {
             if (closestDestinationIndex == -1) break
 
             // Add the shortest path to the final path
-            finalPath.addAll(shortestPath)
+            finalPath.addAll(shortestPath.dropLast(1))
 
             // Update current point to the newly reached destination
             currentPoint = destinationPoints[closestDestinationIndex].second.toInt() to destinationPoints[closestDestinationIndex].third.toInt()
