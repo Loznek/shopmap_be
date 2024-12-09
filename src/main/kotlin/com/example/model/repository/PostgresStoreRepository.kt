@@ -13,11 +13,12 @@ class PostgresStoreRepository: StoreRepository {
         StoreDAO.find{(StoreTable.id eq id)}.map(::daoToModel).firstOrNull()
     }
 
-    override suspend fun addStore(store: Store) : Unit = suspendTransaction {
-        StoreDAO.new {
+    override suspend fun addStore(store: Store) : Store = suspendTransaction {
+        val newStore = StoreDAO.new {
             name = store.name
            location = store.location
         }
+        daoToModel(newStore)
     }
 
     override suspend fun removeStore(store: Store): Boolean = suspendTransaction {

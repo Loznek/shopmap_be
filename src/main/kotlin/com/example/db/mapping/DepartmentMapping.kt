@@ -32,7 +32,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 
 
 
-    fun daoToModel(dao: DepartmentDAO) = Department(
+    fun daoToModel(dao: DepartmentDAO): Department = Department(
         dao.id.value,
         dao.mapId,
         dao.name,

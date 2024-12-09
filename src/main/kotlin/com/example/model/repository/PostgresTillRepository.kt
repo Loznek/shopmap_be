@@ -13,14 +13,15 @@ class PostgresTillRepository : TillRepository {
         TillDAO.find { (TillTable.mapId eq mapId) }.map(::daoToModel)
     }
 
-    override suspend fun addTill(till: Till): Unit = suspendTransaction {
-        TillDAO.new {
+    override suspend fun addTill(till: Till): Till = suspendTransaction {
+        val till= TillDAO.new {
             width = till.width
             height = till.height
             startX = till.startX
             startY = till.startY
             mapId = till.mapId
         }
+        daoToModel(till)
     }
 
     override suspend fun removeTillById(id: Int): Boolean = suspendTransaction {
@@ -30,15 +31,19 @@ class PostgresTillRepository : TillRepository {
         rowsDeleted == 1
     }
 
-    override suspend fun updateTill(till: Till) {
-        suspendTransaction {
-            val tillDAO = till.id?.let { TillDAO.findById(it) } ?: return@suspendTransaction
-            tillDAO.width = till.width
-            tillDAO.height = till.height
-            tillDAO.startX = till.startX
-            tillDAO.startY = till.startY
-            tillDAO.mapId = till.mapId
-        }
+    override suspend fun updateTill(till: Till): Till = suspendTransaction {
+        val tillDAO = till.id?.let { TillDAO.findById(it) }
+            ?: throw IllegalArgumentException("Till with ID ${till.id} not found")
+
+        // Update the DAO fields
+        tillDAO.width = till.width
+        tillDAO.height = till.height
+        tillDAO.startX = till.startX
+        tillDAO.startY = till.startY
+        tillDAO.mapId = till.mapId
+
+        // Convert the updated DAO back to the Till domain model
+        daoToModel(tillDAO)
     }
 
 }

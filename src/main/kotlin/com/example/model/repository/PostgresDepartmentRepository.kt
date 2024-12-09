@@ -11,8 +11,8 @@ class PostgresDepartmentRepository: DepartmentRepository{
     }
 
 
-    override suspend fun addDepartment(department: Department) : Unit = suspendTransaction {
-        DepartmentDAO.new {
+    override suspend fun addDepartment(department: Department) : Department = suspendTransaction {
+        val newDepartment= DepartmentDAO.new {
             width = department.width
             height = department.height
             startX = department.startX
@@ -20,6 +20,7 @@ class PostgresDepartmentRepository: DepartmentRepository{
             mapId = department.mapId
             name = department.name
         }
+        daoToModel(newDepartment)
     }
 
 
@@ -30,7 +31,9 @@ class PostgresDepartmentRepository: DepartmentRepository{
         rowsDeleted == 1
     }
 
-    override suspend fun updateDepartment(department: Department) {
+
+    /*
+    override suspend fun updateDepartment(department: Department): Department = suspendTransaction
         suspendTransaction {
             val departmentDAO = department.id?.let { DepartmentDAO.findById(it) } ?: return@suspendTransaction
             departmentDAO.width = department.width
@@ -40,5 +43,22 @@ class PostgresDepartmentRepository: DepartmentRepository{
             departmentDAO.mapId = department.mapId
             departmentDAO.name = department.name
         }
-    }
+    }*/
+
+override suspend fun updateDepartment(department: Department): Department = suspendTransaction {
+    val departmentDAO = department.id?.let { DepartmentDAO.findById(it) }
+        ?: throw IllegalArgumentException("Department with ID ${department.id} not found")
+
+    // Update the DAO fields
+    departmentDAO.width = department.width
+    departmentDAO.height = department.height
+    departmentDAO.startX = department.startX
+    departmentDAO.startY = department.startY
+    departmentDAO.mapId = department.mapId
+    departmentDAO.name = department.name
+
+    // Convert the updated DAO back to the Department domain model
+    daoToModel(departmentDAO)
+}
+
 }

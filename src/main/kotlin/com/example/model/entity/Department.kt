@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Department(
-    val id: Int?,
+    var id: Int?,
     val mapId: Int,
     val name: String, // Nullable as per the diagram
     val width: Double,

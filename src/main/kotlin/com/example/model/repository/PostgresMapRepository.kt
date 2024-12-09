@@ -10,21 +10,25 @@ class PostgresMapRepository: MapRepository {
         MapDAO.find{(MapTable.id eq id)}.map(::daoToModel).firstOrNull()
     }
 
-    override suspend fun updateMap(map: Map) {
-        suspendTransaction {
-            val mapDAO = map.id?.let { MapDAO.findById(it) } ?: return@suspendTransaction
-            mapDAO.width = map.width
-            mapDAO.height = map.height
-            mapDAO.entranceX = map.entranceX
-            mapDAO.entranceY = map.entranceY
-            mapDAO.exitX = map.exitX
-            mapDAO.exitY = map.exitY
-            mapDAO.storeId = map.storeId
-        }
+    override suspend fun updateMap(map: Map): Map = suspendTransaction {
+        val mapDAO = map.id?.let { MapDAO.findById(it) }
+            ?: throw IllegalArgumentException("Map with ID ${map.id} not found")
+
+        // Update the DAO fields
+        mapDAO.width = map.width
+        mapDAO.height = map.height
+        mapDAO.entranceX = map.entranceX
+        mapDAO.entranceY = map.entranceY
+        mapDAO.exitX = map.exitX
+        mapDAO.exitY = map.exitY
+        mapDAO.storeId = map.storeId
+
+        // Convert the updated DAO back to the Map domain model
+        daoToModel(mapDAO)
     }
 
-    override suspend fun addMap(map: Map) : Unit = suspendTransaction {
-        MapDAO.new {
+    override suspend fun addMap(map: Map) : Map = suspendTransaction {
+        val newMap = MapDAO.new {
             width = map.width
             height = map.height
             entranceX = map.entranceX
@@ -33,6 +37,7 @@ class PostgresMapRepository: MapRepository {
             exitY = map.exitY
             storeId = map.storeId
         }
+        daoToModel(newMap)
     }
 
     override suspend fun removeMap(map: Map): Boolean = suspendTransaction {

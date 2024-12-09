@@ -10,17 +10,15 @@ fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
 }
 fun Application.module() {
-    install(ContentNegotiation) {
-        json()
-    }
+
     val departmentRepository = PostgresDepartmentRepository()
     val mapRepository = PostgresMapRepository()
     val storeRepository = PostgresStoreRepository()
     val wallBlockRepository = PostgresWallBlockRepository()
     val tillRepository = PostgresTillRepository()
 
-    configureSerialization(departmentRepository, mapRepository, storeRepository, wallBlockRepository, tillRepository)
+    configureSerialization()
     configureDatabases()
-    configureRouting()
+    configureRouting(departmentRepository, mapRepository, storeRepository, wallBlockRepository, tillRepository)
 }
 
