@@ -8,14 +8,18 @@ import com.example.algorithms.RouteCalculation
 import com.example.model.entity.*
 import com.example.model.entity.Map
 import com.example.model.repository.*
+import com.example.services.OCRService
 import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.serialization.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.plugins.statuspages.*
+
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import java.io.File
 
 fun Application.configureRouting(departmentRepository: PostgresDepartmentRepository, mapRepository: PostgresMapRepository, storeRepository: PostgresStoreRepository, wallBlockRepository: PostgresWallBlockRepository, tillRepository: PostgresTillRepository) {
     install(StatusPages) {
@@ -359,8 +363,31 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                 }
             }
         }
+        route("/ocr") {
+            get() {
+                val filePath = call.request.queryParameters["file"]?.replace("/", "\\")
+                var extractedText = ""
+                val file = File(filePath)
+                extractedText = OCRService.extractTextFromImage(file)
+                //file.delete() // Clean up uploaded file
+                if (extractedText.isNotBlank()) {
+                    call.respond(HttpStatusCode.OK, extractedText)
+                } else {
+                    call.respond(HttpStatusCode.BadRequest, "No text found in image")
+                }
+            }
+        }
+        route("googleocr"){
+            post() {
 
+                val fileBytes = call.receive<ByteArray>()
+                val extractedText = OCRService.processOcrDocument(fileBytes)
+
+                call.respondText(extractedText)
+            }
+        }
 
     }
+
 
 }

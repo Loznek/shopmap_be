@@ -34,6 +34,12 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages-jvm")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
+    implementation("net.sourceforge.tess4j:tess4j:5.7.0")
+    implementation("com.google.cloud:google-cloud-document-ai:2.62.0") // Use the latest version
+    implementation("io.grpc:grpc-netty-shaded:1.70.0") // Make sure to use compatible versions
+    implementation("io.grpc:grpc-stub:1.70.0")
+    implementation("com.google.protobuf:protobuf-java:3.21.12")
+    implementation("org.openpnp:opencv:4.5.1-2")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     testImplementation("io.ktor:ktor-client-content-negotiation-jvm")
     implementation("org.postgresql:postgresql:$postgres_version")

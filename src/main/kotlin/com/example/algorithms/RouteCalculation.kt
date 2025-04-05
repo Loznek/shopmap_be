@@ -4,11 +4,111 @@ import com.example.model.entity.Department
 import com.example.model.entity.Map
 import com.example.model.entity.Till
 import com.example.model.entity.WallBlock
+import kotlinx.coroutines.*
+import kotlin.system.measureNanoTime
 
 data class GridCell(val x: Int, val y: Int)
 
 
 class RouteCalculation {
+
+
+
+    fun heldKarpShortestPathParallel(
+        walkablePoints: Set<Pair<Int, Int>>,
+        destinations: List<Pair<Int, Int>>, // Only intermediate points
+        start: Pair<Int, Int>,
+        end: Pair<Int, Int>
+    ): List<Pair<Int, Int>> {
+        val points = listOf(start) + destinations + listOf(end)
+        val n = points.size
+        val startIndex = 0
+        val endIndex = points.size - 1
+
+        // Step 1: Precompute distances between all points using BFS
+        val distances = Array(n) { IntArray(n) { Int.MAX_VALUE } }
+        for (i in points.indices) {
+            for (j in points.indices) {
+                if (i != j) {
+                    distances[i][j] = bfsShortestPath(walkablePoints, points[i], points[j]).size
+                }
+            }
+        }
+
+        // Step 2: Solve TSP using Held-Karp with fixed start and end
+        val intermediateIndices = (1 until points.size - 1).toList() // Indices of intermediate points
+        val dp = Array(1 shl intermediateIndices.size) { IntArray(n) { Int.MAX_VALUE } }
+        val parent = Array(1 shl intermediateIndices.size) { IntArray(n) { -1 } }
+        dp[0][startIndex] = 0
+
+        runBlocking {
+            val numThreads = Runtime.getRuntime().availableProcessors()
+            val chunkSize = (1 shl intermediateIndices.size) / numThreads
+            val jobs = mutableListOf<Deferred<Unit>>()
+
+            for (chunk in 0 until numThreads) {
+                val startMask = chunk * chunkSize
+                val endMask = minOf((chunk + 1) * chunkSize, 1 shl intermediateIndices.size)
+
+                jobs.add(async {
+                    for (mask in startMask until endMask) {
+                        for (u in intermediateIndices) {
+                            if (mask and (1 shl (u - 1)) != 0) { // If `u` is in the subset
+                                val prevMask = mask and (1 shl (u - 1)).inv()
+                                for (v in intermediateIndices + startIndex) { // Consider neighbors
+                                    if (dp[prevMask][v] < Int.MAX_VALUE && distances[v][u] < Int.MAX_VALUE) {
+                                        val newDist = dp[prevMask][v] + distances[v][u]
+                                        synchronized(dp) { // Ensure thread-safe updates
+                                            if (newDist < dp[mask][u]) {
+                                                dp[mask][u] = newDist
+                                                parent[mask][u] = v
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+
+            // Wait for all jobs to complete
+            jobs.awaitAll()
+        }
+
+        // Add the fixed ending point
+        var minCost = Int.MAX_VALUE
+        var lastPoint = -1
+        val fullMask = (1 shl intermediateIndices.size) - 1
+        for (u in intermediateIndices) {
+            val cost = dp[fullMask][u] + distances[u][endIndex]
+            if (cost < minCost) {
+                minCost = cost
+                lastPoint = u
+            }
+        }
+
+        // Step 3: Reconstruct the path
+        val path = mutableListOf<Pair<Int, Int>>()
+        var mask = fullMask
+        var current = lastPoint
+
+        while (current != -1) {
+            path.add(points[current])
+            val prev = parent[mask][current]
+            if (prev != -1) {
+                mask = mask and (1 shl (current - 1)).inv()
+            }
+            current = prev
+        }
+
+        path.reverse()
+        path.add(end) // Add the fixed ending point last
+        return computeFullPathWithDetails(walkablePoints, listOf(start) + path.drop(1))
+    }
+
+
+
 
 
     fun calculateRoutes(
@@ -199,7 +299,18 @@ class RouteCalculation {
         //return bellmanFordShortestPath(points, Pair(map.entranceX.toInt(), map.entranceY.toInt()), destinationPoints.map { it.second.toInt() to it.third.toInt() })
         val start= Pair(map.entranceX.toInt(), map.entranceY.toInt())
         val fixedDestination = tills[0].startX.toInt() to tills[0].startY.toInt()
-        return heldKarpShortestPath(walkablePoints.toSet(), destinationPoints.map { it.second.toInt() to it.third.toInt() }, start, fixedDestination)
+        var path = emptyList<Pair<Int, Int>>()
+        val executionTimeNs = measureNanoTime {
+            path= heldKarpShortestPath(walkablePoints.toSet(), destinationPoints.map { it.second.toInt() to it.third.toInt() }, start, fixedDestination)
+        }
+
+        // Convert time to milliseconds
+        val executionTimeMs = executionTimeNs / 1_000_000.0
+        println("Execution Time: $executionTimeMs ms")
+
+
+
+        return path
 
     }
 

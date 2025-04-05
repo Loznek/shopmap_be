@@ -1,5 +1,6 @@
 package com.example.plugins
 
+import com.example.plugins.UserService.Users
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.*
@@ -34,7 +35,7 @@ class UserService(database: Database) {
 
     suspend fun read(id: Int): ExposedUser? {
         return dbQuery {
-            Users.select { Users.id eq id }
+            Users.selectAll().where { Users.id eq id }
                 .map { ExposedUser(it[Users.name], it[Users.age]) }
                 .singleOrNull()
         }
