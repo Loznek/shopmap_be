@@ -11,8 +11,6 @@ import org.opencv.core.Mat
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
 import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
 
 
 object OCRService {
@@ -58,7 +56,6 @@ object OCRService {
 
         val endpoint = "$location-documentai.googleapis.com:443"
         // Create a custom Netty channel with the custom endpoint
-        val imageFileData: ByteArray = Files.readAllBytes(Paths.get("C:\\Users\\zolta\\Downloads\\ocrtest2.jpg"))
 
         val settings =
             DocumentProcessorServiceSettings.newBuilder().setEndpoint(endpoint).build()
