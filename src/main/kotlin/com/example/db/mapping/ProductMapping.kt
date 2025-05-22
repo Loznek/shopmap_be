@@ -14,6 +14,7 @@ object ProductTable : IntIdTable("map") {
     val size = varchar("size", 100)
     val shelfId = integer("shelfid")
     val price = double("price")
+    val storeId = integer("storeid")
 
 }
 
@@ -24,6 +25,7 @@ class ProductDAO(id: EntityID<Int>) : IntEntity(id) {
     var size by ProductTable.size
     var shelfId by ProductTable.shelfId
     var price by ProductTable.price
+    var storeId by ProductTable.storeId
 }
 
 
@@ -33,5 +35,6 @@ fun daoToModel(dao: ProductDAO) = Product(
     dao.name,
     dao.size,
     dao.shelfId,
-    dao.price
+    dao.price,
+    dao.storeId
 )

@@ -16,9 +16,10 @@ fun Application.module() {
     val storeRepository = PostgresStoreRepository()
     val wallBlockRepository = PostgresWallBlockRepository()
     val tillRepository = PostgresTillRepository()
+    val shelfRepository = PostgresShelfRepository()
 
     configureSerialization()
     configureDatabases()
-    configureRouting(departmentRepository, mapRepository, storeRepository, wallBlockRepository, tillRepository)
+    configureRouting(departmentRepository, mapRepository, storeRepository, wallBlockRepository, tillRepository, shelfRepository)
 }
 

@@ -9,5 +9,7 @@ data class Shelf(
     val width: Double,
     val height: Double,
     val startX: Double,
-    val startY:Double
+    val startY:Double,
+    val midx: Double,
+    val midy: Double,
 )

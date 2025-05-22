@@ -6,4 +6,5 @@ import kotlinx.serialization.Serializable
 class RoutePlanning (
     val mapId: Int,
     val departmentIds: List<Int>,
+    //bevásárlólista
 )

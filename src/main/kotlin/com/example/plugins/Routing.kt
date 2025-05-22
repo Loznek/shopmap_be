@@ -1,8 +1,7 @@
 package com.example.plugins
 
 
-import com.example.DTO.RoutePlan
-import com.example.DTO.RoutePlanning
+import com.example.DTO.*
 import com.example.algorithms.PositionChecker
 import com.example.algorithms.RouteCalculation
 import com.example.model.entity.*
@@ -21,7 +20,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.io.File
 
-fun Application.configureRouting(departmentRepository: PostgresDepartmentRepository, mapRepository: PostgresMapRepository, storeRepository: PostgresStoreRepository, wallBlockRepository: PostgresWallBlockRepository, tillRepository: PostgresTillRepository) {
+fun Application.configureRouting(departmentRepository: PostgresDepartmentRepository, mapRepository: PostgresMapRepository, storeRepository: PostgresStoreRepository, wallBlockRepository: PostgresWallBlockRepository, tillRepository: PostgresTillRepository, shelfRepository: PostgresShelfRepository) {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             call.respondText(text = "500: $cause" , status = HttpStatusCode.InternalServerError)
@@ -333,6 +332,48 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                 }
             }
         }
+
+        route("/shelves"){
+            get("/{departmentId}") {
+                val shelves = shelfRepository.shelvesByDepartment(call.parameters["departmentId"]?.toInt() ?: 0)
+                call.respond(shelves)
+
+            }
+
+            delete("/{shelfId}") {
+                shelfRepository.removeShelfById(call.parameters["shelfId"]?.toInt() ?: 0)
+                call.respond(HttpStatusCode.NoContent)
+            }
+
+            put("/{id}") {
+                val shelf = call.receive<Shelf>()
+                val newShelf=shelfRepository.updateShelf(shelf)
+                call.respond(HttpStatusCode.Created, newShelf)
+
+            }
+
+            post {
+                try {
+                    val shelf = call.receive<ShelfCreation>()
+                    val newShelf = Shelf(
+                        id = 0,
+                        departmentId = shelf.departmentId,
+                        width = shelf.width,
+                        height = shelf.height,
+                        startX = shelf.startX,
+                        startY = shelf.startY,
+                        midx = 0.0,
+                        midy = 0.0
+                    )
+                    //val newShelf = shelfRepository.addShelf(shelf)
+                    call.respond(HttpStatusCode.Created, newShelf)
+                } catch (ex: IllegalStateException) {
+                    call.respond(HttpStatusCode.BadRequest)
+                } catch (ex: JsonConvertException) {
+                    call.respond(HttpStatusCode.BadRequest)
+                }
+            }
+        }
         route("/store") {
             get("/{id}") {
                 val store = storeRepository.storeById(call.parameters["id"]?.toInt() ?: 0)
@@ -382,8 +423,70 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
 
                 val fileBytes = call.receive<ByteArray>()
                 val extractedText = OCRService.processOcrDocument(fileBytes)
+                val shoppingList = ShopList(
+                items = listOf(
+                    ShopItem(name = "Apples", quantity = "5"),
+                    ShopItem(name = "Milk", quantity = "2"),
+                    ShopItem(name = "Bread", quantity = "1")
+                )
+            )
 
-                call.respondText(extractedText)
+                call.respond( HttpStatusCode.OK,shoppingList)
+            }
+        }
+        route("savelist"){
+            post() {
+                val list = call.receive<ShoppingListWithUserDTO>()
+
+                //Save that list and return the id
+                val id = 1
+                call.respond(HttpStatusCode.OK, id )
+            }
+        }
+
+        route("concretlist"){
+            post() {
+                val list = call.receive<ProductsInShop>()
+
+                //give back concreteList
+                val shoppingList = ConcreteShopList(
+                    items = listOf(
+                        ConcreteShopItem(
+                            name = "Milk",
+                            productName = "Whole Milk 1L",
+                            productId = 101,
+                            quantity = "2"
+                        ),
+                        ConcreteShopItem(
+                            name = "Bread",
+                            productName = "Whole Wheat Bread",
+                            productId = 102,
+                            quantity = "1"
+                        ),
+                        ConcreteShopItem(
+                            name = "Eggs",
+                            productName = null,  // e.g. unlinked product
+                            productId = null,
+                            quantity = "12"
+                        )
+                    )
+                )
+                call.respond(HttpStatusCode.OK, shoppingList)
+            }
+        }
+        route("routeplan"){
+            post("/{userId}") {
+                val concreteData = call.receive<SimpleRoutePlanning>()
+
+                val planning: RoutePlan = RoutePlan(
+                    listOf(
+                        Pair(1, 2),
+                        Pair(3, 4),
+                        Pair(5, 6)
+                    )
+                )
+                call.respond(HttpStatusCode.OK, planning)
+
             }
         }
 

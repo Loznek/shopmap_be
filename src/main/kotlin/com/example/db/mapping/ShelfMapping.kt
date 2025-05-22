@@ -15,6 +15,8 @@ object ShelfTable : IntIdTable("shelf") {
     val height = double("height")
     val startX = double("startX")
     val startY = double("startY")
+    val midX = double("midX")
+    val midY = double("midY")
 }
 
 class ShelfDAO(id: EntityID<Int>) : IntEntity(id) {
@@ -25,6 +27,8 @@ class ShelfDAO(id: EntityID<Int>) : IntEntity(id) {
     var height by ShelfTable.height
     var startX by ShelfTable.startX
     var startY by ShelfTable.startY
+    var midX by ShelfTable.midX
+    var midY by ShelfTable.midY
 
 }
 
@@ -36,5 +40,7 @@ fun daoToModel(dao: ShelfDAO) = Shelf(
     dao.width,
     dao.height,
     dao.startX,
-    dao.startY
+    dao.startY,
+    dao.midX,
+    dao.midY
 )

@@ -8,5 +8,6 @@ data class Product(
     val name: String,
     val size: String,
     val shelfId: Int,
-    val price: Double
+    val price: Double,
+    val storeId: Int
 )
