@@ -19,6 +19,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.io.File
+import kotlin.math.round
 
 fun Application.configureRouting(departmentRepository: PostgresDepartmentRepository, mapRepository: PostgresMapRepository, storeRepository: PostgresStoreRepository, wallBlockRepository: PostgresWallBlockRepository, tillRepository: PostgresTillRepository, shelfRepository: PostgresShelfRepository, shoppingListRepository: ShoppingListRepository, shoppingListItemRepository: ShoppingListItemRepository, productRepository: PostgresProductRepository) {
     install(StatusPages) {
@@ -355,6 +356,24 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
             post {
                 try {
                     val shelf = call.receive<ShelfCreation>()
+                    val (midx, midy) = when (shelf.shelfType) {
+                        OuterSide.Left -> Pair(
+                            shelf.startX,
+                            round(shelf.startY + shelf.height / 2)
+                        )
+                        OuterSide.Right -> Pair(
+                            round(shelf.startX + shelf.width),
+                            round(shelf.startY + shelf.height / 2)
+                        )
+                        OuterSide.Up -> Pair(
+                            round(shelf.startX + shelf.width / 2),
+                            shelf.startY
+                        )
+                        OuterSide.Down -> Pair(
+                            round(shelf.startX + shelf.width / 2),
+                            round(shelf.startY + shelf.height)
+                        )
+                    }
                     val newShelf = Shelf(
                         id = 0,
                         departmentId = shelf.departmentId,
@@ -362,8 +381,8 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                         height = shelf.height,
                         startX = shelf.startX,
                         startY = shelf.startY,
-                        midx = 0.0,
-                        midy = 0.0
+                        midx = midx,
+                        midy = midy
                     )
                     //val newShelf = shelfRepository.addShelf(shelf)
                     call.respond(HttpStatusCode.Created, newShelf)
@@ -425,14 +444,12 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                 val extractedText = OCRService.processOcrDocument(fileBytes)
 
 
+                val shoppingItems = parseShoppingList(extractedText)
 
                 val shoppingList = ShopList(
-                items = listOf(
-                    ShopItem(name = "Apples", quantity = "5"),
-                    ShopItem(name = "Milk", quantity = "2"),
-                    ShopItem(name = "Bread", quantity = "1")
+                items = shoppingItems
                 )
-            )
+
 
                 call.respond( HttpStatusCode.OK,shoppingList)
             }
@@ -514,4 +531,26 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
     }
 
 
+
+
+}
+
+fun parseShoppingList(text: String): List<ShopItem> {
+    val lines = text.lines().filter { it.isNotBlank() }
+    val items = mutableListOf<ShopItem>()
+
+    var i = 0
+    while (i < lines.size - 1) {
+        val name = lines[i].trim()
+        val quantity = lines[i + 1].trim()
+        items.add(ShopItem(name, quantity))
+        i += 2
+    }
+
+    // Handle possible odd number of lines (no quantity)
+    if (i == lines.lastIndex) {
+        items.add(ShopItem(lines[i].trim(), ""))
+    }
+
+    return items
 }

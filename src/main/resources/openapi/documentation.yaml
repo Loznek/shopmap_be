@@ -40,7 +40,8 @@ paths:
                 $ref: "#/components/schemas/ConcreteShopList"
               examples:
                 Example#1:
-                  description: "give back concreteList"
+                  description: "call AI service to get concrete list <br> give back\
+                    \ concreteList"
                   value:
                     items:
                     - name: "Milk"
@@ -371,16 +372,12 @@ paths:
         required: true
       responses:
         "200":
-          description: "OK"
+          description: "OK <br> Save that list and return the id"
           content:
             '*/*':
               schema:
                 type: "integer"
                 format: "int32"
-              examples:
-                Example#1:
-                  description: "Save that list and return the id"
-                  value: 1
   /shelves:
     post:
       description: ""
@@ -425,6 +422,15 @@ paths:
         schema:
           type: "integer"
       responses:
+        "500":
+          description: "Internal Server Error"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
         "204":
           description: "No Content"
           content:
@@ -465,6 +471,15 @@ paths:
               $ref: "#/components/schemas/Shelf"
         required: true
       responses:
+        "500":
+          description: "Internal Server Error"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
         "201":
           description: "Created"
           content:
@@ -757,9 +772,12 @@ components:
         shoppingListId:
           type: "integer"
           format: "int32"
+        storeId:
+          type: "integer"
+          format: "int32"
       required:
       - "shoppingListId"
-      - "concreteShoppingList"
+      - "storeId"
     ConcreteShopItem:
       type: "object"
       properties:
@@ -874,9 +892,11 @@ components:
         storeId:
           type: "integer"
           format: "int32"
+        concreteShopList:
+          $ref: "#/components/schemas/ConcreteShopList"
       required:
       - "storeId"
-      - "concreteShoppingList"
+      - "concreteShopList"
     ShoppingListWithUserDTO:
       type: "object"
       properties:
@@ -887,9 +907,12 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/ShopItem"
+        listName:
+          type: "string"
       required:
       - "userId"
       - "items"
+      - "listName"
     ShelfCreation:
       type: "object"
       properties:
