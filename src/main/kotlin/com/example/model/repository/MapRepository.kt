@@ -7,4 +7,5 @@ interface MapRepository {
     suspend fun addMap(map: Map): Map
     suspend fun removeMap(map: Map): Boolean
     suspend fun updateMap(map: Map): Map
+    suspend fun mapsByStoreId(storeId: Int): List<Map>
 }

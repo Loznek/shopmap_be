@@ -17,6 +17,7 @@ class ShopList(
 @Serializable
 class ShoppingListWithUserDTO(
     val userId: Int,
-    val items: List<ShopItem>
+    val items: List<ShopItem>,
+    val listName: String
 )
 

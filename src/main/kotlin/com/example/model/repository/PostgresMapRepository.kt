@@ -27,6 +27,13 @@ class PostgresMapRepository: MapRepository {
         daoToModel(mapDAO)
     }
 
+    override suspend fun mapsByStoreId(storeId: Int): List<Map> {
+        return suspendTransaction {
+            MapDAO.find { MapTable.storeId eq storeId }
+                .map(::daoToModel)
+        }
+    }
+
     override suspend fun addMap(map: Map) : Map = suspendTransaction {
         val newMap = MapDAO.new {
             width = map.width

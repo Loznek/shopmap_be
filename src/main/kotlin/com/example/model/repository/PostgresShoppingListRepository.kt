@@ -14,6 +14,12 @@ class PostgresShoppingListRepository : ShoppingListRepository {
             .map(::daoToModel)
     }
 
+    override suspend fun shoppingListById(id: Int): ShoppingList? = suspendTransaction {
+        ShoppingListDAO.find { ShoppingListTable.id eq id }
+            .map(::daoToModel)
+            .firstOrNull()
+    }
+
     override suspend fun addShoppingList(shoppingList: ShoppingList): ShoppingList = suspendTransaction {
         val newShoppingList = ShoppingListDAO.new {
             name = shoppingList.name

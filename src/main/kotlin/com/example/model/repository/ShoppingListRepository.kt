@@ -6,4 +6,5 @@ interface ShoppingListRepository {
     suspend fun shoppingListsByUser(userId: Int): List<ShoppingList>
     suspend fun addShoppingList(shoppingList: ShoppingList): ShoppingList
     suspend fun removeShoppingListById(id: Int): Boolean
+    suspend fun shoppingListById(id: Int): ShoppingList?
 }

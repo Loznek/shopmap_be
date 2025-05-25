@@ -5,6 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 class ProductsInShop (
     val shoppingListId: Int,
-    val concreteShoppingList: ConcreteShopList
-
+    val storeId:Int,
 )
