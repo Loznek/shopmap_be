@@ -358,24 +358,24 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                     val shelf = call.receive<ShelfCreation>()
                     val (midx, midy) = when (shelf.shelfType) {
                         OuterSide.Left -> Pair(
-                            shelf.startX,
+                            shelf.startX - 1.0,
                             round(shelf.startY + shelf.height / 2)
                         )
                         OuterSide.Right -> Pair(
-                            round(shelf.startX + shelf.width),
+                            round(shelf.startX + shelf.width) + 1.0,
                             round(shelf.startY + shelf.height / 2)
                         )
                         OuterSide.Up -> Pair(
                             round(shelf.startX + shelf.width / 2),
-                            shelf.startY
+                            shelf.startY - 1.0
                         )
                         OuterSide.Down -> Pair(
                             round(shelf.startX + shelf.width / 2),
-                            round(shelf.startY + shelf.height)
+                            round(shelf.startY + shelf.height) + 1.0
                         )
                     }
                     val newShelf = Shelf(
-                        id = 0,
+                        id = null,
                         departmentId = shelf.departmentId,
                         width = shelf.width,
                         height = shelf.height,
@@ -384,8 +384,8 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                         midx = midx,
                         midy = midy
                     )
-                    //val newShelf = shelfRepository.addShelf(shelf)
-                    call.respond(HttpStatusCode.Created, newShelf)
+                    val newestShelf = shelfRepository.addShelf(newShelf)
+                    call.respond(HttpStatusCode.Created, newestShelf)
                 } catch (ex: IllegalStateException) {
                     call.respond(HttpStatusCode.BadRequest)
                 } catch (ex: JsonConvertException) {

@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Shelf(
-    val id: Int,
+    val id: Int?,
     val departmentId: Int,
     val width: Double,
     val height: Double,
