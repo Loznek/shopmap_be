@@ -8,7 +8,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 
 object ShoppingListItemTable : IntIdTable("shopping_list_item") {
     val shoppingListId = integer("shopping_list_id").references(ShoppingListTable.id)
-    val itemName = varchar("item_name", 255)
+    val itemName = varchar("shopping_item_name", 255)
     val attributes = varchar("attributes", 255)
 }
 

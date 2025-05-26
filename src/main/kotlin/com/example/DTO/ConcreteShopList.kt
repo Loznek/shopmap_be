@@ -14,3 +14,12 @@ class ConcreteShopItem(
     val productId: Int?,
     val quantity: String
 )
+
+
+// Temporary DTO matching the JSON structure
+@Serializable
+data class ConcreteShopItemTemp(
+    val list_item_name: String,
+    val product_id: Int? = null,
+    val product_name: String? = null
+)

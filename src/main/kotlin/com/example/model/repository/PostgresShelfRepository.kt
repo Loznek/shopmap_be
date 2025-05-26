@@ -13,8 +13,17 @@ class PostgresShelfRepository: ShelfRepository {
             .map(::daoToModel)
     }
 
-    override suspend fun addShelf(shelf: Shelf): Shelf {
-        throw NotImplementedError("Not yet implemented")
+    override suspend fun addShelf(shelf: Shelf): Shelf = suspendTransaction {
+        val newShelf = ShelfDAO.new {
+            width = shelf.width
+            height = shelf.height
+            startX = shelf.startX
+            startY = shelf.startY
+            departmentId = shelf.departmentId
+            midX = shelf.midx
+            midY = shelf.midy
+        }
+        daoToModel(newShelf)
     }
 
     override suspend fun removeShelfById(id: Int): Boolean {

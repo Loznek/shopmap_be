@@ -9,19 +9,17 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 
 object ShelfTable : IntIdTable("shelf") {
 
-    val shelfId = integer("shelfid")
-    val departmentId = integer("departmentId")
+    val departmentId = integer("departmentid")
     val width = double("width")
     val height = double("height")
-    val startX = double("startX")
-    val startY = double("startY")
-    val midX = double("midX")
-    val midY = double("midY")
+    val startX = double("startx")
+    val startY = double("starty")
+    val midX = double("midx")
+    val midY = double("midy")
 }
 
 class ShelfDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<ShelfDAO>(ShelfTable)
-    var shelfId by ShelfTable.shelfId
     var departmentId by ShelfTable.departmentId
     var width by ShelfTable.width
     var height by ShelfTable.height
@@ -35,7 +33,7 @@ class ShelfDAO(id: EntityID<Int>) : IntEntity(id) {
 
 
 fun daoToModel(dao: ShelfDAO) = Shelf(
-    dao.shelfId,
+    dao.id.value,
     dao.departmentId,
     dao.width,
     dao.height,

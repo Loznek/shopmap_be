@@ -11,7 +11,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 object ShoppingListTable : IntIdTable("shopping_list") {
-    val userId = integer("user_id")
+    val userId = integer("userid")
     val name = varchar("name", 60)
 }
 

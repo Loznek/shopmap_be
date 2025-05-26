@@ -5,9 +5,12 @@ import com.example.DTO.*
 import com.example.algorithms.PositionChecker
 import com.example.algorithms.RouteCalculation
 import com.example.model.entity.*
-import com.example.model.entity.Map
 import com.example.model.repository.*
 import com.example.services.OCRService
+import io.ktor.client.*
+import io.ktor.client.plugins.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.serialization.*
@@ -16,9 +19,19 @@ import io.ktor.server.http.content.*
 import io.ktor.server.plugins.statuspages.*
 
 import io.ktor.server.request.*
+import io.ktor.http.*
+import kotlinx.coroutines.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.json.JsonElement
 import java.io.File
+import kotlin.collections.Map
+import kotlin.math.floor
 import kotlin.math.round
 
 fun Application.configureRouting(departmentRepository: PostgresDepartmentRepository, mapRepository: PostgresMapRepository, storeRepository: PostgresStoreRepository, wallBlockRepository: PostgresWallBlockRepository, tillRepository: PostgresTillRepository, shelfRepository: PostgresShelfRepository, shoppingListRepository: ShoppingListRepository, shoppingListItemRepository: ShoppingListItemRepository, productRepository: PostgresProductRepository) {
@@ -117,6 +130,7 @@ fun Application.configureRouting(departmentRepository: PostgresDepartmentReposit
                     )
                     if (!checked) call.respond(HttpStatusCode.BadRequest, "Invalid position")
 
+                    /*
                     else if(!RouteCalculation().checkPathExistence( department.startX,
                             department.startY,
                             department.width,
@@ -125,7 +139,7 @@ fun Application.configureRouting(departmentRepository: PostgresDepartmentReposit
                             wallBlockRepository.wallBlocksByMap(department.mapId),
                             departmentRepository.departmentsByMap(department.mapId), department.id ?: -1, -1)) {
                        call.respond(HttpStatusCode.BadRequest, "Invalid position, there is no path to the tills")
-                    }
+                    }*/
 
                     else {
                         val newDepartment = departmentRepository.addDepartment(department)
@@ -161,7 +175,7 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
 
 
             put("/{id}") {
-                val map = call.receive<Map>()
+                val map = call.receive<com.example.model.entity.Map>()
                 val checked = PositionChecker.checkNewMapSizes(
                     map.width,
                     map.height,
@@ -186,7 +200,7 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
 
             post {
                 try {
-                    val map = call.receive<Map>()
+                    val map = call.receive<com.example.model.entity.Map>()
                     val newMap = mapRepository.addMap(map)
                     call.respond(HttpStatusCode.Created, newMap)
                 } catch (ex: IllegalStateException) {
@@ -359,19 +373,19 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                     val (midx, midy) = when (shelf.shelfType) {
                         OuterSide.Left -> Pair(
                             shelf.startX - 1.0,
-                            round(shelf.startY + shelf.height / 2)
+                            floor(shelf.startY - shelf.height / 2) + 1.0
                         )
                         OuterSide.Right -> Pair(
-                            round(shelf.startX + shelf.width) + 1.0,
-                            round(shelf.startY + shelf.height / 2)
+                            shelf.startX + shelf.width,
+                            floor(shelf.startY - shelf.height / 2) + 1.0
                         )
                         OuterSide.Up -> Pair(
-                            round(shelf.startX + shelf.width / 2),
-                            shelf.startY - 1.0
+                            floor(shelf.startX + shelf.width / 2),
+                            shelf.startY + 1.0
                         )
                         OuterSide.Down -> Pair(
-                            round(shelf.startX + shelf.width / 2),
-                            round(shelf.startY + shelf.height) + 1.0
+                            floor(shelf.startX + shelf.width / 2),
+                            shelf.startY - shelf.height
                         )
                     }
                     val newShelf = Shelf(
@@ -464,7 +478,7 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                         name=list.listName
                     )
                 ).id
-                for (item in list.items) {
+                for (item in list.items.items) {
                     shoppingListItemRepository.addShoppingListItem(
                         ShoppingListItem(
                             itemId = null, // ID will be generated by the database
@@ -475,7 +489,7 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                     )
                 }
                 //Save that list and return the id
-                call.respond(HttpStatusCode.OK, shoppingListId?: -1)
+                call.respond(HttpStatusCode.OK, shoppingListId?: -1)//
             }
         }
 
@@ -485,6 +499,34 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                 val products = productRepository.productsByStoreId(list.storeId)
                 val shoppingListDB = shoppingListRepository.shoppingListById(list.shoppingListId)
                 val shoppingItems = shoppingListItemRepository.itemsByShoppingList(list.shoppingListId)
+
+                val storeProducts: List<Pair<Int?, String>>  = products.map { Pair(it.Id, it.name) }
+                val items: List<String> = shoppingItems.map { it.shoppingItemName }
+
+                val request: AiRequest = AiRequest(
+                    products = storeProducts,
+                    listItems = items,
+                )
+
+                val client = HttpClient() {
+                    install(HttpTimeout) {
+                        requestTimeoutMillis = 30_000  // 30 seconds
+                        connectTimeoutMillis = 10_000
+                        socketTimeoutMillis = 30_000
+                    }
+                }
+
+                val res = client.post("http://localhost:8090/ask") {
+                    contentType(ContentType.Application.Json)
+                    setBody(Json.encodeToString(request))
+                }
+
+
+                val responseBody = res.bodyAsText()
+
+                val concreteList = parseShopList(responseBody)
+                println(concreteList)
+                println("Response from AI service: $responseBody")
                 //call AI service to get concrete list
                 //give back concreteList
                 val shoppingList = ConcreteShopList(
@@ -509,7 +551,7 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                         )
                     )
                 )
-                call.respond(HttpStatusCode.OK, shoppingList)
+                call.respond(HttpStatusCode.OK, concreteList)
             }
         }
         route("routeplan"){
@@ -525,6 +567,13 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                 )
                 call.respond(HttpStatusCode.OK, planning)
 
+            }
+        }
+        route("products"){
+            post {
+                val product = call.receive<Product>()
+                val newProduct = productRepository.addProduct(product)
+                call.respond(HttpStatusCode.Created, newProduct)
             }
         }
 
@@ -553,4 +602,29 @@ fun parseShoppingList(text: String): List<ShopItem> {
     }
 
     return items
+}
+
+
+
+
+fun parseShopList(responseJson: String): ConcreteShopList {
+    val json = Json { ignoreUnknownKeys = true }
+
+    val outerMap = json.decodeFromString<Map<String, String>>(responseJson)
+
+    val answerJson = outerMap["answer"]
+        ?: throw IllegalArgumentException("Missing 'answer' field")
+
+    val parsedItems = json.decodeFromString<List<ConcreteShopItemTemp>>(answerJson)
+
+    val items = parsedItems.map {
+        ConcreteShopItem(
+            name = it.list_item_name,
+            productId = it.product_id,
+            productName = it.product_name,
+            quantity = "1"
+        )
+    }
+
+    return ConcreteShopList(items)
 }

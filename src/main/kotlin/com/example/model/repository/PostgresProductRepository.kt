@@ -16,7 +16,6 @@ class PostgresProductRepository : ProductRepository {
     override suspend fun addProduct(product: Product): Product {
         return suspendTransaction {
             val newProduct = ProductDAO.new {
-                articleNo = product.articleNo
                 name = product.name
                 size = product.size
                 shelfId = product.shelfId

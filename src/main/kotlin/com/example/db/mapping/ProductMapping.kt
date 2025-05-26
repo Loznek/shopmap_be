@@ -7,9 +7,8 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
-object ProductTable : IntIdTable("map") {
+object ProductTable : IntIdTable("product") {
 
-    val articleNo = integer("storeid")
     val name = varchar("name", 30)
     val size = varchar("size", 100)
     val shelfId = integer("shelfid")
@@ -20,7 +19,6 @@ object ProductTable : IntIdTable("map") {
 
 class ProductDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<ProductDAO>(ProductTable)
-    var articleNo by ProductTable.articleNo
     var name by  ProductTable.name
     var size by ProductTable.size
     var shelfId by ProductTable.shelfId
@@ -31,7 +29,7 @@ class ProductDAO(id: EntityID<Int>) : IntEntity(id) {
 
 
 fun daoToModel(dao: ProductDAO) = Product(
-    dao.articleNo,
+    dao.id.value,
     dao.name,
     dao.size,
     dao.shelfId,
