@@ -354,6 +354,14 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                 call.respond(shelves)
 
             }
+            get("/{storeId}"){
+                val map = mapRepository.mapsByStoreId(call.parameters["departmentId"]?.toInt() ?: 0)
+                val departments = departmentRepository.departmentsByMap(map.first().id!!)
+                val allShelves = mutableListOf<Shelf>()
+                for (dep in departments){
+                    allShelves.addAll(shelfRepository.shelvesByDepartment(dep.id!!))
+                }
+            }
 
             delete("/{shelfId}") {
                 shelfRepository.removeShelfById(call.parameters["shelfId"]?.toInt() ?: 0)
@@ -555,9 +563,34 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
             }
         }
         route("routeplan"){
-            post("/{userId}") {
-                val concreteData = call.receive<SimpleRoutePlanning>()
+            post() {
 
+                val concreteData = call.receive<SimpleRoutePlanning>()
+                val map = mapRepository.mapsByStoreId(concreteData.storeId)
+                val departments = departmentRepository.departmentsByMap(map.first().id!!)
+                val allShelves = mutableListOf<Shelf>()
+                for (dep in departments){
+                    allShelves.addAll(shelfRepository.shelvesByDepartment(dep.id!!))
+                }
+                val destinationShelves = mutableListOf<Shelf>()
+                for (item in concreteData.concreteShopList.items) {
+                    destinationShelves.add(
+                       productRepository.productById(item.productId ?: 0)?.let {
+                            allShelves.firstOrNull { shelf -> shelf.id == it.shelfId }
+                        } ?: throw IllegalArgumentException("Product with ID ${item.productId} not found"))
+                }
+                val path = RouteCalculation().calculateShortestRoutesWithShelves(
+                    map = map.first(),
+                    tills = tillRepository.tillsByMap(map.first().id!!),
+                    wallBlocks = wallBlockRepository.wallBlocksByMap(map.first().id!!),
+                    allShelves = allShelves,
+                    destinationShelves = destinationShelves
+                )
+
+                val planning: RoutePlan = RoutePlan(path)
+                call.respond(HttpStatusCode.OK, planning)
+
+                /*
                 val planning: RoutePlan = RoutePlan(
                     listOf(
                         Pair(1, 2),
@@ -566,6 +599,7 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                     )
                 )
                 call.respond(HttpStatusCode.OK, planning)
+                */
 
             }
         }

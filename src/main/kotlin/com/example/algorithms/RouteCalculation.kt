@@ -1,9 +1,7 @@
 package com.example.algorithms
 
-import com.example.model.entity.Department
+import com.example.model.entity.*
 import com.example.model.entity.Map
-import com.example.model.entity.Till
-import com.example.model.entity.WallBlock
 import kotlinx.coroutines.*
 import kotlin.system.measureNanoTime
 
@@ -520,6 +518,58 @@ class RouteCalculation {
         ).isNotEmpty()
 
 
+
+    }
+
+    fun calculateShortestRoutesWithShelves(map: Map,
+                                           tills: List<Till>,
+                                           wallBlocks: List<WallBlock>,
+                                           allShelves: List<Shelf>,
+                                           destinationShelves: List<Shelf>): List<Pair<Int, Int>> {
+
+        val destinationPoints = destinationShelves.map { shelf ->
+            Pair(shelf.midx.toInt(), shelf.midy.toInt())
+        }.toMutableList()
+
+
+        val walkablePoints = mutableListOf<Pair<Int, Int>>()
+
+        for (x in 1 until (map.width + 1).toInt()) {
+            for (y in 1 until (map.height + 1).toInt()) {
+                // Check if the point is inside any wall block
+                val isInWall = wallBlocks.any { wall ->
+                    x in wall.startX.toInt() until (wall.startX + wall.width).toInt() &&
+                            y in wall.startY.toInt() until (wall.startY + wall.height).toInt()
+                }
+                // Add to the list if not in a wall block
+                val isInShelf = allShelves.any { dep ->
+                    x in dep.startX.toInt() until (dep.startX + dep.width).toInt() &&
+                            y in dep.startY.toInt() until (dep.startY + dep.height).toInt()
+                }
+
+                if (!isInWall && !isInShelf) {
+                    walkablePoints.add(x to y)
+                }
+            }
+        }
+        walkablePoints.add(tills[0].startX.toInt() to tills[0].startY.toInt())
+
+
+        //return bellmanFordShortestPath(points, Pair(map.entranceX.toInt(), map.entranceY.toInt()), destinationPoints.map { it.second.toInt() to it.third.toInt() })
+        val start= Pair(map.entranceX.toInt(), map.entranceY.toInt())
+        val fixedDestination = tills[0].startX.toInt() to tills[0].startY.toInt()
+        var path = emptyList<Pair<Int, Int>>()
+        val executionTimeNs = measureNanoTime {
+            path= heldKarpShortestPath(walkablePoints.toSet(), destinationPoints,  start, fixedDestination)
+        }
+
+        // Convert time to milliseconds
+        val executionTimeMs = executionTimeNs / 1_000_000.0
+        println("Execution Time: $executionTimeMs ms")
+
+
+
+        return path
 
     }
 
