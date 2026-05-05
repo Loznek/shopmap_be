@@ -1,10 +1,13 @@
 package com.example.plugins
 
 
+import ProcessImageResponse
+import PythonRequest
 import com.example.DTO.*
 import com.example.algorithms.PositionChecker
 import com.example.algorithms.RouteCalculation
 import com.example.model.entity.*
+import com.example.model.entity.OpeningHours
 import com.example.model.repository.*
 import com.example.services.OCRService
 import io.ktor.client.*
@@ -34,13 +37,59 @@ import kotlin.collections.Map
 import kotlin.math.floor
 import kotlin.math.round
 
-fun Application.configureRouting(departmentRepository: PostgresDepartmentRepository, mapRepository: PostgresMapRepository, storeRepository: PostgresStoreRepository, wallBlockRepository: PostgresWallBlockRepository, tillRepository: PostgresTillRepository, shelfRepository: PostgresShelfRepository, shoppingListRepository: ShoppingListRepository, shoppingListItemRepository: ShoppingListItemRepository, productRepository: PostgresProductRepository) {
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.serialization.kotlinx.json.*
+import org.jsoup.Jsoup
+
+
+fun Application.configureRouting(departmentRepository: PostgresDepartmentRepository, mapRepository: PostgresMapRepository, storeRepository: PostgresStoreRepository, wallBlockRepository: PostgresWallBlockRepository, tillRepository: PostgresTillRepository, shelfRepository: PostgresShelfRepository, shoppingListRepository: ShoppingListRepository, shoppingListItemRepository: ShoppingListItemRepository, productRepository: PostgresProductRepository, googleMapsInfoRepository: PostgresGoogleMapsInfoRepository, openingHoursRepository: PostgresOpeningHoursRepository, pictureRepository: PostgresStorePictureRepository) {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             call.respondText(text = "500: $cause" , status = HttpStatusCode.InternalServerError)
         }
     }
+
+    val client = HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json(
+                Json {
+                    ignoreUnknownKeys = true
+                }
+            )
+        }
+    }
     routing {
+        route("/sales") {
+            get {
+                val client = HttpClient(CIO)
+
+                val url = "https://akcios-ujsag.hu/akcios-ujsagok/aldi-akcios-ujsag-2026-03-12-03-18/"
+
+                val html = client.get(url).body<String>()
+
+                val doc = Jsoup.parse(html)
+
+                // OCR szöveg
+                val rawText = doc.select("p.wp-caption-text").text()
+
+                println("=== RAW TEXT ===")
+                println(rawText)
+
+                val items = splitProducts(rawText)
+
+                println("\n=== PARSED ITEMS ===")
+                items.forEach {
+                    println("----")
+                    println(it)
+                }
+
+                client.close()
+            }
+        }
         route("/calculate-route") {
             post {
                 val route = call.receive<RoutePlanning>()
@@ -611,6 +660,157 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
             }
         }
 
+
+        post("/api/maps/process-image") {
+
+            val request = call.receive<ProcessImageRequest>()
+
+            val pythonResponse: ProcessImageResponse = client.post("http://localhost:8001/process") {
+                contentType(ContentType.Application.Json)
+
+                setBody(
+                    PythonRequest(
+                        image_path = request.imagePath,
+                        map_width = request.mapWidth,
+                        map_height = request.mapHeight
+                    )
+                )
+            }.body()
+
+            //call.respond(pythonResponse)
+
+            if (pythonResponse.boxes.isEmpty()) {
+                call.respond(HttpStatusCode.BadRequest, "No boxes detected")
+                return@post
+            }
+
+            // ✅ első box
+            val firstBox = pythonResponse.boxes.first()
+
+            val department = Department(
+                id = null,
+                mapId = request.mapId, // ⚠️ ez kell a requestbe!
+                name = firstBox.name,
+                width = firstBox.width,
+                height = firstBox.height,
+                startX = firstBox.startX,
+                startY = firstBox.startY
+            )
+
+            val newDepartment = departmentRepository.addDepartment(department)
+
+            call.respond(HttpStatusCode.Created, newDepartment)
+        }
+
+        route("/stores/{id}/place-details") {
+            get {
+                val id = call.parameters["id"]?.toIntOrNull()
+                    ?: return@get call.respond(HttpStatusCode.BadRequest, "Invalid id")
+
+                val store = storeRepository.storeById(id)
+                    ?: return@get call.respond(HttpStatusCode.NotFound, "Store not found")
+
+                val location = store.location
+                    ?: return@get call.respond(HttpStatusCode.BadRequest, "Store has no location")
+                val storeName = store.name
+                val apiKey = "AIzaSyC4nSycI53p7aXzXuJ7soXXZEnHx1HJjo4"
+
+                // 1️⃣ Text search
+                val searchResponse: SearchResponse = client.post(
+                    "https://places.googleapis.com/v1/places:searchText"
+                ) {
+                    header("X-Goog-Api-Key", apiKey)
+                    header("X-Goog-FieldMask", "places.id,places.displayName,places.formattedAddress")
+                    contentType(ContentType.Application.Json)
+                    setBody(
+                        SearchTextRequest(
+                            textQuery = "$storeName $location"
+                        )
+                    )
+                }.body()
+
+                val placeId = searchResponse.places.firstOrNull()?.id
+                    ?: return@get call.respond(HttpStatusCode.NotFound, "No place found")
+
+                // 2️⃣ Place details
+                val detailsResponse: PlaceDetailsResponse = client.get(
+                    "https://places.googleapis.com/v1/places/$placeId"
+                ) {
+                    header("X-Goog-Api-Key", apiKey)
+                    header(
+                        "X-Goog-FieldMask",
+                        "id,internationalPhoneNumber,websiteUri,googleMapsUri,regularOpeningHours,rating,userRatingCount,priceLevel,photos,accessibilityOptions,parkingOptions"
+                    )
+                }.body()
+
+                val hasParking = detailsResponse.parkingOptions?.let {
+                    (it.freeParkingLot == true) ||
+                            (it.freeStreetParking == true) ||
+                            (it.freeGarageParking == true)
+                } ?: false
+
+                val isWheelchairAccessible =
+                    detailsResponse.accessibilityOptions?.wheelchairAccessibleEntrance == true
+
+                val openingHours = detailsResponse.regularOpeningHours?.periods?.map {
+                    Triple(
+                        it.open.day,
+                        "${it.open.hour}:${it.open.minute.toString().padStart(2, '0')}",
+                        "${it.close.hour}:${it.close.minute.toString().padStart(2, '0')}"
+                    )
+                } ?: emptyList()
+                val existing = googleMapsInfoRepository.getByStoreId(store.id!!)
+                if (existing != null) {
+                    return@get call.respond("Already fetched")
+                }
+                val images = detailsResponse.photos
+                    ?.take(3)
+                    ?.mapIndexed { index, photo ->
+                        downloadPhoto(client, photo.name, store.id!!, index)
+                    } ?: emptyList()
+
+                googleMapsInfoRepository.add(
+                    GoogleMapsInfo(
+                        id = null,
+                        storeId = store.id!!,
+                        placeId = detailsResponse.id,
+                        phoneNumber = detailsResponse.internationalPhoneNumber,
+                        websiteUri = detailsResponse.websiteUri,
+                        googleMapsUri = detailsResponse.googleMapsUri,
+                        rating = detailsResponse.rating,
+                        userRatingCount = detailsResponse.userRatingCount,
+                        hasParking = hasParking,
+                        wheelchairAccessible = isWheelchairAccessible
+                    )
+                )
+
+                openingHours.forEach { (day, open, close) ->
+                    openingHoursRepository.add(
+                        OpeningHours(
+                            id = null,
+                            storeId = store.id,
+                            day = day,
+                            openTime = open,
+                            closeTime = close
+                        )
+                    )
+                }
+
+                images.forEach { path ->
+                    pictureRepository.add(
+                        StorePicture(
+                            id = null,
+                            storeId = store.id,
+                            path = path
+                        )
+                    )
+                }
+
+
+                call.respond(detailsResponse)
+            }
+        }
+
     }
 
 
@@ -661,4 +861,44 @@ fun parseShopList(responseJson: String): ConcreteShopList {
     }
 
     return ConcreteShopList(items)
+}
+
+
+fun splitProducts(text: String): List<String> {
+    val cleaned = text.replace(Regex("\\s+"), " ").trim()
+
+    // csak akkor vágunk, ha:
+    // - nagybetűs szó
+    // - utána vessző (termék neveknél ez tipikus)
+    val regex = Regex("(?=\\s[A-ZÁÉÍÓÖŐÚÜŰ]{3,},)")
+
+    return cleaned
+        .split(regex)
+        .map { it.trim() }
+        .filter { it.contains("Ft") } // csak ahol ár van
+}
+
+suspend fun downloadPhoto(
+    client: HttpClient,
+    photoName: String,
+    storeId: Int,
+    index: Int
+): String {
+
+    val url = "https://places.googleapis.com/v1/$photoName/media"
+    println(url)
+    val response: ByteArray = client.get(url) {
+        parameter("maxHeightPx", 800)
+        header("X-Goog-Api-Key", "AIzaSyC4nSycI53p7aXzXuJ7soXXZEnHx1HJjo4")
+    }.body()
+
+    val dir = File("storePictures/$storeId")
+    dir.mkdirs()
+
+    val fileName = "image_$index.jpg"
+    val file = File(dir, fileName)
+
+    file.writeBytes(response)
+
+    return file.absolutePath
 }

@@ -29,6 +29,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.jsoup:jsoup:1.17.2")
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-host-common-jvm")
     implementation("io.ktor:ktor-server-status-pages-jvm")

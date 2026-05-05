@@ -20,9 +20,12 @@ fun Application.module() {
     val shoppingListRepository = PostgresShoppingListRepository()
     val shoppingListItemRepository = PostgresShoppingListItemRepository()
     val productRepository = PostgresProductRepository()
+    val googleMapsInfoRepository = PostgresGoogleMapsInfoRepository()
+    val openingHoursRepository = PostgresOpeningHoursRepository()
+    val storePictureRepository = PostgresStorePictureRepository()
 
     configureSerialization()
     configureDatabases()
-    configureRouting(departmentRepository, mapRepository, storeRepository, wallBlockRepository, tillRepository, shelfRepository, shoppingListRepository, shoppingListItemRepository,  productRepository)
+    configureRouting(departmentRepository, mapRepository, storeRepository, wallBlockRepository, tillRepository, shelfRepository, shoppingListRepository, shoppingListItemRepository,  productRepository,  googleMapsInfoRepository, openingHoursRepository, storePictureRepository)
 }
 

@@ -11,9 +11,9 @@ import org.jetbrains.exposed.sql.*
 
 fun Application.configureDatabases() {
     Database.connect(
-        "jdbc:postgresql://localhost:5432/postgres",
+        "jdbc:postgresql://localhost:5432/shopmap",
         user = "postgres",
-        password = "Darius44"
+        password = "123456"
     )
 }
 
