@@ -11,3 +11,5 @@ data class WallBlock(
     val startX: Double,
     val startY: Double
 )
+
+fun WallBlock.toRect() = Rectangle(startX, startY, width, height)

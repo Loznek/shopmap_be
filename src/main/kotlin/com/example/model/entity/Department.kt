@@ -13,3 +13,6 @@ data class Department(
     val startX: Double,
     val startY: Double
 )
+
+fun Department.toRect() = Rectangle(startX, startY, width, height)
+

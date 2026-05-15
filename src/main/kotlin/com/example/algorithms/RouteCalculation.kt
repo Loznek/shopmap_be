@@ -484,8 +484,6 @@ class RouteCalculation {
         wallId: Int
     ): Boolean {
 
-
-
         val points =  mutableListOf<Pair<Int, Int>>()
 
         for (x in 1 until (map.width + 1).toInt()) {
@@ -516,8 +514,6 @@ class RouteCalculation {
             Pair(map.entranceX.toInt(), map.entranceY.toInt()),
             Pair(tills[0].startX.toInt(), tills[0].startY.toInt())
         ).isNotEmpty()
-
-
 
     }
 

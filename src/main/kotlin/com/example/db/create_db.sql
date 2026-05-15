@@ -44,7 +44,10 @@ CREATE TABLE Product (
                          article_no SERIAL PRIMARY KEY,
                          name TEXT,
                          size INT,
+                        departmentid INT REFERENCES Department(Id),
+                         position ENUM('LEFT', 'RIGHT', 'TOP', 'BOTTOM'),
                          shelfid INT REFERENCES Shelf(Id),
+
                          price DOUBLE PRECISION
 );
 

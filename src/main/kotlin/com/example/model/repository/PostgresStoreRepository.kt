@@ -16,7 +16,7 @@ class PostgresStoreRepository: StoreRepository {
     override suspend fun addStore(store: Store) : Store = suspendTransaction {
         val newStore = StoreDAO.new {
             name = store.name
-           location = store.location
+           location = store.location.toString()
         }
         daoToModel(newStore)
     }

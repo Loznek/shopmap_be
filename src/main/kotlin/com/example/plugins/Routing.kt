@@ -3,50 +3,77 @@ package com.example.plugins
 
 import ProcessImageResponse
 import PythonRequest
+import WallBlockController
 import com.example.DTO.*
-import com.example.algorithms.PositionChecker
-import com.example.algorithms.RouteCalculation
+import com.example.departments.DepartmentController
+import com.example.departments.departmentRoutes
+import com.example.maps.MapController
+import com.example.maps.mapRoutes
 import com.example.model.entity.*
-import com.example.model.entity.OpeningHours
 import com.example.model.repository.*
+import com.example.navigation.NavigationController
+import com.example.navigation.navigationRoutes
+import com.example.ocr.OcrController
+import com.example.ocr.ocrRoutes
+import com.example.recipes.RecipeController
+import com.example.recipes.recipeRoutes
+import com.example.sales.SalesController
+import com.example.sales.salesRoutes
 import com.example.services.OCRService
+import com.example.stores.StoreController
+import com.example.stores.storeRoutes
+import com.example.tills.TillController
+import com.example.tills.tillRoutes
+import com.example.wallblocks.wallBlockRoutes
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.http.content.*
 import io.ktor.serialization.*
 import io.ktor.server.application.*
-import io.ktor.server.http.content.*
 import io.ktor.server.plugins.statuspages.*
 
 import io.ktor.server.request.*
-import io.ktor.http.*
-import kotlinx.coroutines.*
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.json.JsonElement
 import java.io.File
 import kotlin.collections.Map
 import kotlin.math.floor
-import kotlin.math.round
 
-import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.request.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import org.jsoup.Jsoup
 
 
-fun Application.configureRouting(departmentRepository: PostgresDepartmentRepository, mapRepository: PostgresMapRepository, storeRepository: PostgresStoreRepository, wallBlockRepository: PostgresWallBlockRepository, tillRepository: PostgresTillRepository, shelfRepository: PostgresShelfRepository, shoppingListRepository: ShoppingListRepository, shoppingListItemRepository: ShoppingListItemRepository, productRepository: PostgresProductRepository, googleMapsInfoRepository: PostgresGoogleMapsInfoRepository, openingHoursRepository: PostgresOpeningHoursRepository, pictureRepository: PostgresStorePictureRepository) {
+fun Application.configureRouting(
+    departmentRepository: PostgresDepartmentRepository,
+    mapRepository: PostgresMapRepository,
+    storeRepository: PostgresStoreRepository,
+    wallBlockRepository: PostgresWallBlockRepository,
+    tillRepository: PostgresTillRepository,
+    shelfRepository: PostgresShelfRepository,
+    shoppingListRepository: ShoppingListRepository,
+    shoppingListItemRepository: ShoppingListItemRepository,
+    productRepository: PostgresProductRepository,
+    googleMapsInfoRepository: PostgresGoogleMapsInfoRepository,
+    openingHoursRepository: PostgresOpeningHoursRepository,
+    pictureRepository: PostgresStorePictureRepository,
+    departmentController: DepartmentController,
+    wallBlockController: WallBlockController,
+    mapController: MapController,
+    tillController: TillController,
+    storeController: StoreController,
+    recipeController: RecipeController,
+    navigationController: NavigationController,
+    ocrController: OcrController,
+    salesController: SalesController
+) {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             call.respondText(text = "500: $cause" , status = HttpStatusCode.InternalServerError)
@@ -63,339 +90,20 @@ fun Application.configureRouting(departmentRepository: PostgresDepartmentReposit
         }
     }
     routing {
-        route("/sales") {
-            get {
-                val client = HttpClient(CIO)
 
-                val url = "https://akcios-ujsag.hu/akcios-ujsagok/aldi-akcios-ujsag-2026-03-12-03-18/"
+        departmentRoutes(departmentController)
+        mapRoutes(mapController)
 
-                val html = client.get(url).body<String>()
-
-                val doc = Jsoup.parse(html)
-
-                // OCR szöveg
-                val rawText = doc.select("p.wp-caption-text").text()
-
-                println("=== RAW TEXT ===")
-                println(rawText)
-
-                val items = splitProducts(rawText)
-
-                println("\n=== PARSED ITEMS ===")
-                items.forEach {
-                    println("----")
-                    println(it)
-                }
-
-                client.close()
-            }
-        }
-        route("/calculate-route") {
-            post {
-                val route = call.receive<RoutePlanning>()
-                val map = mapRepository.mapById(route.mapId)
-                val departments = departmentRepository.departmentsByMap(route.mapId)
-
-                val tills = tillRepository.tillsByMap(route.mapId)
-                val wallBlocks = wallBlockRepository.wallBlocksByMap(route.mapId)
-                val path = RouteCalculation().calculateShortestRoutes(
-                    map!!,
-                    tills,
-                    wallBlocks,
-                    departments,
-                    route.departmentIds
-                )
-                val planning: RoutePlan = RoutePlan(path)
-                call.respond(HttpStatusCode.OK, planning)
-
-            }
-        }
-        route("/departments") {
-            get("/{mapId}") {
-                val departments = departmentRepository.departmentsByMap(
-                    call.parameters["mapId"]?.toInt() ?: 0
-                )
-                call.respond(departments)
-            }
-
-            delete("/{departmentId}") {
-                departmentRepository.removeDepartmentById(
-                    call.parameters["departmentId"]?.toInt() ?: 0
-                )
-                call.respond(HttpStatusCode.NoContent)
-            }
-
-            put("/{id}") {
-                val department = call.receive<Department>()
-
-                val checked = PositionChecker.checkNewBlockposition(
-                    department.startX,
-                    department.startY,
-                    department.width,
-                    department.height,
-                    wallBlockRepository.wallBlocksByMap(department.mapId),
-                    departmentRepository.departmentsByMap(department.mapId),
-                    tillRepository.tillsByMap(department.mapId),
-                    mapRepository.mapById(department.mapId)!!
-                )
-                if (!checked){
-                    call.respond(HttpStatusCode.BadRequest, "Invalid position")
-                }
-                else{
-                    val map = mapRepository.mapById(department.mapId)
-                    val departments = departmentRepository.departmentsByMap(department.mapId)
-                    val tills = tillRepository.tillsByMap(department.mapId)
-                    val wallBlocks = wallBlockRepository.wallBlocksByMap(department.mapId)
-
-                    if(!RouteCalculation().checkPathExistence( department.startX,
-                            department.startY,
-                            department.width,
-                            department.height, map!!,
-                            tills,
-                            wallBlocks,
-                            departments, department.id ?: -1, -1)) {
-                        call.respond(HttpStatusCode.BadRequest, "Invalid position, there is no path to the tills")
-                    }
-
-                    else {
-                        val newDepartment = departmentRepository.updateDepartment(department)
-                        call.respond(HttpStatusCode.Created, newDepartment)
-                    }
-                }
-
-            }
-            post {
-                try {
-                    val department = call.receive<Department>()
-                    val checked = PositionChecker.checkNewBlockposition(
-                        department.startX,
-                        department.startY,
-                        department.width,
-                        department.height,
-                        wallBlockRepository.wallBlocksByMap(department.mapId),
-                        departmentRepository.departmentsByMap(department.mapId),
-                        tillRepository.tillsByMap(department.mapId),
-                        mapRepository.mapById(department.mapId)!!
-                    )
-                    if (!checked) call.respond(HttpStatusCode.BadRequest, "Invalid position")
-
-                    /*
-                    else if(!RouteCalculation().checkPathExistence( department.startX,
-                            department.startY,
-                            department.width,
-                            department.height, mapRepository.mapById(department.mapId)!!,
-                            tillRepository.tillsByMap(department.mapId),
-                            wallBlockRepository.wallBlocksByMap(department.mapId),
-                            departmentRepository.departmentsByMap(department.mapId), department.id ?: -1, -1)) {
-                       call.respond(HttpStatusCode.BadRequest, "Invalid position, there is no path to the tills")
-                    }*/
-
-                    else {
-                        val newDepartment = departmentRepository.addDepartment(department)
-                        call.respond(HttpStatusCode.Created, newDepartment)
-                    }
-                } catch (ex: IllegalStateException) {
-                    call.respond(HttpStatusCode.BadRequest)
-                } catch (ex: JsonConvertException) {
-                    call.respond(HttpStatusCode.BadRequest)
-                }
-            }
-        }
         /*
 Blokk mozgatása/létrehozása: belső alg, ami csekoolja, hogy mehet-e oda
 Amikor letrejon egy Bolt, annak kell legyen egy bejarata, egy kijarata es egy kasszaja
 Az utolsot ezekbol sose lehet torolni
 Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menni, es kozben pedig pontokat kell erinteni
 */
-        route("/maps") {
-            get("/{id}") {
-                val map = mapRepository.mapById(call.parameters["id"]?.toInt() ?: 0)
-                call.respond(map!!)
-            }
-
-            delete("/{id}") {
-                val map = mapRepository.mapById(call.parameters["id"]?.toInt() ?: 0)
-                if (map != null) {
-                    mapRepository.removeMap(map)
-                }
-                call.respond(HttpStatusCode.NoContent)
-            }
 
 
-
-            put("/{id}") {
-                val map = call.receive<com.example.model.entity.Map>()
-                val checked = PositionChecker.checkNewMapSizes(
-                    map.width,
-                    map.height,
-                    wallBlockRepository.wallBlocksByMap(map.id!!),
-                    departmentRepository.departmentsByMap(map.id!!),
-                    tillRepository.tillsByMap(map.id!!),
-                    mapRepository.mapById(map.id!!)!!
-                )
-                if (checked) {
-                    val newMap= mapRepository.updateMap(map)
-                    call.respond(HttpStatusCode.Created, newMap)
-                } else {
-                    call.respond(
-                        HttpStatusCode.BadRequest,
-                        "Map resizing would cause collision"
-                    )
-                }
-                //PositionChecker.checkNewBlockposition(map, wallBlockRepository.wallBlocksByMap(map.id), departmentRepository.departmentsByMap(map.id), tillRepository.tillsByMap(map.id), map)
-                //mapRepository.updateMap(map)
-
-            }
-
-            post {
-                try {
-                    val map = call.receive<com.example.model.entity.Map>()
-                    val newMap = mapRepository.addMap(map)
-                    call.respond(HttpStatusCode.Created, newMap)
-                } catch (ex: IllegalStateException) {
-                    call.respond(HttpStatusCode.BadRequest)
-                } catch (ex: JsonConvertException) {
-                    call.respond(HttpStatusCode.BadRequest)
-                }
-            }
-        }
-        route("/wall-blocks") {
-            get("/{mapId}") {
-                val wallBlocks =
-                    wallBlockRepository.wallBlocksByMap(call.parameters["mapId"]?.toInt() ?: 0)
-                call.respond(wallBlocks)
-            }
-            put("/{id}") {
-                val wallBlock = call.receive<WallBlock>()
-
-                val checked = PositionChecker.checkNewBlockposition(
-                    wallBlock.startX,
-                    wallBlock.startY,
-                    wallBlock.width,
-                    wallBlock.height,
-                    wallBlockRepository.wallBlocksByMap(wallBlock.mapId),
-                    departmentRepository.departmentsByMap(wallBlock.mapId),
-                    tillRepository.tillsByMap(wallBlock.mapId),
-                    mapRepository.mapById(wallBlock.mapId)!!
-                )
-                if (!checked) call.respond(HttpStatusCode.BadRequest)
-
-
-                else if(!RouteCalculation().checkPathExistence( wallBlock.startX,
-                        wallBlock.startY,
-                        wallBlock.width,
-                        wallBlock.height,mapRepository.mapById(wallBlock.mapId)!!,
-                        tillRepository.tillsByMap(wallBlock.mapId),
-                        wallBlockRepository.wallBlocksByMap(wallBlock.mapId),
-                        departmentRepository.departmentsByMap(wallBlock.mapId), -1, wallBlock.id ?: -1)) {
-                    call.respond(HttpStatusCode.BadRequest, "Invalid position, there is no path to the tills")
-                }
-                else {
-                    val newWallBlock = wallBlockRepository.updateWallBlock(wallBlock)
-                    call.respond(HttpStatusCode.Created, newWallBlock)
-                }
-            }
-
-            delete("/{wallBlockId}") {
-                wallBlockRepository.removeWallBlockById(
-                    call.parameters["wallBlockId"]?.toInt() ?: 0
-                )
-                call.respond(HttpStatusCode.NoContent)
-            }
-
-            post {
-                try {
-                    val wallBlock = call.receive<WallBlock>()
-                    val checked = PositionChecker.checkNewBlockposition(
-                        wallBlock.startX,
-                        wallBlock.startY,
-                        wallBlock.width,
-                        wallBlock.height,
-                        wallBlockRepository.wallBlocksByMap(wallBlock.mapId),
-                        departmentRepository.departmentsByMap(wallBlock.mapId),
-                        tillRepository.tillsByMap(wallBlock.mapId),
-                        mapRepository.mapById(wallBlock.mapId)!!
-                    )
-                    if (!checked) call.respond(HttpStatusCode.BadRequest, "Invalid position")
-
-                    else if(!RouteCalculation().checkPathExistence( wallBlock.startX,
-                            wallBlock.startY,
-                            wallBlock.width,
-                            wallBlock.height,mapRepository.mapById(wallBlock.mapId)!!,
-                            tillRepository.tillsByMap(wallBlock.mapId),
-                            wallBlockRepository.wallBlocksByMap(wallBlock.mapId),
-                            departmentRepository.departmentsByMap(wallBlock.mapId), -1, wallBlock.id ?: -1)) {
-                        call.respond(HttpStatusCode.BadRequest, "Invalid position, there is no path to the tills")
-                    }
-                    else {
-                        val newWallBlock = wallBlockRepository.addWallBlock(wallBlock)
-                        call.respond(HttpStatusCode.Created, newWallBlock)
-                    }
-                } catch (ex: IllegalStateException) {
-                    call.respond(HttpStatusCode.BadRequest)
-                } catch (ex: JsonConvertException) {
-                    call.respond(HttpStatusCode.BadRequest)
-                }
-            }
-        }
-        route("/tills") {
-            get("/{tillId}") {
-                val tills = tillRepository.tillsByMap(call.parameters["tillId"]?.toInt() ?: 0)
-                call.respond(tills)
-            }
-
-            delete("/{tillId}") {
-                tillRepository.removeTillById(call.parameters["tillId"]?.toInt() ?: 0)
-                call.respond(HttpStatusCode.NoContent)
-            }
-
-            put("/{id}") {
-                val till = call.receive<Till>()
-
-                val checked = PositionChecker.checkNewBlockposition(
-                    till.startX,
-                    till.startY,
-                    till.width,
-                    till.height,
-                    wallBlockRepository.wallBlocksByMap(till.mapId),
-                    departmentRepository.departmentsByMap(till.mapId),
-                    tillRepository.tillsByMap(till.mapId),
-                    mapRepository.mapById(till.mapId)!!
-                )
-                if (!checked) call.respond(HttpStatusCode.BadRequest, "Invalid position")
-                else {
-                    val newTill=tillRepository.updateTill(till)
-                    call.respond(HttpStatusCode.Created, newTill)
-                }
-
-            }
-
-            post {
-                try {
-                    val till = call.receive<Till>()
-                    val checked = PositionChecker.checkNewBlockposition(
-                        till.startX,
-                        till.startY,
-                        till.width,
-                        till.height,
-                        wallBlockRepository.wallBlocksByMap(till.mapId),
-                        departmentRepository.departmentsByMap(till.mapId),
-                        tillRepository.tillsByMap(till.mapId),
-                        mapRepository.mapById(till.mapId)!!
-                    )
-                    if (!checked) call.respond(HttpStatusCode.BadRequest, "Invalid position")
-                    else {
-                        val newTill = tillRepository.addTill(till)
-                        call.respond(HttpStatusCode.Created, newTill)
-                    }
-
-                } catch (ex: IllegalStateException) {
-                    call.respond(HttpStatusCode.BadRequest)
-                } catch (ex: JsonConvertException) {
-                    call.respond(HttpStatusCode.BadRequest)
-                }
-            }
-        }
+        wallBlockRoutes(wallBlockController)
+        tillRoutes(tillController)
 
         route("/shelves"){
             get("/{departmentId}") {
@@ -464,36 +172,63 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                 }
             }
         }
-        route("/store") {
-            get("/{id}") {
-                val store = storeRepository.storeById(call.parameters["id"]?.toInt() ?: 0)
-                call.respond(store!!)
-            }
+        storeRoutes(storeController)
+        salesRoutes(salesController)
 
-            delete("/{id}") {
-                val store = storeRepository.storeById(call.parameters["id"]?.toInt() ?: 0)
-                if (store != null) {
-                    storeRepository.removeStore(store)
+        route("/sales") {
+            get {
+                val client = HttpClient(CIO)
+
+                val url = "https://akcios-ujsag.hu/akcios-ujsagok/aldi-akcios-ujsag-2026-03-12-03-18/"
+
+                val html = client.get(url).body<String>()
+
+                val doc = Jsoup.parse(html)
+
+                // OCR szöveg
+                val rawText = doc.select("p.wp-caption-text").text()
+
+                println("=== RAW TEXT ===")
+                println(rawText)
+
+                val items = splitProducts(rawText)
+
+                println("\n=== PARSED ITEMS ===")
+                items.forEach {
+                    println("----")
+                    println(it)
                 }
-                call.respond(HttpStatusCode.NoContent)
-            }
 
-            post {
-                try {
-                    val map = call.receive<Store>()
-                    val newStore = storeRepository.addStore(map)
-                    call.respond(HttpStatusCode.Created, newStore)
-
-                } catch (e: Exception) {
-                    println("Serialization error: ${e.message}") // Log the serialization error
-                    call.respond(HttpStatusCode.BadRequest, "Invalid input data: ${e.message}")
-                } catch (ex: IllegalStateException) {
-                    call.respond(HttpStatusCode.BadRequest)
-                } catch (ex: JsonConvertException) {
-                    call.respond(HttpStatusCode.BadRequest)
-                }
+                client.close()
             }
         }
+        navigationRoutes(navigationController)
+
+        /*
+        route("/calculate-route") {
+            post {
+                val route = call.receive<RoutePlanning>()
+                val map = mapRepository.mapById(route.mapId)
+                val departments = departmentRepository.departmentsByMap(route.mapId)
+
+                val tills = tillRepository.tillsByMap(route.mapId)
+                val wallBlocks = wallBlockRepository.wallBlocksByMap(route.mapId)
+                val path = RouteCalculation().calculateShortestRoutes(
+                    map!!,
+                    tills,
+                    wallBlocks,
+                    departments,
+                    route.departmentIds
+                )
+                val planning: RoutePlan = RoutePlan(path)
+                call.respond(HttpStatusCode.OK, planning)
+
+            }
+        }
+        */
+        recipeRoutes(recipeController)
+        ocrRoutes(ocrController)
+
         route("/ocr") {
             get() {
                 val filePath = call.request.queryParameters["file"]?.replace("/", "\\")
@@ -513,15 +248,10 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
 
                 val fileBytes = call.receive<ByteArray>()
                 val extractedText = OCRService.processOcrDocument(fileBytes)
-
-
                 val shoppingItems = parseShoppingList(extractedText)
-
                 val shoppingList = ShopList(
                 items = shoppingItems
                 )
-
-
                 call.respond( HttpStatusCode.OK,shoppingList)
             }
         }
@@ -611,6 +341,8 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                 call.respond(HttpStatusCode.OK, concreteList)
             }
         }
+
+        /*
         route("routeplan"){
             post() {
 
@@ -652,6 +384,9 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
 
             }
         }
+
+        */
+
         route("products"){
             post {
                 val product = call.receive<Product>()
@@ -702,6 +437,8 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
             call.respond(HttpStatusCode.Created, newDepartment)
         }
 
+
+        /*
         route("/stores/{id}/place-details") {
             get {
                 val id = call.parameters["id"]?.toIntOrNull()
@@ -810,7 +547,7 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                 call.respond(detailsResponse)
             }
         }
-
+        */
     }
 
 
@@ -837,8 +574,6 @@ fun parseShoppingList(text: String): List<ShopItem> {
 
     return items
 }
-
-
 
 
 fun parseShopList(responseJson: String): ConcreteShopList {

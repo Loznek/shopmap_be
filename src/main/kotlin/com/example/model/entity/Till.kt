@@ -11,3 +11,5 @@ data class Till(
     val startX: Double,
     val startY: Double
 )
+
+fun Till.toRect() = Rectangle(startX, startY, width, height)

@@ -1,6 +1,5 @@
 package com.example.db.mapping
 
-import com.example.model.entity.Department
 import com.example.model.entity.Store
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
