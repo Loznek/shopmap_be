@@ -22,5 +22,9 @@ fun Route.mapRoutes(controller: MapController) {
         delete("/{id}") {
             controller.delete(call)
         }
+
+        post("/process-image") {
+            controller.processImage(call)
+        }
     }
 }

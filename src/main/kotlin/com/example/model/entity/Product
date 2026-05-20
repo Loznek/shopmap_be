@@ -1,11 +1,9 @@
 package com.example.model.mapping
 
 import com.example.model.entity.Product
-import com.example.model.entity.ProductPosition
-
+import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 object ProductTable : IntIdTable("product", "article_no") {

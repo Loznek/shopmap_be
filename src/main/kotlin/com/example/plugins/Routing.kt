@@ -8,6 +8,7 @@ import com.example.DTO.*
 import com.example.departments.DepartmentController
 import com.example.departments.departmentRoutes
 import com.example.maps.MapController
+import com.example.maps.dto.ProcessImageRequest
 import com.example.maps.mapRoutes
 import com.example.model.entity.*
 import com.example.model.repository.*
@@ -15,55 +16,38 @@ import com.example.navigation.NavigationController
 import com.example.navigation.navigationRoutes
 import com.example.ocr.OcrController
 import com.example.ocr.ocrRoutes
+import com.example.products.ProductController
+import com.example.products.productRoutes
 import com.example.recipes.RecipeController
 import com.example.recipes.recipeRoutes
 import com.example.sales.SalesController
 import com.example.sales.salesRoutes
-import com.example.services.OCRService
 import com.example.stores.StoreController
 import com.example.stores.storeRoutes
 import com.example.tills.TillController
 import com.example.tills.tillRoutes
 import com.example.wallblocks.wallBlockRoutes
 import io.ktor.client.*
-import io.ktor.client.plugins.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.serialization.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
 
 import io.ktor.server.request.*
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.io.File
 import kotlin.collections.Map
-import kotlin.math.floor
 
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
-import org.jsoup.Jsoup
 
 
 fun Application.configureRouting(
-    departmentRepository: PostgresDepartmentRepository,
-    mapRepository: PostgresMapRepository,
-    storeRepository: PostgresStoreRepository,
-    wallBlockRepository: PostgresWallBlockRepository,
-    tillRepository: PostgresTillRepository,
-    shelfRepository: PostgresShelfRepository,
-    shoppingListRepository: ShoppingListRepository,
-    shoppingListItemRepository: ShoppingListItemRepository,
-    productRepository: PostgresProductRepository,
-    googleMapsInfoRepository: PostgresGoogleMapsInfoRepository,
-    openingHoursRepository: PostgresOpeningHoursRepository,
-    pictureRepository: PostgresStorePictureRepository,
     departmentController: DepartmentController,
     wallBlockController: WallBlockController,
     mapController: MapController,
@@ -72,7 +56,8 @@ fun Application.configureRouting(
     recipeController: RecipeController,
     navigationController: NavigationController,
     ocrController: OcrController,
-    salesController: SalesController
+    salesController: SalesController,
+    productController: ProductController
 ) {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
@@ -91,6 +76,15 @@ fun Application.configureRouting(
     }
     routing {
 
+        /*
+        openAPI(path = "openapi") {
+            info = OpenApiInfo("My API", "1.0")
+            source = OpenApiDocSource.Routing {
+                routingRoot.descendants()
+            }
+        }*/
+
+
         departmentRoutes(departmentController)
         mapRoutes(mapController)
 
@@ -105,6 +99,7 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
         wallBlockRoutes(wallBlockController)
         tillRoutes(tillController)
 
+        /*
         route("/shelves"){
             get("/{departmentId}") {
                 val shelves = shelfRepository.shelvesByDepartment(call.parameters["departmentId"]?.toInt() ?: 0)
@@ -172,9 +167,14 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                 }
             }
         }
+
+         */
         storeRoutes(storeController)
         salesRoutes(salesController)
 
+        productRoutes(productController)
+
+        /*
         route("/sales") {
             get {
                 val client = HttpClient(CIO)
@@ -202,6 +202,8 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                 client.close()
             }
         }
+        */
+
         navigationRoutes(navigationController)
 
         /*
@@ -229,6 +231,7 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
         recipeRoutes(recipeController)
         ocrRoutes(ocrController)
 
+        /*
         route("/ocr") {
             get() {
                 val filePath = call.request.queryParameters["file"]?.replace("/", "\\")
@@ -341,7 +344,7 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
                 call.respond(HttpStatusCode.OK, concreteList)
             }
         }
-
+*/
         /*
         route("routeplan"){
             post() {
@@ -387,15 +390,8 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
 
         */
 
-        route("products"){
-            post {
-                val product = call.receive<Product>()
-                val newProduct = productRepository.addProduct(product)
-                call.respond(HttpStatusCode.Created, newProduct)
-            }
-        }
 
-
+        /*
         post("/api/maps/process-image") {
 
             val request = call.receive<ProcessImageRequest>()
@@ -436,6 +432,8 @@ Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menn
 
             call.respond(HttpStatusCode.Created, newDepartment)
         }
+        */
+
 
 
         /*

@@ -1,5 +1,6 @@
 package com.example.maps
 
+import com.example.maps.dto.ProcessImageRequest
 import com.example.dto.MapService
 import com.example.maps.dto.CreateMapRequest
 import com.example.maps.dto.UpdateMapRequest
@@ -50,5 +51,12 @@ class MapController(
 
         service.delete(id)
         call.respond(HttpStatusCode.NoContent)
+    }
+
+
+    suspend fun processImage(call: ApplicationCall) {
+        val request = call.receive<ProcessImageRequest>()
+        val department = service.processImage(request)
+        call.respond(HttpStatusCode.Created, department)
     }
 }

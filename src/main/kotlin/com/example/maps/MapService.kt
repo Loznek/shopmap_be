@@ -6,13 +6,17 @@ import com.example.model.repository.TillRepository
 import com.example.model.repository.WallBlockRepository
 import com.example.model.entity.Map
 import com.example.geometry.SpatialValidator
+import com.example.maps.PythonMapProcessorClient
+import com.example.maps.dto.ProcessImageRequest
+import com.example.model.entity.Department
 import com.example.model.entity.toRect
 
 class MapService(
     private val mapRepository: MapRepository,
     private val wallBlockRepository: WallBlockRepository,
     private val departmentRepository: DepartmentRepository,
-    private val tillRepository: TillRepository
+    private val tillRepository: TillRepository,
+    private val pythonMapProcessorClient: PythonMapProcessorClient
 ) {
 
     suspend fun getById(id: Int): Map {
@@ -54,5 +58,32 @@ class MapService(
         }
 
         return mapRepository.updateMap(map)
+    }
+
+
+    suspend fun processImage(request: ProcessImageRequest): Department {
+        val pythonResponse = pythonMapProcessorClient.processImage(
+            imagePath = request.imagePath,
+            mapWidth = request.mapWidth,
+            mapHeight = request.mapHeight
+        )
+
+        if (pythonResponse.boxes.isEmpty()) {
+            throw IllegalArgumentException("No boxes detected")
+        }
+
+        val firstBox = pythonResponse.boxes.first()
+
+        val department = Department(
+            id = null,
+            mapId = request.mapId,
+            name = firstBox.name,
+            width = firstBox.width,
+            height = firstBox.height,
+            startX = firstBox.startX,
+            startY = firstBox.startY
+        )
+
+        return departmentRepository.addDepartment(department)
     }
 }

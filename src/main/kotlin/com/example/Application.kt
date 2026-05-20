@@ -5,6 +5,7 @@ import com.example.departments.DepartmentController
 import com.example.departments.DepartmentService
 import com.example.dto.MapService
 import com.example.maps.MapController
+import com.example.maps.PythonMapProcessorClient
 import com.example.model.repository.*
 import com.example.navigation.*
 import com.example.ocr.OcrController
@@ -13,6 +14,8 @@ import com.example.ocr.parser.ShoppingListParser
 import com.example.ocr.providers.GoogleDocumentAiProvider
 import com.example.ocr.providers.TesseractOcrProvider
 import com.example.plugins.*
+import com.example.products.ProductController
+import com.example.products.ProductService
 import com.example.recipes.RecipeController
 import com.example.recipes.RecipeService
 import com.example.sales.FlyerScraper
@@ -49,6 +52,12 @@ fun Application.module() {
     val storePictureRepository = PostgresStorePictureRepository()
 
 
+    val httpClient = HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json(Json { ignoreUnknownKeys = true })
+        }
+    }
+
     val gridBuilder = GridBuilder()
     val pathFinder = PathFinder()
     val pathValidator = PathValidator(pathFinder)
@@ -74,12 +83,14 @@ fun Application.module() {
     )
 
     val wallBlockController = WallBlockController(wallBlockService)
-
+    val pythonMapProcessorClient = PythonMapProcessorClient(httpClient)
     val mapService = MapService(
         mapRepository,
         wallBlockRepository,
         departmentRepository,
-        tillRepository
+        tillRepository,
+        pythonMapProcessorClient
+
     )
 
     val mapController = MapController(mapService)
@@ -94,7 +105,13 @@ fun Application.module() {
     val tillController = TillController(tillService)
 
 
-    val storeService = StoreService(storeRepository)
+    val storeService = StoreService(
+        storeRepository = storeRepository,
+        mapRepository = mapRepository,
+        departmentRepository = departmentRepository,
+        wallBlockRepository = wallBlockRepository,
+        tillRepository = tillRepository
+    )
 
 
 
@@ -120,11 +137,7 @@ fun Application.module() {
         shoppingListParser
     )
 
-    val httpClient = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(Json { ignoreUnknownKeys = true })
-        }
-    }
+
 
     val googleApiKey = "YOUR_GOOGLE_API_KEY"
 
@@ -163,9 +176,15 @@ fun Application.module() {
         productParser = productParser
     )
 
+
+    val productService = ProductService(productRepository)
+
+    // Controllers
+    val productController = ProductController(productService)
+
     val salesController = SalesController(salesService)
     configureSerialization()
     configureDatabases()
-    configureRouting(departmentRepository, mapRepository, storeRepository, wallBlockRepository, tillRepository, shelfRepository, shoppingListRepository, shoppingListItemRepository,  productRepository,  googleMapsInfoRepository, openingHoursRepository, storePictureRepository, departmentController, wallBlockController, mapController, tillController, storeController, recipeController, navigationController, ocrController, salesController)
+    configureRouting( departmentController, wallBlockController, mapController, tillController, storeController, recipeController, navigationController, ocrController, salesController, productController)
 }
 

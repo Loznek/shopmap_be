@@ -1,4 +1,4 @@
-package com.example.DTO
+package com.example.maps.dto
 
 import kotlinx.serialization.Serializable
 

@@ -51,4 +51,14 @@ class StoreController(
 
         call.respond(HttpStatusCode.OK, details)
     }
+
+
+    suspend fun getDetails(call: ApplicationCall) {
+        val id = call.parameters["id"]?.toIntOrNull()
+            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
+
+        val details = service.getStoreDetails(id)
+
+        call.respond(HttpStatusCode.OK, details)
+    }
 }

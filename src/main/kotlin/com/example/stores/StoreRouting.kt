@@ -22,5 +22,9 @@ fun Route.storeRoutes(controller: StoreController) {
         get("/{id}/place-details") {
             controller.fetchPlaceDetails(call)
         }
+
+        get("/{id}/details") {
+            controller.getDetails(call)
+        }
     }
 }

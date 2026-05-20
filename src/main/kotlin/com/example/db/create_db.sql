@@ -26,33 +26,30 @@ CREATE TABLE Department (
 -- Create an index on Department's foreign key (MapId)
 CREATE INDEX idx_department_mapid ON Department(MapId);
 
--- Create Shelf table
-CREATE TABLE Shelf (
-                       id SERIAL PRIMARY KEY,
-                       departmentid INT REFERENCES Department(Id),
-                       width DOUBLE PRECISION,
-                       height DOUBLE PRECISION,
-                       startx DOUBLE PRECISION,
-                       starty DOUBLE PRECISION
-);
 
--- Create an index on Shelf's foreign key (DepartmentId)
-CREATE INDEX idx_shelf_departmentid ON Shelf(DepartmentId);
+CREATE TYPE product_position AS ENUM (
+    'LEFT',
+    'RIGHT',
+    'TOP',
+    'BOTTOM'
+);
 
 -- Create Product table
 CREATE TABLE Product (
                          article_no SERIAL PRIMARY KEY,
                          name TEXT,
-                         size INT,
-                        departmentid INT REFERENCES Department(Id),
-                         position ENUM('LEFT', 'RIGHT', 'TOP', 'BOTTOM'),
-                         shelfid INT REFERENCES Shelf(Id),
-
+                         size TEXT,
+                         departmentid INT REFERENCES Department(Id),
+                         position product_position,
+                         storeid INT REFERENCES Store(Id),
                          price DOUBLE PRECISION
 );
 
--- Create an index on Product's foreign key (ShelfId)
-CREATE INDEX idx_product_shelfid ON Product(ShelfId);
+-- Index on storeid
+CREATE INDEX idx_product_storeid ON Product(storeid);
+
+-- Optional index on departmentid
+CREATE INDEX idx_product_departmentid ON Product(departmentid);
 
 -- Create Store table
 CREATE TABLE Store (
