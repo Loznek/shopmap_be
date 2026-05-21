@@ -1,9 +1,12 @@
 package com.example
 
+import PostgresUserRepository
+
+import UserService
 import WallBlockController
 import com.example.departments.DepartmentController
 import com.example.departments.DepartmentService
-import com.example.dto.MapService
+import com.example.maps.MapService
 import com.example.maps.MapController
 import com.example.maps.PythonMapProcessorClient
 import com.example.model.repository.*
@@ -25,7 +28,9 @@ import com.example.sales.SalesService
 import com.example.stores.*
 import com.example.tills.TillController
 import com.example.tills.TillService
+import com.example.users.UserController
 import com.example.wallblocks.WallBlockService
+import configureAuthentication
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -50,6 +55,8 @@ fun Application.module() {
     val googleMapsInfoRepository = PostgresGoogleMapsInfoRepository()
     val openingHoursRepository = PostgresOpeningHoursRepository()
     val storePictureRepository = PostgresStorePictureRepository()
+    val userRepository = PostgresUserRepository()
+
 
 
     val httpClient = HttpClient(CIO) {
@@ -181,10 +188,13 @@ fun Application.module() {
 
     // Controllers
     val productController = ProductController(productService)
-
+    val appUserService = UserService(userRepository)
+    val appUserController= UserController(appUserService)
     val salesController = SalesController(salesService)
+    FirebaseConfiguration.initialize()
+    configureAuthentication()
     configureSerialization()
     configureDatabases()
-    configureRouting( departmentController, wallBlockController, mapController, tillController, storeController, recipeController, navigationController, ocrController, salesController, productController)
+    configureRouting( departmentController, wallBlockController, mapController, tillController, storeController, recipeController, navigationController, ocrController, salesController, productController, appUserController )
 }
 

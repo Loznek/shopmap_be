@@ -142,3 +142,12 @@ CREATE INDEX idx_google_store_id ON google_maps_info(storeid);
 CREATE INDEX idx_opening_store_id ON opening_hours(storeid);
 CREATE INDEX idx_pictures_store_id ON store_pictures(storeid);
 
+
+
+CREATE TABLE AppUser (
+                         id SERIAL PRIMARY KEY,
+                         firebaseuid TEXT NOT NULL UNIQUE,
+                         email TEXT,
+                         displayname TEXT
+);
+

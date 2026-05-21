@@ -3,6 +3,7 @@ package com.example.plugins
 
 import ProcessImageResponse
 import PythonRequest
+
 import WallBlockController
 import com.example.DTO.*
 import com.example.departments.DepartmentController
@@ -26,25 +27,30 @@ import com.example.stores.StoreController
 import com.example.stores.storeRoutes
 import com.example.tills.TillController
 import com.example.tills.tillRoutes
+import com.example.users.UserController
 import com.example.wallblocks.wallBlockRoutes
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
-
 import io.ktor.server.request.*
 import kotlinx.serialization.json.Json
-
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.io.File
 import kotlin.collections.Map
-
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.openapi.OpenApiInfo
 import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.plugins.openapi.*
+import io.ktor.server.plugins.swagger.swaggerUI
+
+import io.ktor.server.routing.*
+import io.ktor.server.routing.openapi.OpenApiDocSource
+import userRoutes
 
 
 fun Application.configureRouting(
@@ -57,7 +63,8 @@ fun Application.configureRouting(
     navigationController: NavigationController,
     ocrController: OcrController,
     salesController: SalesController,
-    productController: ProductController
+    productController: ProductController,
+    userController: UserController
 ) {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
@@ -76,14 +83,25 @@ fun Application.configureRouting(
     }
     routing {
 
-        /*
+
         openAPI(path = "openapi") {
             info = OpenApiInfo("My API", "1.0")
             source = OpenApiDocSource.Routing {
                 routingRoot.descendants()
             }
-        }*/
+        }
 
+        swaggerUI(path = "swagger-ui", swaggerFile = "openapi")
+
+
+
+
+
+
+
+
+
+        userRoutes(userController)
 
         departmentRoutes(departmentController)
         mapRoutes(mapController)

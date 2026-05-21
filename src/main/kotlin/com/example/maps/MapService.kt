@@ -1,4 +1,4 @@
-package com.example.dto
+package com.example.maps
 
 import com.example.model.repository.DepartmentRepository
 import com.example.model.repository.MapRepository

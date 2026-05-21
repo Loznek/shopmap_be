@@ -1,6 +1,6 @@
 package com.example.plugins
 
-import com.example.plugins.UserService.Users
+import com.example.plugins.UsersService.Users
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.*
@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Serializable
 data class ExposedUser(val name: String, val age: Int)
 
-class UserService(database: Database) {
+class UsersService(database: Database) {
     object Users : Table() {
         val id = integer("id").autoIncrement()
         val name = varchar("name", length = 50)

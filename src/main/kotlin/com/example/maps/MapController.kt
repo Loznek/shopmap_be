@@ -1,7 +1,6 @@
 package com.example.maps
 
 import com.example.maps.dto.ProcessImageRequest
-import com.example.dto.MapService
 import com.example.maps.dto.CreateMapRequest
 import com.example.maps.dto.UpdateMapRequest
 import com.example.maps.dto.toEntity
