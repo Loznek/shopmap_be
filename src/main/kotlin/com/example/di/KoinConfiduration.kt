@@ -17,6 +17,10 @@ fun Application.configureKoin() {
 
                 "openai.apiKey" to environment.config
                     .property("openai.apiKey")
+                    .getString(),
+
+                "google.documentAi.credentialsFile" to environment.config
+                    .property("google.documentAi.credentialsFile")
                     .getString()
             )
         )

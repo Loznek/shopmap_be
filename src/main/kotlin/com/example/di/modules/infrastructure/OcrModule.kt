@@ -11,7 +11,11 @@ val ocrModule = module {
 
     singleOf(::TesseractOcrProvider)
 
-    singleOf(::GoogleDocumentAiProvider)
+    single {
+        GoogleDocumentAiProvider(
+            credentialsFile = getProperty("google.documentAi.credentialsFile")
+        )
+    }
 
     singleOf(::ShoppingListParser)
 }
