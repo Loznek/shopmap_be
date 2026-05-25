@@ -38,6 +38,8 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("io.ktor:ktor-server-config-yaml")
+    implementation("io.insert-koin:koin-ktor:4.1.0")
+    implementation("io.insert-koin:koin-logger-slf4j:4.1.0")
 
     // OpenAPI / Swagger
     implementation("io.ktor:ktor-server-openapi")

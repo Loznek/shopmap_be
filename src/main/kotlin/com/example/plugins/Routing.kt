@@ -6,6 +6,7 @@ import PythonRequest
 
 import WallBlockController
 import com.example.DTO.*
+import com.example.controller.ShoppingListController
 import com.example.departments.DepartmentController
 import com.example.departments.departmentRoutes
 import com.example.maps.MapController
@@ -23,6 +24,7 @@ import com.example.recipes.RecipeController
 import com.example.recipes.recipeRoutes
 import com.example.sales.SalesController
 import com.example.sales.salesRoutes
+import com.example.shoppingList.shoppingListRoutes
 import com.example.stores.StoreController
 import com.example.stores.storeRoutes
 import com.example.tills.TillController
@@ -64,7 +66,8 @@ fun Application.configureRouting(
     ocrController: OcrController,
     salesController: SalesController,
     productController: ProductController,
-    userController: UserController
+    userController: UserController,
+    shoppingListController: ShoppingListController
 ) {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
@@ -72,15 +75,7 @@ fun Application.configureRouting(
         }
     }
 
-    val client = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(
-                Json {
-                    ignoreUnknownKeys = true
-                }
-            )
-        }
-    }
+
     routing {
 
 
@@ -93,14 +88,7 @@ fun Application.configureRouting(
 
         swaggerUI(path = "swagger-ui", swaggerFile = "openapi")
 
-
-
-
-
-
-
-
-
+        shoppingListRoutes(shoppingListController)
         userRoutes(userController)
 
         departmentRoutes(departmentController)
@@ -113,78 +101,11 @@ Az utolsot ezekbol sose lehet torolni
 Ezutan utkereso algoritmust kitalalni: melyik lesz ra a jo? A-bol B-be kell menni, es kozben pedig pontokat kell erinteni
 */
 
-
         wallBlockRoutes(wallBlockController)
         tillRoutes(tillController)
 
         /*
-        route("/shelves"){
-            get("/{departmentId}") {
-                val shelves = shelfRepository.shelvesByDepartment(call.parameters["departmentId"]?.toInt() ?: 0)
-                call.respond(shelves)
 
-            }
-            get("/{storeId}"){
-                val map = mapRepository.mapsByStoreId(call.parameters["departmentId"]?.toInt() ?: 0)
-                val departments = departmentRepository.departmentsByMap(map.first().id!!)
-                val allShelves = mutableListOf<Shelf>()
-                for (dep in departments){
-                    allShelves.addAll(shelfRepository.shelvesByDepartment(dep.id!!))
-                }
-            }
-
-            delete("/{shelfId}") {
-                shelfRepository.removeShelfById(call.parameters["shelfId"]?.toInt() ?: 0)
-                call.respond(HttpStatusCode.NoContent)
-            }
-
-            put("/{id}") {
-                val shelf = call.receive<Shelf>()
-                val newShelf=shelfRepository.updateShelf(shelf)
-                call.respond(HttpStatusCode.Created, newShelf)
-
-            }
-
-            post {
-                try {
-                    val shelf = call.receive<ShelfCreation>()
-                    val (midx, midy) = when (shelf.shelfType) {
-                        OuterSide.Left -> Pair(
-                            shelf.startX - 1.0,
-                            floor(shelf.startY - shelf.height / 2) + 1.0
-                        )
-                        OuterSide.Right -> Pair(
-                            shelf.startX + shelf.width,
-                            floor(shelf.startY - shelf.height / 2) + 1.0
-                        )
-                        OuterSide.Up -> Pair(
-                            floor(shelf.startX + shelf.width / 2),
-                            shelf.startY + 1.0
-                        )
-                        OuterSide.Down -> Pair(
-                            floor(shelf.startX + shelf.width / 2),
-                            shelf.startY - shelf.height
-                        )
-                    }
-                    val newShelf = Shelf(
-                        id = null,
-                        departmentId = shelf.departmentId,
-                        width = shelf.width,
-                        height = shelf.height,
-                        startX = shelf.startX,
-                        startY = shelf.startY,
-                        midx = midx,
-                        midy = midy
-                    )
-                    val newestShelf = shelfRepository.addShelf(newShelf)
-                    call.respond(HttpStatusCode.Created, newestShelf)
-                } catch (ex: IllegalStateException) {
-                    call.respond(HttpStatusCode.BadRequest)
-                } catch (ex: JsonConvertException) {
-                    call.respond(HttpStatusCode.BadRequest)
-                }
-            }
-        }
 
          */
         storeRoutes(storeController)

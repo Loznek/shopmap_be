@@ -1,38 +1,65 @@
-package com.example.model.repository
+package com.example.repository
 
-
-
-import com.example.db.mapping.ShoppingListItemDAO
-import com.example.db.mapping.ShoppingListItemTable
-import com.example.db.mapping.daoToModel
-import com.example.db.mapping.suspendTransaction
+import com.example.db.mapping.*
 import com.example.model.entity.ShoppingListItem
-import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
-class PostgresShoppingListItemRepository : ShoppingListItemRepository {
-    override suspend fun itemsByShoppingList(shoppingListId: Int): List<ShoppingListItem> =
-        suspendTransaction {
-            ShoppingListItemDAO.find { ShoppingListItemTable.shoppingListId eq shoppingListId }
-                .map(::daoToModel)
+class PostgresShoppingListItemRepository :
+    ShoppingListItemRepository {
+
+    override suspend fun addShoppingListItem(
+        item: ShoppingListItem
+    ): ShoppingListItem = suspendTransaction {
+
+        val dao = ShoppingListItemDAO.new {
+
+            shoppingList =
+                ShoppingListDAO[item.shoppingListId]
+
+            itemName =
+                item.shoppingItemName
+
+            attributes =
+                item.attributes
         }
 
-    override suspend fun addShoppingListItem(item: ShoppingListItem): ShoppingListItem =
-        suspendTransaction {
-            val newItem = ShoppingListItemDAO.new {
-                shoppingListId = item.shoppingListId
-                itemName = item.shoppingItemName
-                attributes = item.attributes
-            }
-            daoToModel(newItem)
-        }
-
-    override suspend fun removeShoppingListItemById(id: Int): Boolean = suspendTransaction {
-        val rowsDeleted = ShoppingListItemTable.deleteWhere { ShoppingListItemTable.id eq id }
-        rowsDeleted == 1
+        daoToModel(dao)
     }
 
-    override suspend fun updateShoppingListItem(item: ShoppingListItem): ShoppingListItem {
-        throw UnsupportedOperationException("Update operation is not implemented for ShoppingListItemRepository")
+    override suspend fun getShoppingListItems(
+        shoppingListId: Int
+    ): List<ShoppingListItem> = suspendTransaction {
+
+        ShoppingListItemDAO.find {
+            ShoppingListItemTable.shoppingList eq shoppingListId
+        }
+            .map(::daoToModel)
+    }
+
+    override suspend fun updateShoppingListItem(
+        item: ShoppingListItem
+    ): ShoppingListItem = suspendTransaction {
+
+        val dao =
+            ShoppingListItemDAO[item.itemId!!]
+
+        dao.itemName =
+            item.shoppingItemName
+
+        dao.attributes =
+            item.attributes
+
+        daoToModel(dao)
+    }
+
+    override suspend fun deleteShoppingListItem(
+        itemId: Int
+    ) {
+        suspendTransaction {
+
+            ShoppingListItemDAO
+                .findById(itemId)
+                ?.delete()
+        }
     }
 }

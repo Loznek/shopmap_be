@@ -1,10 +1,26 @@
-package com.example.model.repository
+package com.example.repository
 
 import com.example.model.entity.ShoppingList
 
 interface ShoppingListRepository {
-    suspend fun shoppingListsByUser(userId: Int): List<ShoppingList>
-    suspend fun addShoppingList(shoppingList: ShoppingList): ShoppingList
-    suspend fun removeShoppingListById(id: Int): Boolean
-    suspend fun shoppingListById(id: Int): ShoppingList?
+
+    suspend fun addShoppingList(
+        shoppingList: ShoppingList
+    ): ShoppingList
+
+    suspend fun getShoppingList(
+        id: Int
+    ): ShoppingList?
+
+    suspend fun getShoppingListsByUser(
+        userId: Int
+    ): List<ShoppingList>
+
+    suspend fun updateShoppingList(
+        shoppingList: ShoppingList
+    ): ShoppingList
+
+    suspend fun deleteShoppingList(
+        id: Int
+    )
 }

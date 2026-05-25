@@ -61,18 +61,26 @@ class MapService(
     }
 
 
-    suspend fun processImage(request: ProcessImageRequest): Department {
-        val pythonResponse = pythonMapProcessorClient.processImage(
-            imagePath = request.imagePath,
-            mapWidth = request.mapWidth,
-            mapHeight = request.mapHeight
-        )
+    suspend fun processImage(
+        imageBytes: ByteArray,
+        request: ProcessImageRequest
+    ): Department {
+
+        val pythonResponse =
+            pythonMapProcessorClient.processImage(
+                imageBytes = imageBytes,
+                mapWidth = request.mapWidth,
+                mapHeight = request.mapHeight
+            )
 
         if (pythonResponse.boxes.isEmpty()) {
-            throw IllegalArgumentException("No boxes detected")
+            throw IllegalArgumentException(
+                "No boxes detected"
+            )
         }
 
-        val firstBox = pythonResponse.boxes.first()
+        val firstBox =
+            pythonResponse.boxes.first()
 
         val department = Department(
             id = null,
@@ -84,6 +92,7 @@ class MapService(
             startY = firstBox.startY
         )
 
-        return departmentRepository.addDepartment(department)
+        return departmentRepository
+            .addDepartment(department)
     }
 }

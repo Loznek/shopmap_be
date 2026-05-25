@@ -13,7 +13,7 @@ fun Route.ocrRoutes(controller: OcrController) {
             controller.extractText(call)
         }
 
-        post("/google") {
+        post("/shopping-list") {
             controller.extractShoppingList(call)
         }
     }

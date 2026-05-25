@@ -23,8 +23,11 @@ fun Route.mapRoutes(controller: MapController) {
             controller.delete(call)
         }
 
-        post("/process-image") {
+        post("/import-by-image") {
             controller.processImage(call)
         }
+
+
+
     }
 }

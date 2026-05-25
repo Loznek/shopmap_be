@@ -1,7 +1,15 @@
 package com.example.stores
 
+import com.example.dto.mapping.toResponse
+import com.example.model.entity.Product
+import com.example.model.entity.ShoppingListItem
 import com.example.model.entity.Store
 import com.example.model.repository.*
+import com.example.products.dto.toResponse
+import com.example.repository.ShoppingListItemRepository
+import com.example.repository.ShoppingListRepository
+import com.example.stores.dto.ShoppingListMatchesResponse
+import com.example.stores.dto.ShoppingListProductMatchResponse
 import com.example.stores.dto.StoreDetailsResponse
 
 class StoreService(
@@ -9,7 +17,9 @@ class StoreService(
     private val mapRepository: MapRepository,
     private val departmentRepository: DepartmentRepository,
     private val wallBlockRepository: WallBlockRepository,
-    private val tillRepository: TillRepository
+    private val tillRepository: TillRepository,
+    private val shoppingListItemRepository: ShoppingListItemRepository,
+    private val productRepository: ProductRepository
 ) {
 
     suspend fun getById(id: Int): Store {
@@ -27,6 +37,52 @@ class StoreService(
     suspend fun create(store: Store): Store {
         return storeRepository.addStore(store)
     }
+
+    suspend fun getMatches(
+        storeId: Int,
+        shoppingListId: Int
+    ): ShoppingListMatchesResponse {
+
+
+
+        val items =
+            shoppingListItemRepository.getShoppingListItems(shoppingListId)
+
+        val products =
+            productRepository
+                .productsByStoreId(storeId)
+
+        val productMap =
+            products.associateBy {
+                it.name.trim().lowercase()
+            }
+
+        val matches =
+            items.mapNotNull { item ->
+
+                val product =
+                    productMap[
+                        item.shoppingItemName
+                            .trim()
+                            .lowercase()
+                    ]
+
+                product?.let {
+                    ShoppingListProductMatchResponse(
+                        shoppingListItem = item.toResponse(),
+                        product = it.toResponse()
+                    )
+                }
+            }
+
+        return ShoppingListMatchesResponse(
+            shoppingListId = shoppingListId,
+            storeId = storeId,
+            matches = matches
+        )
+    }
+
+
 
     suspend fun getStoreDetails(storeId: Int): StoreDetailsResponse {
         val store = storeRepository.storeById(storeId)

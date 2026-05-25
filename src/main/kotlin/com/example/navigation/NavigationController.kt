@@ -2,6 +2,7 @@ package com.example.navigation
 
 import com.example.navigation.dto.RoutePlanResponse
 import com.example.navigation.dto.RoutePlanningRequest
+import com.example.navigation.dto.toModel
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.request.receive
@@ -16,7 +17,7 @@ class NavigationController(
 
         val route = navigationService.calculateRoute(
             mapId = request.mapId,
-            destinationDepartmentIds = request.departmentIds
+            products = request.products.map { it.toModel() }
         )
 
         call.respond(

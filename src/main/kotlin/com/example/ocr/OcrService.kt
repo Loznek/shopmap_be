@@ -4,6 +4,7 @@ import com.example.DTO.ShopList
 import com.example.ocr.parser.ShoppingListParser
 import com.example.ocr.providers.GoogleDocumentAiProvider
 import com.example.ocr.providers.TesseractOcrProvider
+import com.example.shoppingList.dto.CreateShoppingListItemRequest
 import java.io.File
 
 class OcrService(
@@ -16,9 +17,9 @@ class OcrService(
         return tesseractProvider.extractText(file)
     }
 
-    fun extractShoppingListWithGoogle(fileBytes: ByteArray): ShopList {
+    fun extractShoppingListWithGoogle(fileBytes: ByteArray): List<CreateShoppingListItemRequest> {
         val text = googleProvider.extractText(fileBytes)
         val items = shoppingListParser.parseShoppingList(text)
-        return ShopList(items)
+        return items
     }
 }

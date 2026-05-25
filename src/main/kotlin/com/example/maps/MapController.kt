@@ -6,6 +6,9 @@ import com.example.maps.dto.UpdateMapRequest
 import com.example.maps.dto.toEntity
 import com.example.maps.dto.toResponse
 import io.ktor.http.*
+import io.ktor.http.content.PartData
+import io.ktor.http.content.forEachPart
+import io.ktor.http.content.streamProvider
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -53,9 +56,56 @@ class MapController(
     }
 
 
-    suspend fun processImage(call: ApplicationCall) {
-        val request = call.receive<ProcessImageRequest>()
-        val department = service.processImage(request)
-        call.respond(HttpStatusCode.Created, department)
+    suspend fun processImage(
+        call: ApplicationCall
+    ) {
+
+        val multipart = call.receiveMultipart()
+
+        var mapWidth: Int? = null
+        var mapHeight: Int? = null
+        var mapId: Int? = null
+
+        var imageBytes: ByteArray? = null
+
+        multipart.forEachPart { part ->
+
+            when (part) {
+
+                is PartData.FormItem -> {
+                    when (part.name) {
+                        "mapWidth" -> mapWidth = part.value.toInt()
+                        "mapHeight" -> mapHeight = part.value.toInt()
+                        "mapId" -> mapId = part.value.toInt()
+                    }
+                }
+
+                is PartData.FileItem -> {
+                    imageBytes =
+                        part.streamProvider()
+                            .readBytes()
+                }
+
+                else -> {}
+            }
+
+            part.dispose()
+        }
+
+        val request = ProcessImageRequest(
+            mapWidth = mapWidth ?: error("Missing mapWidth"),
+            mapHeight = mapHeight ?: error("Missing mapHeight"),
+            mapId = mapId ?: error("Missing mapId")
+        )
+
+        val department = service.processImage(
+            imageBytes ?: error("Missing image"),
+            request
+        )
+
+        call.respond(
+            HttpStatusCode.Created,
+            department
+        )
     }
 }

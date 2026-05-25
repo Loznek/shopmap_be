@@ -1,9 +1,11 @@
 package com.example
 
 import PostgresUserRepository
+import ShoppingListService
 
 import UserService
 import WallBlockController
+import com.example.controller.ShoppingListController
 import com.example.departments.DepartmentController
 import com.example.departments.DepartmentService
 import com.example.maps.MapService
@@ -21,6 +23,8 @@ import com.example.products.ProductController
 import com.example.products.ProductService
 import com.example.recipes.RecipeController
 import com.example.recipes.RecipeService
+import com.example.repository.PostgresShoppingListItemRepository
+import com.example.repository.PostgresShoppingListRepository
 import com.example.sales.FlyerScraper
 import com.example.sales.ProductParser
 import com.example.sales.SalesController
@@ -48,14 +52,18 @@ fun Application.module() {
     val storeRepository = PostgresStoreRepository()
     val wallBlockRepository = PostgresWallBlockRepository()
     val tillRepository = PostgresTillRepository()
-    val shelfRepository = PostgresShelfRepository()
-    val shoppingListRepository = PostgresShoppingListRepository()
-    val shoppingListItemRepository = PostgresShoppingListItemRepository()
     val productRepository = PostgresProductRepository()
     val googleMapsInfoRepository = PostgresGoogleMapsInfoRepository()
     val openingHoursRepository = PostgresOpeningHoursRepository()
     val storePictureRepository = PostgresStorePictureRepository()
     val userRepository = PostgresUserRepository()
+    val shoppingListRepository =
+        PostgresShoppingListRepository()
+
+    val shoppingListItemRepository =
+        PostgresShoppingListItemRepository()
+
+
 
 
 
@@ -117,7 +125,9 @@ fun Application.module() {
         mapRepository = mapRepository,
         departmentRepository = departmentRepository,
         wallBlockRepository = wallBlockRepository,
-        tillRepository = tillRepository
+        tillRepository = tillRepository,
+        shoppingListItemRepository = shoppingListItemRepository,
+        productRepository = productRepository,
     )
 
 
@@ -129,7 +139,8 @@ fun Application.module() {
         mapRepository = mapRepository,
         departmentRepository = departmentRepository,
         tillRepository = tillRepository,
-        wallBlockRepository = wallBlockRepository
+        wallBlockRepository = wallBlockRepository,
+        productRepository = productRepository,
     )
 
     val navigationController = NavigationController(navigationService)
@@ -183,6 +194,18 @@ fun Application.module() {
         productParser = productParser
     )
 
+    val shoppingListService =
+        ShoppingListService(
+            shoppingListRepository,
+            shoppingListItemRepository,
+            userRepository
+        )
+
+    val shoppingListController =
+        ShoppingListController(
+            shoppingListService
+        )
+
 
     val productService = ProductService(productRepository)
 
@@ -195,6 +218,6 @@ fun Application.module() {
     configureAuthentication()
     configureSerialization()
     configureDatabases()
-    configureRouting( departmentController, wallBlockController, mapController, tillController, storeController, recipeController, navigationController, ocrController, salesController, productController, appUserController )
+    configureRouting( departmentController, wallBlockController, mapController, tillController, storeController, recipeController, navigationController, ocrController, salesController, productController, appUserController, shoppingListController )
 }
 

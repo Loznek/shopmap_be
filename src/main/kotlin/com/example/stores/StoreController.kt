@@ -61,4 +61,14 @@ class StoreController(
 
         call.respond(HttpStatusCode.OK, details)
     }
+
+    suspend fun getMatches(
+        storeId: Int,
+        shoppingListId: Int
+    ) =
+        service.getMatches(
+            storeId,
+            shoppingListId
+        )
+
 }

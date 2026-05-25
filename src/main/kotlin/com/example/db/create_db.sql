@@ -151,3 +151,22 @@ CREATE TABLE AppUser (
                          displayname TEXT
 );
 
+CREATE TABLE ShoppingList (
+                              id SERIAL PRIMARY KEY,
+                              userid INT NOT NULL REFERENCES AppUser(id) ON DELETE CASCADE,
+                              name TEXT NOT NULL
+);
+
+CREATE TABLE ShoppingListItem (
+                                  itemid SERIAL PRIMARY KEY,
+                                  shoppinglistid INT NOT NULL REFERENCES ShoppingList(id) ON DELETE CASCADE,
+                                  shoppingitem_name TEXT NOT NULL,
+                                  attributes TEXT NULL
+);
+
+CREATE INDEX idx_shoppinglist_userid
+    ON ShoppingList(userid);
+
+CREATE INDEX idx_shoppinglistitem_listid
+    ON ShoppingListItem(shoppinglistid);
+

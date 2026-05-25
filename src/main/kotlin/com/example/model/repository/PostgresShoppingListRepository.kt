@@ -1,35 +1,66 @@
-package com.example.model.repository
+package com.example.repository
 
-import com.example.db.mapping.ShoppingListDAO
-import com.example.db.mapping.ShoppingListTable
-import com.example.db.mapping.daoToModel
-import com.example.db.mapping.suspendTransaction
+import com.example.db.mapping.*
 import com.example.model.entity.ShoppingList
-import org.jetbrains.exposed.sql.deleteWhere
+import com.example.model.mapping.AppUserDAO
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
-class PostgresShoppingListRepository : ShoppingListRepository {
-    override suspend fun shoppingListsByUser(userId: Int): List<ShoppingList> = suspendTransaction {
-        ShoppingListDAO.find { ShoppingListTable.userId eq userId }
-            .map(::daoToModel)
-    }
+class PostgresShoppingListRepository :
+    ShoppingListRepository {
 
-    override suspend fun shoppingListById(id: Int): ShoppingList? = suspendTransaction {
-        ShoppingListDAO.find { ShoppingListTable.id eq id }
-            .map(::daoToModel)
-            .firstOrNull()
-    }
+    override suspend fun addShoppingList(
+        shoppingList: ShoppingList
+    ): ShoppingList = suspendTransaction {
 
-    override suspend fun addShoppingList(shoppingList: ShoppingList): ShoppingList = suspendTransaction {
-        val newShoppingList = ShoppingListDAO.new {
+        val dao = ShoppingListDAO.new {
+
+            user = AppUserDAO[shoppingList.userId]
+
             name = shoppingList.name
-            userId = shoppingList.userId
         }
-        daoToModel(newShoppingList)
+
+        daoToModel(dao)
     }
 
-    override suspend fun removeShoppingListById(id: Int): Boolean = suspendTransaction {
-        val rowsDeleted = ShoppingListTable.deleteWhere { ShoppingListTable.id eq id }
-        rowsDeleted == 1
+    override suspend fun getShoppingList(
+        id: Int
+    ): ShoppingList? = suspendTransaction {
+
+        ShoppingListDAO
+            .findById(id)
+            ?.let(::daoToModel)
+    }
+
+    override suspend fun getShoppingListsByUser(
+        userId: Int
+    ): List<ShoppingList> = suspendTransaction {
+
+        ShoppingListDAO.find {
+            ShoppingListTable.user eq userId
+        }
+            .map(::daoToModel)
+    }
+
+    override suspend fun updateShoppingList(
+        shoppingList: ShoppingList
+    ): ShoppingList = suspendTransaction {
+
+        val dao =
+            ShoppingListDAO[shoppingList.id!!]
+
+        dao.name = shoppingList.name
+
+        daoToModel(dao)
+    }
+
+    override suspend fun deleteShoppingList(
+        id: Int
+    ) {
+        suspendTransaction {
+
+            ShoppingListDAO
+                .findById(id)
+                ?.delete()
+        }
     }
 }
