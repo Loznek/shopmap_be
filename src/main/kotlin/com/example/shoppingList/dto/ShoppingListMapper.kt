@@ -1,10 +1,9 @@
-package com.example.dto.mapping
+package com.example.shoppingList.dto
 
 import ShoppingListItemResponse
 import ShoppingListResponse
 import com.example.model.entity.ShoppingList
 import com.example.model.entity.ShoppingListItem
-import com.example.shoppingList.dto.CreateShoppingListItemRequest
 
 fun ShoppingListItem.toResponse() =
     ShoppingListItemResponse(

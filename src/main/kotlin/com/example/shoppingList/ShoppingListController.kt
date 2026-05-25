@@ -2,7 +2,7 @@ package com.example.controller
 
 import FirebaseUserPrincipal
 import ShoppingListService
-import com.example.dto.mapping.toModel
+import com.example.shoppingList.dto.toModel
 import com.example.shoppingList.dto.CreateShoppingListRequest
 
 

@@ -1,44 +1,12 @@
 package com.example
 
-import PostgresUserRepository
-import ShoppingListService
 
-import UserService
-import WallBlockController
-import com.example.controller.ShoppingListController
-import com.example.departments.DepartmentController
-import com.example.departments.DepartmentService
-import com.example.maps.MapService
-import com.example.maps.MapController
-import com.example.maps.PythonMapProcessorClient
-import com.example.model.repository.*
-import com.example.navigation.*
-import com.example.ocr.OcrController
-import com.example.ocr.OcrService
-import com.example.ocr.parser.ShoppingListParser
-import com.example.ocr.providers.GoogleDocumentAiProvider
-import com.example.ocr.providers.TesseractOcrProvider
+import com.example.di.configureKoin
+
 import com.example.plugins.*
-import com.example.products.ProductController
-import com.example.products.ProductService
-import com.example.recipes.RecipeController
-import com.example.recipes.RecipeService
-import com.example.repository.PostgresShoppingListItemRepository
-import com.example.repository.PostgresShoppingListRepository
-import com.example.sales.FlyerScraper
-import com.example.sales.ProductParser
-import com.example.sales.SalesController
-import com.example.sales.SalesService
-import com.example.stores.*
-import com.example.tills.TillController
-import com.example.tills.TillService
-import com.example.users.UserController
-import com.example.wallblocks.WallBlockService
+
 import configureAuthentication
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.serialization.kotlinx.json.*
+
 import io.ktor.server.application.*
 import kotlinx.serialization.json.Json
 
@@ -46,7 +14,7 @@ fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
 }
 fun Application.module() {
-
+/*
     val departmentRepository = PostgresDepartmentRepository()
     val mapRepository = PostgresMapRepository()
     val storeRepository = PostgresStoreRepository()
@@ -214,10 +182,18 @@ fun Application.module() {
     val appUserService = UserService(userRepository)
     val appUserController= UserController(appUserService)
     val salesController = SalesController(salesService)
+    */
+
+    val googleApiKey =
+        environment.config.property("google.apiKey").getString()
+
     FirebaseConfiguration.initialize()
+
+    configureKoin()
+
     configureAuthentication()
     configureSerialization()
     configureDatabases()
-    configureRouting( departmentController, wallBlockController, mapController, tillController, storeController, recipeController, navigationController, ocrController, salesController, productController, appUserController, shoppingListController )
+    configureRouting()
 }
 

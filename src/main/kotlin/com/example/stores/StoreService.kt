@@ -1,13 +1,12 @@
 package com.example.stores
 
-import com.example.dto.mapping.toResponse
-import com.example.model.entity.Product
-import com.example.model.entity.ShoppingListItem
+
 import com.example.model.entity.Store
 import com.example.model.repository.*
 import com.example.products.dto.toResponse
 import com.example.repository.ShoppingListItemRepository
 import com.example.repository.ShoppingListRepository
+import com.example.shoppingList.dto.toResponse
 import com.example.stores.dto.ShoppingListMatchesResponse
 import com.example.stores.dto.ShoppingListProductMatchResponse
 import com.example.stores.dto.StoreDetailsResponse

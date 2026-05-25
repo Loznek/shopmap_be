@@ -13,8 +13,11 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.serialization.json.Json
 
-class RecipeService {
-
+class RecipeService(
+    private val client: HttpClient,
+    private val apiKey: String
+) {
+    /*
     private val client = HttpClient(CIO) {
         install(ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
@@ -22,6 +25,8 @@ class RecipeService {
     }
 
     private val apiKey = ""
+    */
+
 
     suspend fun getIngredients(mealName: String): List<IngredientResponse> {
 

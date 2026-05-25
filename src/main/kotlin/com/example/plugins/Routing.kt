@@ -52,23 +52,28 @@ import io.ktor.server.plugins.swagger.swaggerUI
 
 import io.ktor.server.routing.*
 import io.ktor.server.routing.openapi.OpenApiDocSource
+import org.koin.ktor.ext.inject
 import userRoutes
 
 
-fun Application.configureRouting(
-    departmentController: DepartmentController,
-    wallBlockController: WallBlockController,
-    mapController: MapController,
-    tillController: TillController,
-    storeController: StoreController,
-    recipeController: RecipeController,
-    navigationController: NavigationController,
-    ocrController: OcrController,
-    salesController: SalesController,
-    productController: ProductController,
-    userController: UserController,
-    shoppingListController: ShoppingListController
-) {
+fun Application.configureRouting() {
+
+    val departmentController by inject<DepartmentController>()
+    val wallBlockController by inject<WallBlockController>()
+    val mapController by inject<MapController>()
+    val tillController by inject<TillController>()
+    val storeController by inject<StoreController>()
+    val recipeController by inject<RecipeController>()
+    val navigationController by inject<NavigationController>()
+    val ocrController by inject<OcrController>()
+    val salesController by inject<SalesController>()
+    val productController by inject<ProductController>()
+    val userController by inject<UserController>()
+    val shoppingListController by inject<ShoppingListController>()
+
+
+
+
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             call.respondText(text = "500: $cause" , status = HttpStatusCode.InternalServerError)
