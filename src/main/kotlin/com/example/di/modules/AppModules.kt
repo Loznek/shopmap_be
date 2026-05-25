@@ -8,8 +8,6 @@ import com.example.di.modules.infrastructure.navigationModule
 import com.example.di.modules.infrastructure.ocrModule
 import com.example.di.modules.infrastructure.salesModule
 
-import di.modules.service.serviceModule
-
 val appModules = listOf(
     repositoryModule,
     httpClientModule,

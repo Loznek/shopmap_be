@@ -6,7 +6,7 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 
 fun Route.salesRoutes(controller: SalesController) {
-    route("/sales") {
+    route("/sales/{store}") {
         get {
             controller.getSales(call)
         }

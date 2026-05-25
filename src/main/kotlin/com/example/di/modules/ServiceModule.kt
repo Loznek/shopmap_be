@@ -1,4 +1,4 @@
-package di.modules.service
+package com.example.di.modules
 
 import ShoppingListService
 import UserService
@@ -13,9 +13,7 @@ import com.example.stores.StoreGooglePlacesService
 import com.example.stores.StoreService
 import com.example.tills.TillService
 import com.example.wallblocks.WallBlockService
-import org.koin.core.context.GlobalContext.get
 import org.koin.core.module.dsl.singleOf
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val serviceModule = module {

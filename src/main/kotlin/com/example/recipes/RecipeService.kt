@@ -60,6 +60,8 @@ class RecipeService(
             )
         }.body()
 
+
+
         val content = response.choices.first().message.content
 
         return parseIngredients(content)

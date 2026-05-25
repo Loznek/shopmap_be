@@ -10,15 +10,32 @@ class SalesController(
 ) {
 
     suspend fun getSales(call: ApplicationCall) {
-        val url =
-            call.request.queryParameters["url"]
-                ?: "https://akcios-ujsag.hu/akcios-ujsagok/aldi-akcios-ujsag-2026-03-12-03-18/"
 
-        val items = salesService.parseSales(url)
+        val store =
+            call.parameters["store"]
+                ?: return call.respond(
+                    HttpStatusCode.BadRequest,
+                    "Store is required"
+                )
 
-        call.respond(
-            HttpStatusCode.OK,
-            SalesResponse(items)
-        )
+        try {
+            val response = salesService.getSales(store)
+
+            call.respond(
+                HttpStatusCode.OK,
+                response
+            )
+
+        } catch (e: IllegalArgumentException) {
+            call.respond(
+                HttpStatusCode.BadRequest,
+                e.message ?: "Invalid store"
+            )
+        } catch (e: Exception) {
+            call.respond(
+                HttpStatusCode.InternalServerError,
+                e.message ?: "Failed to fetch sales"
+            )
+        }
     }
 }
