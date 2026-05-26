@@ -43,4 +43,49 @@ class PathFinder {
 
         return fullPath
     }
+
+
+
+    fun bfsDistanceMap(
+        walkablePoints: Set<Pair<Int, Int>>,
+        start: Pair<Int, Int>
+    ): Map<Pair<Int, Int>, Int> {
+
+        val queue = ArrayDeque<Pair<Int, Int>>()
+        val distances = mutableMapOf<Pair<Int, Int>, Int>()
+
+        queue.add(start)
+        distances[start] = 0
+
+        val directions = listOf(
+            1 to 0,
+            -1 to 0,
+            0 to 1,
+            0 to -1
+        )
+
+        while (queue.isNotEmpty()) {
+
+            val current = queue.removeFirst()
+            val currentDistance = distances[current]!!
+
+            for ((dx, dy) in directions) {
+
+                val next =
+                    (current.first + dx) to
+                            (current.second + dy)
+
+                if (
+                    next in walkablePoints &&
+                    next !in distances
+                ) {
+
+                    distances[next] = currentDistance + 1
+                    queue.add(next)
+                }
+            }
+        }
+
+        return distances
+    }
 }

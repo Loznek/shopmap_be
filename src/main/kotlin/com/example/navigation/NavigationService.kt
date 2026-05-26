@@ -8,21 +8,36 @@ import com.example.model.repository.ProductRepository
 import com.example.model.repository.TillRepository
 import com.example.model.repository.WallBlockRepository
 import com.example.navigation.dto.RoutePlanningProduct
-import com.example.navigation.dto.RoutePlanningProductRequest
+import com.example.navigation.optimizer.HeldKarpSolver
+import com.example.navigation.optimizer.NearestNeighborSolver
+import com.example.navigation.optimizer.RouteOptimizer
+import com.example.navigation.optimizer.TwoOptSolver
 
 class NavigationService(
     private val mapRepository: MapRepository,
     private val departmentRepository: DepartmentRepository,
     private val tillRepository: TillRepository,
     private val wallBlockRepository: WallBlockRepository,
-    private val productRepository: ProductRepository
+    private val gridBuilder: GridBuilder,
+    private val pathFinder: PathFinder,
+    private val distanceMatrixBuilder: DistanceMatrixBuilder,
+
+    private val optimizerFactory: RouteOptimizerFactory
 
 ) {
-
+    /*
     private val gridBuilder = GridBuilder()
     private val pathFinder = PathFinder()
-    private val tspSolver = TspSolver(pathFinder)
+    private val distanceMatrixBuilder = DistanceMatrixBuilder(pathFinder)
+    private val heldKarpSolver = HeldKarpSolver()
+    private val twoOptSolver =
+        TwoOptSolver()
 
+    private val nearestNeighborSolver =
+        NearestNeighborSolver(
+            twoOptSolver
+        )
+    */
     suspend fun calculateRoute(
         mapId: Int,
         products: List<RoutePlanningProduct>
@@ -39,10 +54,6 @@ class NavigationService(
             throw IllegalArgumentException("No tills found for map")
         }
 /*
-
-
-
-
 
         val relevantDepartments =
             departments.filter { it.id in destinationDepartmentIds }
@@ -83,12 +94,40 @@ class NavigationService(
         val start = map.entranceX.toInt() to map.entranceY.toInt()
         val end = tills.first().startX.toInt() to tills.first().startY.toInt()
 
-        return tspSolver.solve(
+
+        val points = listOf(start) + destinationPoints + listOf(end)
+
+
+        val distances = distanceMatrixBuilder.build(walkablePoints, points)
+
+        val optimizer =
+            optimizerFactory.getOptimizer(
+                destinationPoints.size
+            )
+
+        val order =
+            optimizer.solveOrder(
+                distances,
+                destinationPoints.size,
+                points.lastIndex
+            )
+
+        val orderedStops =
+            order.map {
+                points[it]
+            }
+
+        return pathFinder.computeFullPath(
+            walkablePoints,
+            orderedStops
+        )
+        /*
+        return heldKarpSolver.solve(
             walkablePoints = walkablePoints,
             destinations = destinationPoints,
             start = start,
             end = end
-        )
+        )*/
     }
 
 

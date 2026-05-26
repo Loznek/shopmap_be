@@ -1,4 +1,7 @@
-package com.example.navigation
+package com.example.navigation.optimizer
+
+import com.example.navigation.DistanceMatrixBuilder
+import com.example.navigation.PathFinder
 
 /**
  * Solves the Traveling Salesman Problem (TSP) with:
@@ -16,14 +19,16 @@ package com.example.navigation
  * migrated and tested. This class is the production-ready replacement for
  * heldKarpShortestPath().
  */
-class TspSolver(
-    private val pathFinder: PathFinder
-) {
+class HeldKarpSolver(
+): RouteOptimizer
+
+{
 
     /**
      * Calculates the optimal route:
      * entrance -> all destinations (best order) -> till
      */
+    /*
     fun solve(
         walkablePoints: Set<Pair<Int, Int>>,
         destinations: List<Pair<Int, Int>>,
@@ -48,24 +53,14 @@ class TspSolver(
         // --------------------------------------------------------------------
         // Step 1: Precompute shortest path distances between all important points
         // --------------------------------------------------------------------
-        val distances = Array(points.size) { IntArray(points.size) { Int.MAX_VALUE } }
 
-        for (i in points.indices) {
-            for (j in points.indices) {
-                if (i == j) continue
 
-                val path = pathFinder.bfsShortestPath(
-                    walkablePoints = walkablePoints,
-                    start = points[i],
-                    end = points[j]
-                )
 
-                if (path.isNotEmpty()) {
-                    // Number of edges, not number of vertices
-                    distances[i][j] = path.size - 1
-                }
-            }
-        }
+        val distances =
+            distanceMatrixBuilder.build(
+                walkablePoints = walkablePoints,
+                points = points
+            )
 
         // --------------------------------------------------------------------
         // Step 2: Held-Karp Dynamic Programming
@@ -183,5 +178,146 @@ class TspSolver(
             walkablePoints = walkablePoints,
             stops = orderedStops
         )
+    }
+
+
+
+           val distances = Array(points.size) { IntArray(points.size) { Int.MAX_VALUE } }
+
+           for (i in points.indices) {
+               for (j in points.indices) {
+                   if (i == j) continue
+
+                   val path = pathFinder.bfsShortestPath(
+                       walkablePoints = walkablePoints,
+                       start = points[i],
+                       end = points[j]
+                   )
+
+                   if (path.isNotEmpty()) {
+                       // Number of edges, not number of vertices
+                       distances[i][j] = path.size - 1
+                   }
+               }
+           }*/
+
+
+    override fun solveOrder(
+        distances: Array<IntArray>,
+        destinationCount: Int,
+        endIndex: Int
+    ): List<Int> {
+
+        val startIndex = 0
+
+        val subsetCount =
+            1 shl destinationCount
+
+        val pointCount =
+            distances.size
+
+        val dp =
+            Array(subsetCount) {
+                IntArray(pointCount) {
+                    Int.MAX_VALUE
+                }
+            }
+
+        val parent =
+            Array(subsetCount) {
+                IntArray(pointCount) {
+                    -1
+                }
+            }
+
+        dp[0][startIndex] = 0
+
+        for (mask in 0 until subsetCount) {
+            for (destIdx in 0 until destinationCount) {
+                val u = destIdx + 1 // actual index in points
+
+                // Destination u must be included in the current subset
+                if ((mask and (1 shl destIdx)) == 0) continue
+
+                val previousMask = mask and (1 shl destIdx).inv()
+
+                // Previous point can be:
+                // - start
+                // - any other destination
+                for (v in 0..destinationCount) {
+                    if (dp[previousMask][v] == Int.MAX_VALUE) continue
+                    if (distances[v][u] == Int.MAX_VALUE) continue
+
+                    val newCost = dp[previousMask][v] + distances[v][u]
+
+                    if (newCost < dp[mask][u]) {
+                        dp[mask][u] = newCost
+                        parent[mask][u] = v
+                    }
+                }
+            }
+        }
+
+        // --------------------------------------------------------------------
+        // Step 3: Connect the last destination to the fixed end point (till)
+        // --------------------------------------------------------------------
+        val fullMask = subsetCount - 1
+
+        var bestCost = Int.MAX_VALUE
+        var lastPoint = -1
+
+        for (destIdx in 0 until destinationCount) {
+            val u = destIdx + 1
+
+            if (dp[fullMask][u] == Int.MAX_VALUE) continue
+            if (distances[u][endIndex] == Int.MAX_VALUE) continue
+
+            val totalCost = dp[fullMask][u] + distances[u][endIndex]
+
+            if (totalCost < bestCost) {
+                bestCost = totalCost
+                lastPoint = u
+            }
+        }
+
+        // No feasible route
+        if (lastPoint == -1) {
+            return emptyList()
+        }
+
+        // --------------------------------------------------------------------
+        // Step 4: Reconstruct optimal order of stops
+        // --------------------------------------------------------------------
+        val orderedStops = mutableListOf<Int>()
+
+        var currentMask = fullMask
+        var current = lastPoint
+
+        // Add fixed end point first (will reverse later)
+        orderedStops.add(endIndex)
+
+        while (current != -1) {
+            orderedStops.add(current)
+
+            val previous = parent[currentMask][current]
+
+            if (current in 1..destinationCount) {
+                val bit = current - 1
+                currentMask = currentMask and (1 shl bit).inv()
+            }
+
+            current = previous
+        }
+
+        // Reverse to obtain:
+        // start -> destinations -> end
+        orderedStops.reverse()
+
+        // Ensure end is present (in case reconstruction did not include it)
+        if (orderedStops.last() != endIndex) {
+            orderedStops.add(endIndex)
+        }
+
+        return orderedStops
     }
 }
