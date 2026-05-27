@@ -25,19 +25,7 @@ class NavigationService(
     private val optimizerFactory: RouteOptimizerFactory
 
 ) {
-    /*
-    private val gridBuilder = GridBuilder()
-    private val pathFinder = PathFinder()
-    private val distanceMatrixBuilder = DistanceMatrixBuilder(pathFinder)
-    private val heldKarpSolver = HeldKarpSolver()
-    private val twoOptSolver =
-        TwoOptSolver()
 
-    private val nearestNeighborSolver =
-        NearestNeighborSolver(
-            twoOptSolver
-        )
-    */
     suspend fun calculateRoute(
         mapId: Int,
         products: List<RoutePlanningProduct>

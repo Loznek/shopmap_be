@@ -10,12 +10,12 @@ object ShoppingListItemTable : IntIdTable("shopping_list_item") {
 
     val shoppingList =
         reference(
-            "shoppinglistid",
+            "shopping_list_id",
             ShoppingListTable
         )
 
     val itemName =
-        varchar("shoppingitem_name", 255)
+        varchar("shopping_item_name", 255)
 
     val attributes =
         varchar("attributes", 255)

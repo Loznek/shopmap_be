@@ -7,7 +7,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 object StorePicturesTable : IntIdTable("store_pictures") {
-    val storeId = reference("storeid", StoreTable)
+    val storeId = reference("store_id", StoreTable)
     val path = text("path")
 }
 

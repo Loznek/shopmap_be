@@ -37,7 +37,7 @@ class StoreService(
         return storeRepository.addStore(store)
     }
 
-    suspend fun getMatches(
+    suspend fun getProductMatches(
         storeId: Int,
         shoppingListId: Int
     ): ShoppingListMatchesResponse {

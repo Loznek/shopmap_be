@@ -9,13 +9,13 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 
 object MapTable : IntIdTable("map") {
 
-    val storeId = integer("storeid")
+    val storeId = integer("store_id")
     val width = double("width")
     val height = double("height")
-    val exitX = double("exitx")
-    val exitY = double("exity")
-    val entranceX = double("entrancex")
-    val entranceY = double("entrancey")
+    val exitX = double("exit_x")
+    val exitY = double("exit_y")
+    val entranceX = double("entrance_x")
+    val entranceY = double("entrance_y")
 }
 
 class MapDAO(id: EntityID<Int>) : IntEntity(id) {

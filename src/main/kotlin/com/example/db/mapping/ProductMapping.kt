@@ -14,14 +14,14 @@ object ProductTable : IntIdTable("product", "article_no") {
 
     val size = varchar("size", 100).nullable()
 
-    val departmentId = integer("departmentid").nullable()
+    val departmentId = integer("department_id").nullable()
 
     val position = enumerationByName<ProductPosition>(
         "position",
         20
     ).nullable()
 
-    val storeId = integer("storeid")
+    val storeId = integer("store_id")
 
     val price = double("price").nullable()
 }

@@ -8,11 +8,11 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
-object ShoppingListTable : IntIdTable("shoppinglist") {
+object ShoppingListTable : IntIdTable("shopping_list") {
 
     val user =
         reference(
-            "userid",
+            "user_id",
             AppUserTable
         )
 

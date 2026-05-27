@@ -6,11 +6,11 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
-object AppUserTable : IntIdTable("appuser") {
+object AppUserTable : IntIdTable("app_user") {
 
     val firebaseUid = text("firebaseuid").uniqueIndex()
     val email = text("email").nullable()
-    val displayName = text("displayname").nullable()
+    val displayName = text("display_name").nullable()
 }
 
 class AppUserDAO(id: EntityID<Int>) : IntEntity(id) {

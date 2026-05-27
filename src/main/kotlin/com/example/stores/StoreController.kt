@@ -66,7 +66,7 @@ class StoreController(
         storeId: Int,
         shoppingListId: Int
     ) =
-        service.getMatches(
+        service.getProductMatches(
             storeId,
             shoppingListId
         )

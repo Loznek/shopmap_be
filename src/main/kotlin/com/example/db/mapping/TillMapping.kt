@@ -12,11 +12,11 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 
 object TillTable : IntIdTable("till") {
 
-    val mapId = integer("mapid")
+    val mapId = integer("map_id")
     val width = double("width")
     val height = double("height")
-    val startX = double("startx")
-    val startY = double("starty")
+    val startX = double("start_x")
+    val startY = double("start_y")
 }
 
 class TillDAO(id: EntityID<Int>) : IntEntity(id) {

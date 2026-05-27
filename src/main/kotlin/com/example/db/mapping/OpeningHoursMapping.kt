@@ -7,7 +7,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 object OpeningHoursTable : IntIdTable("opening_hours") {
-    val storeId = reference("storeid", StoreTable)
+    val storeId = reference("store_id", StoreTable)
     val day = integer("day")
     val openTime = varchar("open_time", 5)
     val closeTime = varchar("close_time", 5)
