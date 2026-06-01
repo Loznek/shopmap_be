@@ -1,4 +1,4 @@
-
+package com.example.plugins
 
 data class FirebaseUserPrincipal(
     val uid: String,

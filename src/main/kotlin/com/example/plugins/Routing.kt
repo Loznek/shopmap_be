@@ -1,19 +1,13 @@
 package com.example.plugins
 
 
-import ProcessImageResponse
-import PythonRequest
-
-import WallBlockController
+import com.example.wallblocks.WallBlockController
 import com.example.DTO.*
 import com.example.controller.ShoppingListController
 import com.example.departments.DepartmentController
 import com.example.departments.departmentRoutes
 import com.example.maps.MapController
-import com.example.maps.dto.ProcessImageRequest
 import com.example.maps.mapRoutes
-import com.example.model.entity.*
-import com.example.model.repository.*
 import com.example.navigation.NavigationController
 import com.example.navigation.navigationRoutes
 import com.example.ocr.OcrController
@@ -30,30 +24,25 @@ import com.example.stores.storeRoutes
 import com.example.tills.TillController
 import com.example.tills.tillRoutes
 import com.example.users.UserController
+import com.example.users.userRoutes
 import com.example.wallblocks.wallBlockRoutes
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.request.*
 import kotlinx.serialization.json.Json
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.io.File
 import kotlin.collections.Map
 import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.openapi.OpenApiInfo
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.plugins.openapi.*
 import io.ktor.server.plugins.swagger.swaggerUI
 
-import io.ktor.server.routing.*
 import io.ktor.server.routing.openapi.OpenApiDocSource
 import org.koin.ktor.ext.inject
-import userRoutes
 
 
 fun Application.configureRouting() {

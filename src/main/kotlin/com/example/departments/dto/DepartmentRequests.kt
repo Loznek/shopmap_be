@@ -1,5 +1,8 @@
 package com.example.departments.dto
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class CreateDepartmentRequest(
     val mapId: Int,
     val name: String,
@@ -9,6 +12,7 @@ data class CreateDepartmentRequest(
     val height: Double
 )
 
+@Serializable
 data class UpdateDepartmentRequest(
     val id: Int,
     val mapId: Int,

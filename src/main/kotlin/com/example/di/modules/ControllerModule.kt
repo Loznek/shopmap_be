@@ -1,7 +1,7 @@
 package com.example.di.modules
 
 
-import WallBlockController
+import com.example.wallblocks.WallBlockController
 import com.example.controller.ShoppingListController
 import com.example.departments.DepartmentController
 import com.example.maps.MapController

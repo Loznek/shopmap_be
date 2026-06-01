@@ -10,6 +10,7 @@ import com.example.shoppingList.dto.toResponse
 import com.example.stores.dto.ShoppingListMatchesResponse
 import com.example.stores.dto.ShoppingListProductMatchResponse
 import com.example.stores.dto.StoreDetailsResponse
+import io.ktor.server.application.ApplicationCall
 
 class StoreService(
     private val storeRepository: StoreRepository,
@@ -20,6 +21,10 @@ class StoreService(
     private val shoppingListItemRepository: ShoppingListItemRepository,
     private val productRepository: ProductRepository
 ) {
+
+    suspend fun getAll(): List<Store> {
+        return storeRepository.getAll()
+    }
 
     suspend fun getById(id: Int): Store {
         return storeRepository.storeById(id)
@@ -35,6 +40,10 @@ class StoreService(
 
     suspend fun create(store: Store): Store {
         return storeRepository.addStore(store)
+    }
+
+    suspend fun update(store: Store): Store {
+        return storeRepository.update(store)
     }
 
     suspend fun getProductMatches(

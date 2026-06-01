@@ -7,8 +7,21 @@ import com.example.db.mapping.suspendTransaction
 import com.example.model.entity.Store
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.selectAll
 
 class PostgresStoreRepository: StoreRepository {
+
+    override suspend fun update(store: Store): Store =
+        suspendTransaction {
+
+            val dao = StoreDAO[store.id!!]
+
+            dao.name = store.name
+            dao.location = store.location.toString()
+
+            daoToModel(dao)
+        }
+
     override suspend fun storeById(id: Int): Store? = suspendTransaction {
         StoreDAO.find{(StoreTable.id eq id)}.map(::daoToModel).firstOrNull()
     }
@@ -26,5 +39,11 @@ class PostgresStoreRepository: StoreRepository {
             StoreTable.id eq store.id
         }
         rowsDeleted == 1
+    }
+
+    override suspend fun getAll(): List<Store>  = suspendTransaction {
+        StoreDAO
+            .all()
+            .map(::daoToModel)
     }
 }

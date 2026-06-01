@@ -1,7 +1,10 @@
 package com.example.maps
 
+import com.example.maps.dto.CreateMapRequest
 import io.ktor.server.application.*
+import io.ktor.server.request.receiveText
 import io.ktor.server.routing.*
+import kotlinx.serialization.json.Json
 
 fun Route.mapRoutes(controller: MapController) {
 
@@ -12,6 +15,7 @@ fun Route.mapRoutes(controller: MapController) {
         }
 
         post {
+
             controller.create(call)
         }
 

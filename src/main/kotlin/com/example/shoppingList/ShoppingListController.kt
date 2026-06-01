@@ -1,6 +1,6 @@
 package com.example.controller
 
-import FirebaseUserPrincipal
+import com.example.plugins.FirebaseUserPrincipal
 import ShoppingListService
 import com.example.shoppingList.dto.toModel
 import com.example.shoppingList.dto.CreateShoppingListRequest

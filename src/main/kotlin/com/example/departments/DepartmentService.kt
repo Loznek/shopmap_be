@@ -21,6 +21,10 @@ class DepartmentService(
     private val gridBuilder: GridBuilder,
     private val pathValidator: PathValidator
 ) {
+    suspend fun get(id: Int): Department? {
+        return departmentRepository.departmentById(id)
+
+    }
 
     suspend fun getByMap(mapId: Int): List<Department> {
         return departmentRepository.departmentsByMap(mapId)
@@ -74,6 +78,7 @@ class DepartmentService(
         val obstacles = wallBlocks.map { it.toRect()} + departments.map { it.toRect()} + tills.map { it.toRect()}
 
 
+        /*
         if (!SpatialValidator.isValidPosition(rect, map, obstacles)) {
             throw IllegalArgumentException("Invalid position")
         }
@@ -99,6 +104,8 @@ class DepartmentService(
         if (!isReachable) {
             throw IllegalArgumentException("No path to tills")
         }
+
+         */
 
         return departmentRepository.updateDepartment(department)
     }

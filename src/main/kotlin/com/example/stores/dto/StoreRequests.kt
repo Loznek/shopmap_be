@@ -12,4 +12,11 @@ data class CreateStoreRequest(
     val location: String?
 )
 
+@Serializable
+data class UpdateStoreRequest(
+    val id: Int,
+    val name: String,
+    val location: String?
+)
+
 

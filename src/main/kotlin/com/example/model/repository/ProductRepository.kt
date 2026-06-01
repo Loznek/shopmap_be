@@ -4,13 +4,13 @@ import com.example.model.entity.Product
 
 interface ProductRepository {
 
-    fun productById(articleNo: Int): Product?
+    suspend fun productById(articleNo: Int): Product?
 
-    fun productsByStoreId(storeId: Int): List<Product>
+    suspend fun productsByStoreId(storeId: Int): List<Product>
 
-    fun addProduct(product: Product): Product
+    suspend fun addProduct(product: Product): Product
 
-    fun updateProduct(product: Product): Product
+    suspend fun updateProduct(product: Product): Product
 
-    fun removeProductById(articleNo: Int)
+    suspend fun removeProductById(articleNo: Int)
 }

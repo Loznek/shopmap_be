@@ -1,6 +1,7 @@
 package com.example.tills
 
 import com.example.geometry.SpatialValidator
+import com.example.model.entity.Department
 import com.example.model.entity.Till
 import com.example.model.entity.toRect
 import com.example.model.repository.DepartmentRepository
@@ -14,6 +15,13 @@ class TillService(
     private val departmentRepository: DepartmentRepository,
     private val mapRepository: MapRepository
 ) {
+
+
+
+    suspend fun get(id: Int): Till? {
+        return tillRepository.tillById(id)
+
+    }
 
     suspend fun getByMap(mapId: Int): List<Till> {
         return tillRepository.tillsByMap(mapId)

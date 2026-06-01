@@ -1,4 +1,5 @@
-import com.example.wallblocks.WallBlockService
+package com.example.wallblocks
+
 import com.example.wallblocks.dto.CreateWallBlockRequest
 import com.example.wallblocks.dto.UpdateWallBlockRequest
 import com.example.wallblocks.dto.toEntity
@@ -11,6 +12,18 @@ import io.ktor.server.response.*
 class WallBlockController(
     private val service: WallBlockService
 ) {
+
+    suspend fun get(call: ApplicationCall) {
+        val id = call.parameters["id"]?.toIntOrNull()
+            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
+
+        val wallBlock = service.get(id)
+        if (wallBlock == null) {
+            call.respond(HttpStatusCode.NotFound)
+            return
+        }
+        call.respond(wallBlock.toResponse())
+    }
 
     suspend fun getByMap(call: ApplicationCall) {
         val mapId = call.parameters["mapId"]?.toIntOrNull()

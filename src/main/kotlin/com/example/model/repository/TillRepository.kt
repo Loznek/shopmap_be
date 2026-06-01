@@ -1,10 +1,11 @@
 package com.example.model.repository
 
+import com.example.model.entity.Department
 import com.example.model.entity.Till
 
 
 interface TillRepository {
-
+    suspend fun tillById(id: Int): Till?
     suspend fun tillsByMap(mapId:Int): List<Till>
     suspend fun addTill(wallBlock: Till): Till
     suspend fun removeTillById(id:Int): Boolean

@@ -1,5 +1,6 @@
 package com.example.maps
 
+import com.example.departments.dto.DepartmentResponse
 import com.example.model.repository.DepartmentRepository
 import com.example.model.repository.MapRepository
 import com.example.model.repository.TillRepository
@@ -10,6 +11,10 @@ import com.example.maps.PythonMapProcessorClient
 import com.example.maps.dto.ProcessImageRequest
 import com.example.model.entity.Department
 import com.example.model.entity.toRect
+import java.awt.*
+import java.awt.image.BufferedImage
+import java.io.File
+import javax.imageio.ImageIO
 
 class MapService(
     private val mapRepository: MapRepository,
@@ -64,8 +69,8 @@ class MapService(
     suspend fun processImage(
         imageBytes: ByteArray,
         request: ProcessImageRequest
-    ): Department {
-
+    ): List<DepartmentResponse> {
+        println("Processing image with width: ${request.mapWidth}, height: ${request.mapHeight}")
         val pythonResponse =
             pythonMapProcessorClient.processImage(
                 imageBytes = imageBytes,
@@ -78,21 +83,108 @@ class MapService(
                 "No boxes detected"
             )
         }
+        val departments = pythonResponse.boxes
+            .map { box ->
+                DepartmentResponse(
+                    id = null,
+                    name = box.name,
+                    width = box.width,
+                    height = box.height,
+                    startX = box.startX,
+                    startY = box.startY,
+                    mapId = request.mapId
+                )
+            }
+        generateDebugFloorPlan( departments, request.mapWidth, request.mapHeight )
+        return pythonResponse.boxes
+                .map { box ->
+                    DepartmentResponse(
+                        id = null,
+                        name = box.name,
+                        width = box.width,
+                        height = box.height,
+                        startX = box.startX,
+                        startY = box.startY,
+                        mapId = request.mapId
+                    )
+                }
+    }
+    fun generateDebugFloorPlan(
+        departments: List<DepartmentResponse>,
+        mapWidth: Int,
+        mapHeight: Int
+    ) {
 
-        val firstBox =
-            pythonResponse.boxes.first()
+        val scale = 20
 
-        val department = Department(
-            id = null,
-            mapId = request.mapId,
-            name = firstBox.name,
-            width = firstBox.width,
-            height = firstBox.height,
-            startX = firstBox.startX,
-            startY = firstBox.startY
+        val widthPx = mapWidth * scale
+        val heightPx = mapHeight * scale
+
+        val image = BufferedImage(
+            widthPx,
+            heightPx,
+            BufferedImage.TYPE_INT_RGB
         )
 
-        return departmentRepository
-            .addDepartment(department)
+        val g = image.createGraphics()
+
+        // háttér
+        g.color = Color.WHITE
+        g.fillRect(0, 0, widthPx, heightPx)
+
+        g.font = Font(
+            "Arial",
+            Font.BOLD,
+            14
+        )
+
+        departments.forEach { department ->
+
+            val x =
+                (department.startX * scale).toInt()
+
+            val y =
+                (department.startY * scale).toInt()
+
+            val w =
+                (department.width * scale).toInt()
+
+            val h =
+                (department.height * scale).toInt()
+
+            // rectangle
+            g.color = Color.BLACK
+
+            g.drawRect(
+                x,
+                y,
+                w,
+                h
+            )
+
+            // text
+            g.color = Color.BLUE
+
+            g.drawString(
+                department.name,
+                x + 5,
+                y + 20
+            )
+        }
+
+        g.dispose()
+
+        ImageIO.write(
+            image,
+            "png",
+            File("debug_floorplan.png")
+        )
     }
 }
+
+
+
+
+
+
+

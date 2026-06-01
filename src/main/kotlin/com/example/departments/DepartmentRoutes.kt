@@ -11,6 +11,10 @@ fun Route.departmentRoutes(controller: DepartmentController) {
             controller.getByMap(call)
         }
 
+        get("/item/{id}") {
+            controller.get(call)
+        }
+
         post {
             controller.create(call)
         }

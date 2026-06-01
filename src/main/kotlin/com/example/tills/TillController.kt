@@ -1,5 +1,6 @@
 package com.example.tills
 
+import com.example.departments.dto.toResponse
 import com.example.tills.dto.CreateTillRequest
 import com.example.tills.dto.UpdateTillRequest
 import com.example.tills.dto.toEntity
@@ -12,6 +13,21 @@ import io.ktor.server.response.*
 class TillController(
     private val service: TillService
 ) {
+
+    suspend fun get(call: ApplicationCall) {
+
+        val id = call.parameters["id"]?.toIntOrNull() ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
+
+        val till = service.get(id)
+
+        if (till == null) {
+            call.respond(HttpStatusCode.NotFound)
+            return
+        }
+
+        call.respond(till.toResponse())
+
+    }
 
     suspend fun getByMap(call: ApplicationCall) {
         val mapId = call.parameters["mapId"]?.toIntOrNull()

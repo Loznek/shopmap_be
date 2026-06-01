@@ -13,3 +13,10 @@ fun Store.toResponse() = StoreResponse(
     name = name,
     location = location
 )
+
+
+fun UpdateStoreRequest.toEntity() = Store(
+    id = id,
+    name = name,
+    location = location
+)

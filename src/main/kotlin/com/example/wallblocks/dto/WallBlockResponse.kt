@@ -1,5 +1,9 @@
 package com.example.wallblocks.dto
 
+import kotlinx.serialization.Serializable
+
+
+@Serializable
 data class WallBlockResponse(
     val id: Int?,
     val mapId: Int,

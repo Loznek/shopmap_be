@@ -9,6 +9,12 @@ import com.example.model.repository.TillRepository
 import com.example.model.repository.WallBlockRepository
 import com.example.navigation.GridBuilder
 import com.example.navigation.PathValidator
+import com.example.tills.dto.toResponse
+import com.example.wallblocks.dto.toResponse
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.ApplicationCall
+import io.ktor.server.response.respond
+import kotlin.text.toIntOrNull
 
 class WallBlockService(
     private val wallBlockRepository: WallBlockRepository,
@@ -18,6 +24,12 @@ class WallBlockService(
     private val gridBuilder: GridBuilder,
     private val pathValidator: PathValidator
 ) {
+
+    suspend fun get(wallBlockId:Int):WallBlock? {
+
+        return wallBlockRepository.wallBlockById(wallBlockId)
+
+    }
 
     suspend fun getByMap(mapId: Int): List<WallBlock> {
         return wallBlockRepository.wallBlocksByMap(mapId)

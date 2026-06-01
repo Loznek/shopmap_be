@@ -23,7 +23,7 @@ fun Route.productRoutes(controller: ProductController) {
             controller.getByStore(call)
         }
 
-        put("/{articleNo}") {
+        put {
             controller.update(call)
         }
 

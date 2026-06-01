@@ -12,6 +12,20 @@ class DepartmentController(
     private val service: DepartmentService
 ) {
 
+    suspend fun get(call: ApplicationCall) {
+
+        val id = call.parameters["id"]?.toIntOrNull() ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
+
+        val department = service.get(id)
+
+        if (department == null) {
+            call.respond(HttpStatusCode.NotFound)
+            return
+        }
+
+        call.respond(department.toResponse())
+    }
+
     suspend fun getByMap(call: ApplicationCall) {
         val mapId = call.parameters["mapId"]?.toIntOrNull()
             ?: return call.respond(HttpStatusCode.BadRequest, "Invalid mapId")

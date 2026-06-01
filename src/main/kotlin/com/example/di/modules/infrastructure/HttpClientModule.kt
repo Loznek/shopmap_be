@@ -25,5 +25,10 @@ val httpClientModule = module {
         }
     }
 
-    singleOf(::PythonMapProcessorClient)
+    single {
+        PythonMapProcessorClient(
+            httpClient = get(),
+            pythonEndpoint = getProperty( "python.processor.baseUrl" )
+        )
+    }
 }

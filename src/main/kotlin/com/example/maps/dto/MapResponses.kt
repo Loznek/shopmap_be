@@ -1,5 +1,9 @@
 package com.example.maps.dto
 
+import kotlinx.serialization.Serializable
+
+
+@Serializable
 data class MapResponse(
     val id: Int?,
     val width: Double,

@@ -1,4 +1,6 @@
-import com.example.users.UserController
+package com.example.users
+
+import com.example.plugins.FirebaseUserPrincipal
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.authentication

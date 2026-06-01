@@ -21,6 +21,10 @@ fun Application.configureKoin() {
 
                 "google.documentAi.credentialsFile" to environment.config
                     .property("google.documentAi.credentialsFile")
+                    .getString(),
+
+                "python.processor.baseUrl" to environment.config
+                    .property("python.processor.baseUrl")
                     .getString()
             )
         )

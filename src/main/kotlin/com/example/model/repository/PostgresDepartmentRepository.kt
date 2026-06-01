@@ -6,6 +6,11 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 
 class PostgresDepartmentRepository: DepartmentRepository{
+
+    override suspend fun departmentById(id: Int): Department? = suspendTransaction {
+        DepartmentDAO.findById(id)?.let(::daoToModel)
+    }
+
     override suspend fun departmentsByMap(mapId: Int): List<Department> = suspendTransaction {
         DepartmentDAO.find{(DepartmentTable.mapId eq mapId)}.map(::daoToModel)
     }

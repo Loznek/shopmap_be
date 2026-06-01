@@ -1,6 +1,6 @@
 package com.example.users
 import AppUserResponse
-import FirebaseUserPrincipal
+import com.example.plugins.FirebaseUserPrincipal
 import UserService
 import com.example.users.dto.toResponse
 

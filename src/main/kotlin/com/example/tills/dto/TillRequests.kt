@@ -1,5 +1,9 @@
 package com.example.tills.dto
 
+import kotlinx.serialization.Serializable
+
+
+@Serializable
 data class CreateTillRequest(
     val mapId: Int,
     val startX: Double,
@@ -8,6 +12,7 @@ data class CreateTillRequest(
     val height: Double
 )
 
+@Serializable
 data class UpdateTillRequest(
     val id: Int,
     val mapId: Int,

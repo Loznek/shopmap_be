@@ -1,7 +1,7 @@
 package com.example.shoppingList
 
 
-import FirebaseUserPrincipal
+import com.example.plugins.FirebaseUserPrincipal
 import com.example.controller.ShoppingListController
 import com.example.shoppingList.dto.CreateShoppingListRequest
 import io.ktor.http.*
@@ -20,6 +20,7 @@ fun Route.shoppingListRoutes(
 
             get {
 
+
                 val principal =
                     call.authentication
                         .principal<FirebaseUserPrincipal>()
@@ -33,6 +34,7 @@ fun Route.shoppingListRoutes(
             }
 
             post {
+
 
                 val principal =
                     call.authentication

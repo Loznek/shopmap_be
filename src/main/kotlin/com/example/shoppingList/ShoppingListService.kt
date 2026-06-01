@@ -1,7 +1,6 @@
 
 
-import FirebaseUserPrincipal
-import UserRepository
+import com.example.plugins.FirebaseUserPrincipal
 
 import com.example.model.entity.ShoppingList
 import com.example.model.entity.ShoppingListItem

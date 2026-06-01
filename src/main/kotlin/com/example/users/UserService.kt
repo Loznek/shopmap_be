@@ -1,3 +1,5 @@
+import com.example.plugins.FirebaseUserPrincipal
+
 class UserService(
     private val repository: UserRepository
 ) {

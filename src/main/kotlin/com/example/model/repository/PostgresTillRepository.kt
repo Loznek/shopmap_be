@@ -8,6 +8,9 @@ import org.jetbrains.exposed.sql.deleteWhere
 
 class PostgresTillRepository : TillRepository {
 
+    override suspend fun tillById(id: Int): Till? = suspendTransaction {
+        TillDAO.findById(id)?.let(::daoToModel)
+    }
 
     override suspend fun tillsByMap(mapId: Int): List<Till> = suspendTransaction {
         TillDAO.find { (TillTable.mapId eq mapId) }.map(::daoToModel)

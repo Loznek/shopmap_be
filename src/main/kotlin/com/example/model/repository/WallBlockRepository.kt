@@ -3,6 +3,8 @@ package com.example.model.repository
 import com.example.model.entity.WallBlock
 
 interface WallBlockRepository {
+
+    suspend fun wallBlockById(id: Int): WallBlock?
     suspend fun wallBlocksByMap(mapId:Int): List<WallBlock>
     suspend fun addWallBlock(wallBlock: WallBlock): WallBlock
     suspend fun removeWallBlockById(id:Int): Boolean

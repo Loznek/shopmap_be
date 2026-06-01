@@ -1,5 +1,8 @@
 package com.example.departments.dto
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class DepartmentResponse(
     val id: Int?,
     val name: String,

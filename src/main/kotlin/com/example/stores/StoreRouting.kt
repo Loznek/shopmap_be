@@ -10,12 +10,20 @@ fun Route.storeRoutes(controller: StoreController) {
 
     route("/store") {
 
+        get {
+            controller.getAll(call)
+        }
+
         get("/{id}") {
             controller.get(call)
         }
 
         post {
             controller.create(call)
+        }
+
+        put {
+            controller.update(call)
         }
 
         delete("/{id}") {

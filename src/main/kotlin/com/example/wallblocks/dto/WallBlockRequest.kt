@@ -1,5 +1,8 @@
 package com.example.wallblocks.dto
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class CreateWallBlockRequest(
     val mapId: Int,
     val startX: Double,
@@ -7,7 +10,7 @@ data class CreateWallBlockRequest(
     val width: Double,
     val height: Double
 )
-
+@Serializable
 data class UpdateWallBlockRequest(
     val id: Int,
     val mapId: Int,

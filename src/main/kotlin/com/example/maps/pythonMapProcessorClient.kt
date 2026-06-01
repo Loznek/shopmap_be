@@ -1,7 +1,6 @@
 package com.example.maps
 
 import ProcessImageResponse
-import PythonRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -12,7 +11,8 @@ import io.ktor.client.request.setBody
 import io.ktor.http.*
 
 class PythonMapProcessorClient(
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient,
+    private val pythonEndpoint: String
 ) {
 
     /*
@@ -39,9 +39,9 @@ class PythonMapProcessorClient(
             mapWidth: Int,
             mapHeight: Int
         ): ProcessImageResponse {
-
+            println("processImage!!!")
             return httpClient.post(
-                "http://localhost:8001/process"
+                "${pythonEndpoint}/process"
             ) {
 
                 setBody(

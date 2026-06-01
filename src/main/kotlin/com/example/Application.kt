@@ -4,11 +4,9 @@ package com.example
 import com.example.di.configureKoin
 
 import com.example.plugins.*
-
-import configureAuthentication
+import com.example.plugins.configureAuthentication
 
 import io.ktor.server.application.*
-import kotlinx.serialization.json.Json
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)

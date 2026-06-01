@@ -3,6 +3,7 @@ import com.example.model.mapping.AppUserDAO
 import com.example.model.mapping.AppUserTable
 import com.example.model.mapping.daoToModel
 
+
 class PostgresUserRepository : UserRepository {
 
     override suspend fun getByFirebaseUid(

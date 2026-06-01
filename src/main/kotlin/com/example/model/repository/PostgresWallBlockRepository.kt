@@ -7,6 +7,11 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 
 class PostgresWallBlockRepository: WallBlockRepository {
+
+    override suspend fun wallBlockById(id: Int): WallBlock? = suspendTransaction {
+        WallBlockDAO.findById(id)?.let(::daoToModel)
+    }
+
     override suspend fun wallBlocksByMap(mapId: Int): List<WallBlock> = suspendTransaction {
         WallBlockDAO.find{(WallBlockTable.mapId eq mapId)}.map(::daoToModel)
     }

@@ -1,3 +1,5 @@
+package com.example.plugins
+
 import com.google.firebase.auth.FirebaseAuth
 import io.ktor.server.application.Application
 import io.ktor.server.application.install

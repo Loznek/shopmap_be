@@ -3,7 +3,7 @@
 CREATE TABLE store (
                        id SERIAL PRIMARY KEY,
                        name TEXT,
-                       location TEXT,
+                       location TEXT
 
 );
 
@@ -17,9 +17,7 @@ CREATE TABLE map (
                      entrance_y DOUBLE PRECISION,
                      exit_x DOUBLE PRECISION,
                      exit_y DOUBLE PRECISION,
-                     store_id INT REFERENCES Store(id)
-
-
+                     store_id INT UNIQUE REFERENCES Store(id)
 );
 
 -- Create Department table
@@ -133,7 +131,7 @@ CREATE TABLE shopping_list_item (
 );
 
 CREATE INDEX idx_shopping_list_userid
-    ON shopping_list(userid);
+    ON shopping_list(user_id);
 
 CREATE INDEX idx_shopping_list_item_list_id
     ON shopping_list_item(shopping_list_id);

@@ -7,6 +7,10 @@ fun Route.tillRoutes(controller: TillController) {
 
     route("/tills") {
 
+        get("item/{id}"){
+            controller.get(call)
+        }
+
         get("/{mapId}") {
             controller.getByMap(call)
         }

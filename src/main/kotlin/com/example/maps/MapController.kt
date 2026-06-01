@@ -12,6 +12,8 @@ import io.ktor.http.content.streamProvider
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
+import io.ktor.utils.io.readRemaining
+import kotlinx.io.readByteArray
 
 class MapController(
     private val service: MapService
@@ -67,7 +69,7 @@ class MapController(
         var mapId: Int? = null
 
         var imageBytes: ByteArray? = null
-
+        println("First point!")
         multipart.forEachPart { part ->
 
             when (part) {
@@ -82,8 +84,9 @@ class MapController(
 
                 is PartData.FileItem -> {
                     imageBytes =
-                        part.streamProvider()
-                            .readBytes()
+                        part.provider()
+                            .readRemaining()
+                            .readByteArray()
                 }
 
                 else -> {}
@@ -97,6 +100,7 @@ class MapController(
             mapHeight = mapHeight ?: error("Missing mapHeight"),
             mapId = mapId ?: error("Missing mapId")
         )
+        println("Second pont!!!")
 
         val department = service.processImage(
             imageBytes ?: error("Missing image"),

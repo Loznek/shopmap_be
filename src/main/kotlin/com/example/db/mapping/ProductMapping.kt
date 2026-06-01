@@ -1,4 +1,4 @@
-package com.example.model.mapping
+package com.example.db.mapping
 
 import com.example.model.entity.Product
 import com.example.model.entity.ProductPosition
@@ -7,6 +7,7 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.postgresql.util.PGobject
 
 object ProductTable : IntIdTable("product", "article_no") {
 
@@ -16,9 +17,20 @@ object ProductTable : IntIdTable("product", "article_no") {
 
     val departmentId = integer("department_id").nullable()
 
-    val position = enumerationByName<ProductPosition>(
-        "position",
-        20
+    val position = customEnumeration(
+        name = "position",
+        sql = "product_position",
+        fromDb = { value ->
+            ProductPosition.valueOf(value as String)
+        },
+        toDb = { value ->
+            value.let {
+                PGobject().apply {
+                    type = "product_position"
+                    this.value = it.name
+                }
+            }
+        }
     ).nullable()
 
     val storeId = integer("store_id")

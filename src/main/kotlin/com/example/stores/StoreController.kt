@@ -1,6 +1,7 @@
 package com.example.stores
 
 import com.example.stores.dto.CreateStoreRequest
+import com.example.stores.dto.UpdateStoreRequest
 import com.example.stores.dto.toEntity
 import com.example.stores.dto.toResponse
 import io.ktor.http.*
@@ -12,6 +13,11 @@ class StoreController(
     private val service: StoreService,
     private val storeGooglePlacesService: StoreGooglePlacesService
 ) {
+
+    suspend fun getAll(call: ApplicationCall) {
+        val stores = service.getAll()
+        call.respond(stores.map { it.toResponse() })
+    }
 
     suspend fun get(call: ApplicationCall) {
         val id = call.parameters["id"]?.toIntOrNull()
@@ -32,6 +38,22 @@ class StoreController(
             call.respond(HttpStatusCode.BadRequest, e.message ?: "Invalid request")
         } catch (e: Exception) {
             call.respond(HttpStatusCode.BadRequest, "Invalid input data")
+        }
+    }
+
+
+    suspend fun update(call: ApplicationCall) {
+
+        try {
+            val request = call.receive<UpdateStoreRequest>()
+            val result = service.update(request.toEntity())
+            call.respond(HttpStatusCode.OK, result.toResponse())
+        } catch (e: IllegalArgumentException) {
+
+            call.respond(
+                HttpStatusCode.BadRequest,
+                e.message ?: "Invalid request"
+            )
         }
     }
 

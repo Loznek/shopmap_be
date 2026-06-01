@@ -1,5 +1,9 @@
 package com.example.maps.dto
 
+import kotlinx.serialization.Serializable
+
+
+@Serializable
 data class CreateMapRequest(
     val width: Double,
     val height: Double,
@@ -10,6 +14,7 @@ data class CreateMapRequest(
     val storeId: Int
 )
 
+@Serializable
 data class UpdateMapRequest(
     val id: Int,
     val width: Double,
