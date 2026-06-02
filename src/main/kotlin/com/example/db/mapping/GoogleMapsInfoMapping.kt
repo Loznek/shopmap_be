@@ -7,7 +7,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 object GoogleMapsInfoTable : IntIdTable("google_maps_info") {
-    val storeId = reference("storeid", StoreTable)
+    val storeId = reference("store_id", StoreTable)
 
     val placeId = varchar("place_id", 255)
     val phoneNumber = varchar("phone_number", 50).nullable()

@@ -9,9 +9,9 @@ import io.ktor.server.routing.route
 fun Route.ocrRoutes(controller: OcrController) {
 
     route("/ocr") {
-        get {
+        /*get {
             controller.extractText(call)
-        }
+        }*/
 
         post("/shopping-list") {
             controller.extractShoppingList(call)

@@ -22,7 +22,10 @@ class NavigationController(
 
         call.respond(
             HttpStatusCode.OK,
-            RoutePlanResponse(route)
+            RoutePlanResponse(
+                route,
+                length = route.size
+            )
         )
     }
 }

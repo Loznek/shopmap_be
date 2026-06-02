@@ -1,6 +1,7 @@
 package com.example.maps
 
-import ProcessImageResponse
+import com.example.exception.ExternalServiceException
+import com.example.maps.dto.ProcessImageResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -36,45 +37,52 @@ class PythonMapProcessorClient(
 
         suspend fun processImage(
             imageBytes: ByteArray,
-            mapWidth: Int,
-            mapHeight: Int
+            mapWidth: Double,
+            mapHeight: Double
         ): ProcessImageResponse {
-            println("processImage!!!")
-            return httpClient.post(
-                "${pythonEndpoint}/process"
-            ) {
+            try {
+                return httpClient.post(
+                    "${pythonEndpoint}/process"
+                ) {
 
-                setBody(
-                    MultiPartFormDataContent(
-                        formData {
+                    setBody(
+                        MultiPartFormDataContent(
+                            formData {
 
-                            append(
-                                "map_width",
-                                mapWidth.toString()
-                            )
+                                append(
+                                    "map_width",
+                                    mapWidth.toString()
+                                )
 
-                            append(
-                                "map_height",
-                                mapHeight.toString()
-                            )
+                                append(
+                                    "map_height",
+                                    mapHeight.toString()
+                                )
 
-                            append(
-                                "file",
-                                imageBytes,
-                                Headers.build {
-                                    append(
-                                        HttpHeaders.ContentDisposition,
-                                        "filename=image.png"
-                                    )
-                                    append(
-                                        HttpHeaders.ContentType,
-                                        "image/png"
-                                    )
-                                }
-                            )
-                        }
+                                append(
+                                    "file",
+                                    imageBytes,
+                                    Headers.build {
+                                        append(
+                                            HttpHeaders.ContentDisposition,
+                                            "filename=image.png"
+                                        )
+                                        append(
+                                            HttpHeaders.ContentType,
+                                            "image/png"
+                                        )
+                                    }
+                                )
+                            }
+                        )
                     )
+                }.body()
+
+            } catch (e: Exception) {
+                throw ExternalServiceException(
+                    "Python image processor unavailable: ${e.message}"
                 )
-            }.body()
+            }
+
         }
     }

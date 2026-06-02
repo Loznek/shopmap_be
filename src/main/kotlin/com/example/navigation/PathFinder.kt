@@ -2,6 +2,17 @@ package com.example.navigation
 
 class PathFinder {
 
+
+    private val DIRECTIONS = arrayOf(
+        1 to 0,
+        -1 to 0,
+        0 to 1,
+        0 to -1
+    )
+
+
+
+
     fun bfsShortestPath(
         walkablePoints: Set<Pair<Int, Int>>,
         start: Pair<Int, Int>,
@@ -57,19 +68,14 @@ class PathFinder {
         queue.add(start)
         distances[start] = 0
 
-        val directions = listOf(
-            1 to 0,
-            -1 to 0,
-            0 to 1,
-            0 to -1
-        )
+
 
         while (queue.isNotEmpty()) {
 
             val current = queue.removeFirst()
             val currentDistance = distances[current]!!
 
-            for ((dx, dy) in directions) {
+            for ((dx, dy) in DIRECTIONS) {
 
                 val next =
                     (current.first + dx) to

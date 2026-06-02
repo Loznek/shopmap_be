@@ -24,6 +24,7 @@ class HeldKarpSolver(
 
 {
 
+    private val INF = 1_000_000_000
     /**
      * Calculates the optimal route:
      * entrance -> all destinations (best order) -> till
@@ -219,7 +220,7 @@ class HeldKarpSolver(
         val dp =
             Array(subsetCount) {
                 IntArray(pointCount) {
-                    Int.MAX_VALUE
+                    INF
                 }
             }
 
@@ -245,8 +246,8 @@ class HeldKarpSolver(
                 // - start
                 // - any other destination
                 for (v in 0..destinationCount) {
-                    if (dp[previousMask][v] == Int.MAX_VALUE) continue
-                    if (distances[v][u] == Int.MAX_VALUE) continue
+                    if (dp[previousMask][v] == INF) continue
+                    if (distances[v][u] == INF) continue
 
                     val newCost = dp[previousMask][v] + distances[v][u]
 
@@ -263,14 +264,14 @@ class HeldKarpSolver(
         // --------------------------------------------------------------------
         val fullMask = subsetCount - 1
 
-        var bestCost = Int.MAX_VALUE
+        var bestCost = INF
         var lastPoint = -1
 
         for (destIdx in 0 until destinationCount) {
             val u = destIdx + 1
 
-            if (dp[fullMask][u] == Int.MAX_VALUE) continue
-            if (distances[u][endIndex] == Int.MAX_VALUE) continue
+            if (dp[fullMask][u] == INF) continue
+            if (distances[u][endIndex] == INF) continue
 
             val totalCost = dp[fullMask][u] + distances[u][endIndex]
 

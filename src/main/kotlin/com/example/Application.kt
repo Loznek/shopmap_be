@@ -182,13 +182,10 @@ fun Application.module() {
     val salesController = SalesController(salesService)
     */
 
-    val googleApiKey =
-        environment.config.property("google.apiKey").getString()
 
     FirebaseConfiguration.initialize()
-
+    configureExceptionHandling()
     configureKoin()
-
     configureAuthentication()
     configureSerialization()
     configureDatabases()

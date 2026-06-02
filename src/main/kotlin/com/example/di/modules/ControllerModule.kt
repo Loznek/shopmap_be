@@ -2,7 +2,7 @@ package com.example.di.modules
 
 
 import com.example.wallblocks.WallBlockController
-import com.example.controller.ShoppingListController
+import com.example.shoppingList.ShoppingListController
 import com.example.departments.DepartmentController
 import com.example.maps.MapController
 import com.example.navigation.NavigationController

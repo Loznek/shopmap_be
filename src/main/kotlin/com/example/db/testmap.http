@@ -1,0 +1,416 @@
+@host=http://localhost:8080
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Narancslé",
+  "size": "1L",
+  "departmentId": 3,
+  "position": "LEFT",
+  "storeId": 3,
+  "price": 599.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Kutyaeledel",
+  "size": "2kg",
+  "departmentId": 4,
+  "position": "RIGHT",
+  "storeId": 3,
+  "price": 2499.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Sampon",
+  "size": "400ml",
+  "departmentId": 5,
+  "position": "TOP",
+  "storeId": 3,
+  "price": 1299.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Toalettpapír",
+  "size": "8db",
+  "departmentId": 6,
+  "position": "BOTTOM",
+  "storeId": 3,
+  "price": 1799.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Mentolos cukorka",
+  "size": "100g",
+  "departmentId": 7,
+  "position": "LEFT",
+  "storeId": 3,
+  "price": 499.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Kifli",
+  "size": "1db",
+  "departmentId": 8,
+  "position": "RIGHT",
+  "storeId": 3,
+  "price": 89.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Burgonyachips",
+  "size": "150g",
+  "departmentId": 9,
+  "position": "TOP",
+  "storeId": 3,
+  "price": 799.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Őrölt kávé",
+  "size": "250g",
+  "departmentId": 10,
+  "position": "BOTTOM",
+  "storeId": 3,
+  "price": 1499.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Társasjáték",
+  "size": "1db",
+  "departmentId": 11,
+  "position": "LEFT",
+  "storeId": 3,
+  "price": 5999.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Fekete bors",
+  "size": "50g",
+  "departmentId": 12,
+  "position": "RIGHT",
+  "storeId": 3,
+  "price": 699.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Paradicsomszósz",
+  "size": "500ml",
+  "departmentId": 13,
+  "position": "TOP",
+  "storeId": 3,
+  "price": 899.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Csokoládé",
+  "size": "100g",
+  "departmentId": 14,
+  "position": "BOTTOM",
+  "storeId": 3,
+  "price": 549.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Konzerv kukorica",
+  "size": "340g",
+  "departmentId": 15,
+  "position": "LEFT",
+  "storeId": 3,
+  "price": 599.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Liszt",
+  "size": "1kg",
+  "departmentId": 16,
+  "position": "RIGHT",
+  "storeId": 3,
+  "price": 499.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Spagetti",
+  "size": "500g",
+  "departmentId": 17,
+  "position": "TOP",
+  "storeId": 3,
+  "price": 699.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Joghurt",
+  "size": "150g",
+  "departmentId": 18,
+  "position": "BOTTOM",
+  "storeId": 3,
+  "price": 349.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Mosogatószer",
+  "size": "500ml",
+  "departmentId": 19,
+  "position": "LEFT",
+  "storeId": 3,
+  "price": 999.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Vörösbor",
+  "size": "0.75L",
+  "departmentId": 20,
+  "position": "RIGHT",
+  "storeId": 3,
+  "price": 2499.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Világos sör",
+  "size": "0.5L",
+  "departmentId": 21,
+  "position": "TOP",
+  "storeId": 3,
+  "price": 499.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Whisky",
+  "size": "0.7L",
+  "departmentId": 22,
+  "position": "BOTTOM",
+  "storeId": 3,
+  "price": 5999.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Szénsavmentes ásványvíz",
+  "size": "1.5L",
+  "departmentId": 23,
+  "position": "LEFT",
+  "storeId": 3,
+  "price": 199.99
+}
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Alufólia",
+  "size": "20m",
+  "departmentId": 24,
+  "position": "RIGHT",
+  "storeId": 3,
+  "price": 799.99
+}
+
+
+
+
+###
+
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Kóla",
+  "size": "2L",
+  "departmentId": 3,
+  "position": "LEFT",
+  "storeId": 3,
+  "price": 799.99
+}
+
+###
+POST http://localhost:8080/shopping-lists
+Authorization: Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJuYW1lIjoiVGVzdCBVc2VyIiwicGljdHVyZSI6IiIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdXRoX3RpbWUiOjE3ODAzNTY0MTUsInVzZXJfaWQiOiJya1pmNGZ1U2kyU2FMVFRwdW9GVDJ1SnN5b0tYIiwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJ0ZXN0QHRlc3QuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifSwiaWF0IjoxNzgwMzU2NDE1LCJleHAiOjE3ODAzNjAwMTUsImF1ZCI6InNob3BtYXAtMWFmY2EiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vc2hvcG1hcC0xYWZjYSIsInN1YiI6InJrWmY0ZnVTaTJTYUxUVHB1b0ZUMnVKc3lvS1gifQ.
+Content-Type: application/json
+
+{
+  "name": "Teljes bolti teszt",
+  "items": [
+    {
+      "shoppingItemName": "Narancslé",
+      "attributes": "1L"
+    },
+    {
+      "shoppingItemName": "Kifli",
+      "attributes": "1db"
+    },
+    {
+      "shoppingItemName": "Spagetti",
+      "attributes": "500g"
+    },
+    {
+      "shoppingItemName": "Joghurt",
+      "attributes": "150g"
+    },
+    {
+      "shoppingItemName": "Mosogatószer",
+      "attributes": "500ml"
+    },
+    {
+      "shoppingItemName": "Szénsavmentes ásványvíz",
+      "attributes": "1.5L"
+    }
+  ]
+}
+
+
+###
+
+GET http://localhost:8080/store/3/shopping-lists/4/matches
+
+###
+
+###
+POST {{host}}/calculate-route
+Content-Type: application/json
+
+{
+  "mapId": 3,
+  "products": [
+    {
+      "articleNo": 4,
+      "departmentId": 3,
+      "position": "LEFT"
+    },
+    {
+      "articleNo": 9,
+      "departmentId": 8,
+      "position": "RIGHT"
+    },
+    {
+      "articleNo": 18,
+      "departmentId": 17,
+      "position": "TOP"
+    },
+    {
+      "articleNo": 19,
+      "departmentId": 18,
+      "position": "BOTTOM"
+    },
+    {
+      "articleNo": 20,
+      "departmentId": 19,
+      "position": "LEFT"
+    },
+    {
+      "articleNo": 24,
+      "departmentId": 23,
+      "position": "LEFT"
+    }
+  ]
+}
+
+###
+
+POST {{host}}/departments
+Content-Type: application/json
+
+{
+  "mapId": 3,
+  "name": "ERINTI_DE_NEM_METSZI",
+  "startX": 21.0,
+  "startY": 90.0,
+  "width": 17.5,
+  "height": 30.0
+}
+
+###
+POST {{host}}/departments
+Content-Type: application/json
+
+{
+  "mapId": 3,
+  "name": "BFS_FALTESZT",
+  "startX": 0,
+  "startY": 211,
+  "width": 215.5,
+  "height": 1
+}
+
+###
+DELETE {{host}}/departments/26

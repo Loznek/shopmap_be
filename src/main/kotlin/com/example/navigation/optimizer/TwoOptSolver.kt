@@ -16,7 +16,7 @@ class TwoOptSolver {
 
             for (i in 1 until route.size - 2) {
 
-                for (j in i + 1 until route.size - 1) {
+                for (j in i + 1 until route.size - 2) {
 
                     val candidate =
                         route.toMutableList()

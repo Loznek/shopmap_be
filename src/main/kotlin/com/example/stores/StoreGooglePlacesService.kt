@@ -1,6 +1,9 @@
 package com.example.stores
 
 
+import com.example.db.mapping.suspendTransaction
+import com.example.exception.NotFoundException
+import com.example.exception.ValidationException
 import com.example.model.entity.GoogleMapsInfo
 import com.example.model.entity.OpeningHours
 import com.example.model.entity.StorePicture
@@ -21,12 +24,17 @@ class StoreGooglePlacesService(
 
     suspend fun fetchAndStore(storeId: Int): PlaceDetailsResponse {
 
+
         // 1. Load store
         val store = storeRepository.storeById(storeId)
-            ?: throw IllegalArgumentException("Store not found")
+            ?: throw NotFoundException(
+                "Store $storeId not found"
+            )
 
         val location = store.location
-            ?: throw IllegalArgumentException("Store has no location")
+            ?: throw ValidationException(
+                "Store has no location"
+            )
 
         // 2. Check if already imported
         val existing = googleMapsInfoRepository.getByStoreId(store.id!!)
@@ -41,7 +49,7 @@ class StoreGooglePlacesService(
         )
 
         val placeId = searchResponse.places.firstOrNull()?.id
-            ?: throw IllegalArgumentException("No place found")
+            ?: throw NotFoundException("No place found")
 
         // 4. Fetch detailed information
         val detailsResponse = googlePlacesClient.getPlaceDetails(placeId)
@@ -60,53 +68,61 @@ class StoreGooglePlacesService(
         val imagePaths = detailsResponse.photos
             ?.take(3)
             ?.mapIndexed { index, photo ->
-                photoDownloader.download(
-                    photoName = photo.name,
-                    storeId = store.id!!,
-                    index = index
-                )
+                try {
+                    photoDownloader.download(
+                        photoName = photo.name,
+                        storeId = store.id,
+                        index = index
+                    )
+                }catch (e: Exception) {
+                    null
+                }
+
+
             }
             ?: emptyList()
 
-        // 7. Save Google Maps info
-        googleMapsInfoRepository.add(
-            GoogleMapsInfo(
-                id = null,
-                storeId = store.id!!,
-                placeId = detailsResponse.id,
-                phoneNumber = detailsResponse.internationalPhoneNumber,
-                websiteUri = detailsResponse.websiteUri,
-                googleMapsUri = detailsResponse.googleMapsUri,
-                rating = detailsResponse.rating,
-                userRatingCount = detailsResponse.userRatingCount,
-                hasParking = hasParking,
-                wheelchairAccessible = wheelchairAccessible
-            )
-        )
 
-        // 8. Save opening hours
-        detailsResponse.regularOpeningHours?.periods?.forEach { period ->
-            openingHoursRepository.add(
-                OpeningHours(
+            // 7. Save Google Maps info
+            googleMapsInfoRepository.add(
+                GoogleMapsInfo(
                     id = null,
                     storeId = store.id,
-                    day = period.open.day,
-                    openTime = formatTime(period.open.hour, period.open.minute),
-                    closeTime = formatTime(period.close.hour, period.close.minute)
+                    placeId = detailsResponse.id,
+                    phoneNumber = detailsResponse.internationalPhoneNumber,
+                    websiteUri = detailsResponse.websiteUri,
+                    googleMapsUri = detailsResponse.googleMapsUri,
+                    rating = detailsResponse.rating,
+                    userRatingCount = detailsResponse.userRatingCount,
+                    hasParking = hasParking,
+                    wheelchairAccessible = wheelchairAccessible
                 )
             )
-        }
 
-        // 9. Save pictures
-        imagePaths.forEach { path ->
-            pictureRepository.add(
-                StorePicture(
-                    id = null,
-                    storeId = store.id,
-                    path = path
+            // 8. Save opening hours
+            detailsResponse.regularOpeningHours?.periods?.forEach { period ->
+                openingHoursRepository.add(
+                    OpeningHours(
+                        id = null,
+                        storeId = store.id,
+                        day = period.open.day,
+                        openTime = formatTime(period.open.hour, period.open.minute),
+                        closeTime = formatTime(period.close.hour, period.close.minute)
+                    )
                 )
-            )
-        }
+            }
+
+            // 9. Save pictures
+            imagePaths.forEach { path ->
+                pictureRepository.add(
+                    StorePicture(
+                        id = null,
+                        storeId = store.id,
+                        path = path!!
+                    )
+                )
+            }
+
 
         // 10. Return Google response
         return detailsResponse

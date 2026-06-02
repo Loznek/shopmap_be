@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProcessImageRequest(
-    val mapWidth: Int,
-    val mapHeight: Int,
+    val mapWidth: Double,
+    val mapHeight: Double,
     val mapId: Int
 )

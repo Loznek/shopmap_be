@@ -1,3 +1,7 @@
+package com.example.users
+
+import AppUser
+import UserRepository
 import com.example.plugins.FirebaseUserPrincipal
 
 class UserService(

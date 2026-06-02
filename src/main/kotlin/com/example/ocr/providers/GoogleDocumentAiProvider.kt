@@ -1,5 +1,7 @@
 package com.example.ocr.providers
 
+import com.example.exception.ExternalServiceException
+import com.example.exception.NotFoundException
 import com.google.api.gax.core.FixedCredentialsProvider
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.documentai.v1.DocumentProcessorServiceClient
@@ -23,7 +25,7 @@ class GoogleDocumentAiProvider(
 
         val credentialsStream =
             javaClass.classLoader.getResourceAsStream(credentialsFile)
-                ?: throw IllegalStateException(
+                ?: throw ExternalServiceException(
                     "Credential file not found: $credentialsFile"
                 )
 
@@ -70,19 +72,37 @@ class GoogleDocumentAiProvider(
                     .setEndpoint(endpoint)
                     .build()
                 */
-        DocumentProcessorServiceClient.create(settings).use { client ->
-            val document = RawDocument.newBuilder()
-                .setContent(ByteString.copyFrom(fileBytes))
-                .setMimeType("image/jpeg")
-                .build()
 
-            val request = ProcessRequest.newBuilder()
-                .setName(processorName)
-                .setRawDocument(document)
-                .build()
+        try {
 
-            val response = client.processDocument(request)
-            return response.document.text
+            DocumentProcessorServiceClient.create(settings).use { client ->
+                val document = RawDocument.newBuilder()
+                    .setContent(ByteString.copyFrom(fileBytes))
+                    .setMimeType("image/jpeg")
+                    .build()
+
+                val request = ProcessRequest.newBuilder()
+                    .setName(processorName)
+                    .setRawDocument(document)
+                    .build()
+
+                val response = client.processDocument(request)
+                val text =
+                    response.document.text
+
+                if (text.isBlank()) {
+
+                    throw NotFoundException(
+                        "No text detected in image"
+                    )
+                }
+
+                return text
+            }
+        } catch (e: Exception) {
+            throw ExternalServiceException(
+                "Failed to process document with Google Document AI: ${e.message}"
+            )
         }
     }
 }

@@ -2,7 +2,6 @@ package com.example.shoppingList
 
 
 import com.example.plugins.FirebaseUserPrincipal
-import com.example.controller.ShoppingListController
 import com.example.shoppingList.dto.CreateShoppingListRequest
 import io.ktor.http.*
 import io.ktor.server.auth.*

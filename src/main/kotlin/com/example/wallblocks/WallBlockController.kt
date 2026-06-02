@@ -1,5 +1,6 @@
 package com.example.wallblocks
 
+import com.example.exception.ValidationException
 import com.example.wallblocks.dto.CreateWallBlockRequest
 import com.example.wallblocks.dto.UpdateWallBlockRequest
 import com.example.wallblocks.dto.toEntity
@@ -15,60 +16,39 @@ class WallBlockController(
 
     suspend fun get(call: ApplicationCall) {
         val id = call.parameters["id"]?.toIntOrNull()
-            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
-
+            ?: throw ValidationException("Invalid wallblock id")
         val wallBlock = service.get(id)
-        if (wallBlock == null) {
-            call.respond(HttpStatusCode.NotFound)
-            return
-        }
+
         call.respond(wallBlock.toResponse())
     }
 
     suspend fun getByMap(call: ApplicationCall) {
         val mapId = call.parameters["mapId"]?.toIntOrNull()
-            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid mapId")
+            ?: throw ValidationException( "Invalid mapId")
 
         val result = service.getByMap(mapId)
         call.respond(result.map { it.toResponse() })
     }
 
     suspend fun create(call: ApplicationCall) {
-        try {
             val request = call.receive<CreateWallBlockRequest>()
-
             val result = service.create(request.toEntity())
-
             call.respond(HttpStatusCode.Created, result.toResponse())
 
-        } catch (e: IllegalArgumentException) {
-            call.respond(HttpStatusCode.BadRequest, e.message ?: "Invalid request")
-        } catch (e: Exception) {
-            call.respond(HttpStatusCode.InternalServerError, "Unexpected error")
-        }
     }
 
     suspend fun update(call: ApplicationCall) {
-        try {
             val request = call.receive<UpdateWallBlockRequest>()
-
             val result = service.update(request.toEntity())
-
             call.respond(HttpStatusCode.OK, result.toResponse())
-
-        } catch (e: IllegalArgumentException) {
-            call.respond(HttpStatusCode.BadRequest, e.message ?: "Invalid request")
-        } catch (e: Exception) {
-            call.respond(HttpStatusCode.InternalServerError, "Unexpected error")
-        }
     }
 
     suspend fun delete(call: ApplicationCall) {
         val id = call.parameters["id"]?.toIntOrNull()
-            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
-
+            ?: throw ValidationException(
+                "Invalid department id"
+            )
         service.delete(id)
-
         call.respond(HttpStatusCode.NoContent)
     }
 }

@@ -11,15 +11,5 @@ class SalesService(
     suspend fun getSales(storeName: String): SalesResponse {
         return flyerScraper.getSales(storeName)
 
-
-        /*
-        val rawText = flyerScraper.extractRawText(url)
-
-        return productParser
-            .splitProducts(rawText)
-            .map { SalesItem(rawText = it) }
-
-
-         */
     }
 }

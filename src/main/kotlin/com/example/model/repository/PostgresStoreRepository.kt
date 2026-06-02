@@ -34,9 +34,9 @@ class PostgresStoreRepository: StoreRepository {
         daoToModel(newStore)
     }
 
-    override suspend fun removeStore(store: Store): Boolean = suspendTransaction {
+    override suspend fun removeStore(id: Int): Boolean = suspendTransaction {
         val rowsDeleted = StoreTable.deleteWhere {
-            StoreTable.id eq store.id
+            StoreTable.id eq id
         }
         rowsDeleted == 1
     }

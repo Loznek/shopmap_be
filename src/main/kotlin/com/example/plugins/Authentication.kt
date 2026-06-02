@@ -1,6 +1,7 @@
 package com.example.plugins
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
@@ -26,7 +27,12 @@ fun Application.configureAuthentication() {
                         displayName = token.name
                     )
 
-                } catch (e: Exception) {
+                } catch (e: FirebaseAuthException) {
+                    println(
+                        "Firebase authentication error ${e.message}"
+                    )
+
+
                     null
                 }
             }

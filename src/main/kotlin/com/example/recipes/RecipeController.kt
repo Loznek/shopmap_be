@@ -1,5 +1,6 @@
 package com.example.recipes
 
+import com.example.exception.ValidationException
 import com.example.recipes.dto.RecipeRequest
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -11,16 +12,8 @@ class RecipeController(
 ) {
 
     suspend fun getIngredients(call: ApplicationCall) {
-        try {
             val request = call.receive<RecipeRequest>()
-
             val result = service.getIngredients(request.mealName)
-
             call.respond(result)
-
-        } catch (e: Exception) {
-            e.printStackTrace() // 👈 important
-            call.respond(HttpStatusCode.BadRequest, e.message ?: "Unknown error")
-        }
     }
 }

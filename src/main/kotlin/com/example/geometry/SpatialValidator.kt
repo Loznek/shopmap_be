@@ -11,7 +11,7 @@ object SpatialValidator {
         obstacles: List<Rectangle>
     ): Boolean {
 
-        if (rect.x <= 0 || rect.y <= 0 || rect.width <= 0 || rect.height <= 0) {
+        if (rect.x < 0 || rect.y < 0 || rect.width <= 0 || rect.height <= 0) {
             return false
         }
 

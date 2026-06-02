@@ -1,5 +1,6 @@
 package com.example.maps
 
+import com.example.exception.ValidationException
 import com.example.maps.dto.ProcessImageRequest
 import com.example.maps.dto.CreateMapRequest
 import com.example.maps.dto.UpdateMapRequest
@@ -21,7 +22,7 @@ class MapController(
 
     suspend fun get(call: ApplicationCall) {
         val id = call.parameters["id"]?.toIntOrNull()
-            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
+            ?: throw ValidationException("Invalid map id")
 
         val result = service.getById(id)
         call.respond(result.toResponse())
@@ -51,7 +52,7 @@ class MapController(
 
     suspend fun delete(call: ApplicationCall) {
         val id = call.parameters["id"]?.toIntOrNull()
-            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
+            ?: throw ValidationException("Invalid map id")
 
         service.delete(id)
         call.respond(HttpStatusCode.NoContent)
@@ -64,20 +65,25 @@ class MapController(
 
         val multipart = call.receiveMultipart()
 
-        var mapWidth: Int? = null
-        var mapHeight: Int? = null
+        var mapWidth: Double? = null
+        var mapHeight: Double? = null
         var mapId: Int? = null
 
         var imageBytes: ByteArray? = null
-        println("First point!")
         multipart.forEachPart { part ->
 
             when (part) {
 
                 is PartData.FormItem -> {
                     when (part.name) {
-                        "mapWidth" -> mapWidth = part.value.toInt()
-                        "mapHeight" -> mapHeight = part.value.toInt()
+                        "mapWidth" -> mapWidth = part.value.toDoubleOrNull()
+                            ?: throw ValidationException(
+                                "Invalid mapWidth"
+                            )
+                        "mapHeight" -> mapHeight = part.value.toDoubleOrNull()
+                            ?: throw ValidationException(
+                                "Invalid mapHeight"
+                            )
                         "mapId" -> mapId = part.value.toInt()
                     }
                 }
@@ -96,14 +102,22 @@ class MapController(
         }
 
         val request = ProcessImageRequest(
-            mapWidth = mapWidth ?: error("Missing mapWidth"),
-            mapHeight = mapHeight ?: error("Missing mapHeight"),
-            mapId = mapId ?: error("Missing mapId")
+            mapWidth = mapWidth ?: throw ValidationException(
+                "Missing mapWidth"
+            ),
+            mapHeight = mapHeight ?: throw ValidationException(
+                "Missing mapHeight"
+            ),
+            mapId = mapId ?: throw ValidationException(
+                "Missing mapId"
+            )
         )
-        println("Second pont!!!")
+
 
         val department = service.processImage(
-            imageBytes ?: error("Missing image"),
+            imageBytes ?: throw ValidationException(
+                "Missing image"
+            ),
             request
         )
 

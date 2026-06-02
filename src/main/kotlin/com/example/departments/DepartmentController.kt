@@ -3,6 +3,7 @@ package com.example.departments
 import com.example.departments.dto.CreateDepartmentRequest
 import com.example.departments.dto.UpdateDepartmentRequest
 import com.example.departments.dto.toResponse
+import com.example.exception.ValidationException
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -14,21 +15,15 @@ class DepartmentController(
 
     suspend fun get(call: ApplicationCall) {
 
-        val id = call.parameters["id"]?.toIntOrNull() ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
-
+        val id = call.parameters["id"]?.toIntOrNull() ?: throw ValidationException("Invalid department id")
         val department = service.get(id)
-
-        if (department == null) {
-            call.respond(HttpStatusCode.NotFound)
-            return
-        }
 
         call.respond(department.toResponse())
     }
 
     suspend fun getByMap(call: ApplicationCall) {
         val mapId = call.parameters["mapId"]?.toIntOrNull()
-            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid mapId")
+            ?: throw ValidationException( "Invalid mapId")
 
         val departments = service.getByMap(mapId)
         call.respond(departments.map { it.toResponse() })
@@ -48,8 +43,9 @@ class DepartmentController(
 
     suspend fun delete(call: ApplicationCall) {
         val id = call.parameters["id"]?.toIntOrNull()
-            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
-
+                ?: throw ValidationException(
+                    "Invalid department id"
+                )
         service.delete(id)
         call.respond(HttpStatusCode.NoContent)
     }

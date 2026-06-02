@@ -1,6 +1,7 @@
 package com.example.tills
 
 import com.example.departments.dto.toResponse
+import com.example.exception.ValidationException
 import com.example.tills.dto.CreateTillRequest
 import com.example.tills.dto.UpdateTillRequest
 import com.example.tills.dto.toEntity
@@ -16,14 +17,8 @@ class TillController(
 
     suspend fun get(call: ApplicationCall) {
 
-        val id = call.parameters["id"]?.toIntOrNull() ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
-
+        val id = call.parameters["id"]?.toIntOrNull() ?: throw ValidationException("Invalid till id")
         val till = service.get(id)
-
-        if (till == null) {
-            call.respond(HttpStatusCode.NotFound)
-            return
-        }
 
         call.respond(till.toResponse())
 
@@ -31,38 +26,33 @@ class TillController(
 
     suspend fun getByMap(call: ApplicationCall) {
         val mapId = call.parameters["mapId"]?.toIntOrNull()
-            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid mapId")
+            ?: throw ValidationException( "Invalid mapId")
 
         val result = service.getByMap(mapId)
         call.respond(result.map { it.toResponse() })
     }
 
     suspend fun create(call: ApplicationCall) {
-        try {
+
             val request = call.receive<CreateTillRequest>()
             val result = service.create(request.toEntity())
             call.respond(HttpStatusCode.Created, result.toResponse())
-
-        } catch (e: IllegalArgumentException) {
-            call.respond(HttpStatusCode.BadRequest, e.message ?: "Invalid request")
-        }
     }
 
     suspend fun update(call: ApplicationCall) {
-        try {
+
             val request = call.receive<UpdateTillRequest>()
             val result = service.update(request.toEntity())
             call.respond(HttpStatusCode.OK, result.toResponse())
 
-        } catch (e: IllegalArgumentException) {
-            call.respond(HttpStatusCode.BadRequest, e.message ?: "Invalid request")
-        }
+
     }
 
     suspend fun delete(call: ApplicationCall) {
         val id = call.parameters["id"]?.toIntOrNull()
-            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
-
+            ?: throw ValidationException(
+                "Invalid department id"
+            )
         service.delete(id)
         call.respond(HttpStatusCode.NoContent)
     }

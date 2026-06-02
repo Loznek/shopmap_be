@@ -1,5 +1,7 @@
 package com.example.sales
 
+import com.example.exception.ExternalServiceException
+import com.example.exception.ValidationException
 import com.example.sales.dto.SalesResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -18,22 +20,38 @@ class FlyerScraper(
         storeName: String
     ): SalesResponse {
 
-        val store =
-            StoreChain.valueOf(storeName.uppercase())
+        var store = StoreChain.ALDI
+        try {
+            store = StoreChain.valueOf(
+                storeName.uppercase()
+            )
+        } catch (e: IllegalArgumentException) {
 
+            throw ValidationException(
+                "Unknown store: $storeName"
+            )
+        }
         val (start, end) = currentFlyerPeriod()
 
         val url = buildFlyerUrl(store)
 
         println(url)
 
-        val html = httpClient.get(url).body<String>()
+        val html =
+            try {
+                httpClient.get(url).body<String>()
+            } catch (e: Exception) {
+                throw ExternalServiceException("Failed to fetch flyer data for $storeName,  ${e.message}")
+            }
+
 
         val document = Jsoup.parse(html)
 
         val description =
             document.selectFirst("div.product-description")
-                ?: throw IllegalStateException("No product description found")
+                ?: throw ExternalServiceException(
+                    "Flyer format has changed"
+                )
 
         val offers =
             description
@@ -41,7 +59,12 @@ class FlyerScraper(
                 .map { it.text().trim() }
                 .filter { it.isNotBlank() }
 
-        println(offers)
+        if (offers.isEmpty()) {
+
+            throw ExternalServiceException(
+                "No offers found in flyer"
+            )
+        }
 
         return SalesResponse(
             store = store.name,

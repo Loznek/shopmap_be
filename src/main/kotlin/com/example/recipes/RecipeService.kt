@@ -1,5 +1,7 @@
 package com.example.recipes
 
+import com.example.exception.ExternalServiceException
+import com.example.exception.ValidationException
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -17,18 +19,16 @@ class RecipeService(
     private val client: HttpClient,
     private val apiKey: String
 ) {
-    /*
-    private val client = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(Json { ignoreUnknownKeys = true })
-        }
-    }
 
-    private val apiKey = ""
-    */
 
 
     suspend fun getIngredients(mealName: String): List<IngredientResponse> {
+
+        if (mealName.isBlank()) {
+            throw ValidationException(
+                "Meal name cannot be empty"
+            )
+        }
 
         val prompt = """
             Give me the ingredients for $mealName.
@@ -42,29 +42,51 @@ class RecipeService(
             Do not include explanation.
         """.trimIndent()
 
-        val response: OpenAiResponse = client.post("https://api.openai.com/v1/chat/completions") {
-            header(HttpHeaders.Authorization, "Bearer $apiKey")
-            contentType(ContentType.Application.Json)
+        val response: OpenAiResponse =
 
-            setBody(
-                OpenAiRequest(
-                    model = "gpt-4o-mini",
-                    messages = listOf(
-                        OpenAiMessage(
-                            role = "user",
-                            content = prompt
+            try {
+
+                client.post("https://api.openai.com/v1/chat/completions") {
+                    header(HttpHeaders.Authorization, "Bearer $apiKey")
+                    contentType(ContentType.Application.Json)
+
+                    setBody(
+                        OpenAiRequest(
+                            model = "gpt-4o-mini",
+                            messages = listOf(
+                                OpenAiMessage(
+                                    role = "user",
+                                    content = prompt
+                                )
+                            ),
+                            temperature = 0.2
                         )
-                    ),
-                    temperature = 0.2
+                    )
+                }.body()
+
+            } catch (e: Exception) {
+                throw ExternalServiceException(
+                    "Failed to fetch ingredients from openAI: ${e.message} "
                 )
+            }
+
+
+        val content =
+            response.choices
+                .firstOrNull()
+                ?.message
+                ?.content
+                ?: throw ExternalServiceException(
+                    "OpenAI returned empty response"
+                )
+
+        return try {
+            parseIngredients(content)
+        } catch (e: Exception) {
+            throw ExternalServiceException(
+                "OpenAI returned invalid ingredient list ${e.message}"
             )
-        }.body()
-
-
-
-        val content = response.choices.first().message.content
-
-        return parseIngredients(content)
+        }
     }
 
     private fun parseIngredients(jsonText: String): List<IngredientResponse> {

@@ -26,12 +26,6 @@ data class DisplayName(
 )
 
 
-@Serializable
-data class Location(
-    val latitude: Double,
-    val longitude: Double
-)
-
 
 @Serializable
 data class PlaceDetailsResponse(
@@ -41,7 +35,7 @@ data class PlaceDetailsResponse(
     val googleMapsUri: String? = null,
     val rating: Double? = null,
     val userRatingCount: Int? = null,
-    val priceLevel: Int? = null,
+    val priceLevel: String? = null,
     val photos: List<Photo>? = null,
     val regularOpeningHours: OpeningHours? = null,
     val parkingOptions: ParkingOptions? = null,
@@ -82,3 +76,24 @@ data class DayTime(
     val hour: Int,
     val minute: Int
 )
+
+@Serializable
+data class StorePlaceDetailsResponse(
+    val phoneNumber: String?,
+    val websiteUri: String?,
+    val googleMapsUri: String?,
+    val rating: Double?,
+    val userRatingCount: Int?,
+    val hasParking: Boolean,
+    val wheelchairAccessible: Boolean,
+    val openingHours: List<OpeningHoursResponse>,
+    val imagePaths: List<String>
+)
+
+@Serializable
+data class OpeningHoursResponse(
+    val day: Int,
+    val openTime: String,
+    val closeTime: String
+)
+

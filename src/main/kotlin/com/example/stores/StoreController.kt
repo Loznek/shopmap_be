@@ -1,5 +1,6 @@
 package com.example.stores
 
+import com.example.exception.ValidationException
 import com.example.stores.dto.CreateStoreRequest
 import com.example.stores.dto.UpdateStoreRequest
 import com.example.stores.dto.toEntity
@@ -21,54 +22,44 @@ class StoreController(
 
     suspend fun get(call: ApplicationCall) {
         val id = call.parameters["id"]?.toIntOrNull()
-            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
-
+            ?: throw ValidationException(
+                "Invalid store id"
+            )
         val result = service.getById(id)
         call.respond(result.toResponse())
     }
 
     suspend fun create(call: ApplicationCall) {
-        try {
+
             val request = call.receive<CreateStoreRequest>()
             val result = service.create(request.toEntity())
 
             call.respond(HttpStatusCode.Created, result.toResponse())
-
-        } catch (e: IllegalArgumentException) {
-            call.respond(HttpStatusCode.BadRequest, e.message ?: "Invalid request")
-        } catch (e: Exception) {
-            call.respond(HttpStatusCode.BadRequest, "Invalid input data")
-        }
     }
 
 
     suspend fun update(call: ApplicationCall) {
 
-        try {
             val request = call.receive<UpdateStoreRequest>()
             val result = service.update(request.toEntity())
             call.respond(HttpStatusCode.OK, result.toResponse())
-        } catch (e: IllegalArgumentException) {
 
-            call.respond(
-                HttpStatusCode.BadRequest,
-                e.message ?: "Invalid request"
-            )
-        }
     }
 
     suspend fun delete(call: ApplicationCall) {
         val id = call.parameters["id"]?.toIntOrNull()
-            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
-
+            ?: throw ValidationException(
+                "Invalid store id"
+            )
         service.delete(id)
         call.respond(HttpStatusCode.NoContent)
     }
 
     suspend fun fetchPlaceDetails(call: ApplicationCall) {
         val id = call.parameters["id"]?.toIntOrNull()
-            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
-
+            ?: throw ValidationException(
+                "Invalid store id"
+            )
         val details = storeGooglePlacesService.fetchAndStore(id)
 
         call.respond(HttpStatusCode.OK, details)
@@ -77,8 +68,9 @@ class StoreController(
 
     suspend fun getDetails(call: ApplicationCall) {
         val id = call.parameters["id"]?.toIntOrNull()
-            ?: return call.respond(HttpStatusCode.BadRequest, "Invalid id")
-
+            ?: throw ValidationException(
+                "Invalid store id"
+            )
         val details = service.getStoreDetails(id)
 
         call.respond(HttpStatusCode.OK, details)

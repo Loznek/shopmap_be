@@ -1,7 +1,7 @@
 package com.example.di.modules
 
-import ShoppingListService
-import UserService
+import com.example.shoppingList.ShoppingListService
+import com.example.users.UserService
 import com.example.departments.DepartmentService
 import com.example.maps.MapService
 import com.example.navigation.NavigationService

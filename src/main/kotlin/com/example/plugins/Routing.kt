@@ -3,7 +3,7 @@ package com.example.plugins
 
 import com.example.wallblocks.WallBlockController
 import com.example.DTO.*
-import com.example.controller.ShoppingListController
+import com.example.shoppingList.ShoppingListController
 import com.example.departments.DepartmentController
 import com.example.departments.departmentRoutes
 import com.example.maps.MapController
@@ -60,14 +60,6 @@ fun Application.configureRouting() {
     val userController by inject<UserController>()
     val shoppingListController by inject<ShoppingListController>()
 
-
-
-
-    install(StatusPages) {
-        exception<Throwable> { call, cause ->
-            call.respondText(text = "500: $cause" , status = HttpStatusCode.InternalServerError)
-        }
-    }
 
 
     routing {

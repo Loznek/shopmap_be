@@ -6,20 +6,20 @@ fun CreateDepartmentRequest.toEntity() = Department(
     id = null,
     mapId = mapId,
     name = name,
-    startX = startX,
-    startY = startY,
-    width = width,
-    height = height
+    startX = startX.roundToHalf(),
+    startY = startY.roundToHalf(),
+    width = width.roundToHalf(),
+    height = height.roundToHalf()
 )
 
 fun UpdateDepartmentRequest.toEntity() = Department(
     id = id,
     mapId = mapId,
     name = name,
-    startX = startX,
-    startY = startY,
-    width = width,
-    height = height
+    startX = startX.roundToHalf(),
+    startY = startY.roundToHalf(),
+    width = width.roundToHalf(),
+    height = height.roundToHalf()
 )
 
 fun Department.toResponse() = DepartmentResponse(
@@ -31,3 +31,6 @@ fun Department.toResponse() = DepartmentResponse(
     width = width,
     height = height
 )
+
+private fun Double.roundToHalf(): Double =
+    kotlin.math.round(this * 2.0) / 2.0

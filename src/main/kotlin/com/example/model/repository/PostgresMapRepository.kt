@@ -47,9 +47,9 @@ class PostgresMapRepository: MapRepository {
         daoToModel(newMap)
     }
 
-    override suspend fun removeMap(map: Map): Boolean = suspendTransaction {
+    override suspend fun removeMap(id:Int): Boolean = suspendTransaction {
         val rowsDeleted = MapTable.deleteWhere {
-            MapTable.id eq map.id
+            MapTable.id eq id
         }
         rowsDeleted == 1
     }

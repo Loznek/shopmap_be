@@ -1,30 +1,34 @@
 package com.example.model.repository
 
+import com.example.db.mapping.DepartmentTable
 import com.example.model.entity.Product
 import com.example.db.mapping.ProductDAO
 import com.example.db.mapping.ProductTable
 import com.example.db.mapping.daoToModel
 import com.example.db.mapping.suspendTransaction
+import io.ktor.server.plugins.NotFoundException
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class PostgresProductRepository : ProductRepository {
 
     override suspend fun productById(articleNo: Int): Product? =
-        transaction {
+        suspendTransaction {
             ProductDAO
                 .findById(articleNo)
                 ?.let { daoToModel(it) }
         }
 
     override suspend fun productsByStoreId(storeId: Int): List<Product> =
-        transaction {
+        suspendTransaction {
             ProductDAO
                 .find { ProductTable.storeId eq storeId }
                 .map { daoToModel(it) }
         }
 
     override suspend fun addProduct(product: Product): Product =
-        transaction {
+        suspendTransaction {
             val dao = ProductDAO.new {
                 name = product.name
                 size = product.size
@@ -41,7 +45,7 @@ class PostgresProductRepository : ProductRepository {
         suspendTransaction {
 
             val dao = ProductDAO.findById(product.articleNo!!)
-                ?: throw IllegalArgumentException(
+                ?: throw NotFoundException(
                     "Product with articleNo ${product.articleNo} not found"
                 )
 
@@ -55,9 +59,12 @@ class PostgresProductRepository : ProductRepository {
             daoToModel(dao)
         }
 
-    override suspend fun removeProductById(articleNo: Int) {
-        transaction {
-            ProductDAO.findById(articleNo)?.delete()
+    override suspend fun removeProductById(articleNo: Int):Boolean  =
+        suspendTransaction {
+            val rowsDeleted = DepartmentTable.deleteWhere {
+                DepartmentTable.id eq articleNo
+            }
+             rowsDeleted == 1
         }
-    }
+
 }

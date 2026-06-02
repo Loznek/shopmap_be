@@ -12,7 +12,7 @@ class NearestNeighborSolver (
     ): List<Int> {
 
         val visited =
-            BooleanArray(endIndex + 1)
+            BooleanArray(distances.size)
 
         val route =
             mutableListOf<Int>()
@@ -43,15 +43,17 @@ class NearestNeighborSolver (
                 }
             }
 
+            require(best != -1) {
+                "No reachable destination from point $current"
+            }
+
             visited[best] = true
-
             route.add(best)
-
             current = best
         }
 
         route.add(endIndex)
-
+        //return route
         return twoOptSolver.optimize(
             route.toMutableList(),
             distances

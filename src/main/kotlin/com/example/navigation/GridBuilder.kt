@@ -20,26 +20,26 @@ class GridBuilder {
 
         val points = mutableSetOf<Pair<Int, Int>>()
 
-        for (x in 1 until (map.width + 1).toInt()) {
-            for (y in 1 until (map.height + 1).toInt()) {
+        for (x in 0 until map.width.toGrid()) {
+            for (y in 0 until map.height.toGrid()) {
 
                 val isInWall = wallBlocks
                     .filter { it.id != excludeWallId }
                     .any { wall ->
-                        x in wall.startX.toInt() until (wall.startX + wall.width).toInt() &&
-                                y in wall.startY.toInt() until (wall.startY + wall.height).toInt()
+                        x in wall.startX.toGrid() until (wall.startX + wall.width).toGrid() &&
+                                y in wall.startY.toGrid() until (wall.startY + wall.height).toGrid()
                     }
 
                 val isInDepartment = departments
                     .filter { it.id != excludeDepartmentId }
                     .any { dep ->
-                        x in dep.startX.toInt() until (dep.startX + dep.width).toInt() &&
-                                y in dep.startY.toInt() until (dep.startY + dep.height).toInt()
+                        x in dep.startX.toGrid() until (dep.startX + dep.width).toGrid() &&
+                                y in dep.startY.toGrid() until (dep.startY + dep.height).toGrid()
                     }
 
                 val isInNewObject = newRect?.let {
-                    x in it.x.toInt() until (it.x + it.width).toInt() &&
-                            y in it.y.toInt() until (it.y + it.height).toInt()
+                    x in it.x.toGrid() until (it.x + it.width).toGrid() &&
+                            y in it.y.toGrid() until (it.y + it.height).toGrid()
                 } ?: false
 
                 if (!isInWall && !isInDepartment && !isInNewObject) {
@@ -48,9 +48,20 @@ class GridBuilder {
             }
         }
 
-        // Ensure till is reachable
-        points.add(tills[0].startX.toInt() to tills[0].startY.toInt())
+        val startPoint = map.entranceX.toGrid() to map.entranceY.toGrid()
 
+        val till = tills[0]
+        // Ensure till is reachable
+        val endPoint= (till.startX + till.width / 2).toGrid() to (till.startY + till.height / 2).toGrid()
+        if (startPoint !in points) {
+            throw IllegalStateException("Entrance is blocked")
+        }
+
+        if (endPoint !in points) {
+            throw IllegalStateException("Till area is blocked")
+        }
+        //points.add(startPoint)
+        //points.add(endPoint)
         return points
     }
 }

@@ -5,12 +5,15 @@ import com.example.model.entity.Store
 import com.example.model.repository.*
 import com.example.products.dto.toResponse
 import com.example.repository.ShoppingListItemRepository
+import com.example.exception.NotFoundException
+import com.example.exception.ValidationException
 import com.example.repository.ShoppingListRepository
 import com.example.shoppingList.dto.toResponse
 import com.example.stores.dto.ShoppingListMatchesResponse
 import com.example.stores.dto.ShoppingListProductMatchResponse
 import com.example.stores.dto.StoreDetailsResponse
 import io.ktor.server.application.ApplicationCall
+
 
 class StoreService(
     private val storeRepository: StoreRepository,
@@ -28,21 +31,30 @@ class StoreService(
 
     suspend fun getById(id: Int): Store {
         return storeRepository.storeById(id)
-            ?: throw IllegalArgumentException("Store not found")
+            ?: throw NotFoundException("Store not found")
     }
 
     suspend fun delete(id: Int) {
-        val store = storeRepository.storeById(id)
-            ?: throw IllegalArgumentException("Store not found")
-
-        storeRepository.removeStore(store)
+        val deleted = storeRepository.removeStore(id)
+        if (!deleted){
+            throw NotFoundException("Store not found")
+        }
     }
 
     suspend fun create(store: Store): Store {
+        if (store.name.isBlank()) {
+            throw ValidationException(
+                "Store name cannot be empty"
+            )
+        }
         return storeRepository.addStore(store)
     }
 
     suspend fun update(store: Store): Store {
+        storeRepository.storeById(store.id!!)
+            ?: throw NotFoundException(
+                "Store ${store.id} not found"
+            )
         return storeRepository.update(store)
     }
 
@@ -50,7 +62,6 @@ class StoreService(
         storeId: Int,
         shoppingListId: Int
     ): ShoppingListMatchesResponse {
-
 
 
         val items =
@@ -91,10 +102,11 @@ class StoreService(
     }
 
 
-
     suspend fun getStoreDetails(storeId: Int): StoreDetailsResponse {
         val store = storeRepository.storeById(storeId)
-            ?: throw IllegalArgumentException("Store not found")
+            ?: throw NotFoundException(
+                "Store $storeId not found"
+            )
 
         val map = mapRepository.mapsByStoreId(storeId).firstOrNull()
 

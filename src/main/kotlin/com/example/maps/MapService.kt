@@ -1,6 +1,8 @@
 package com.example.maps
 
 import com.example.departments.dto.DepartmentResponse
+import com.example.exception.NotFoundException
+import com.example.exception.ValidationException
 import com.example.model.repository.DepartmentRepository
 import com.example.model.repository.MapRepository
 import com.example.model.repository.TillRepository
@@ -26,24 +28,26 @@ class MapService(
 
     suspend fun getById(id: Int): Map {
         return mapRepository.mapById(id)
-            ?: throw IllegalArgumentException("Map not found")
+            ?: throw NotFoundException("Map $id not found")
     }
 
     suspend fun delete(id: Int) {
-        val map = mapRepository.mapById(id)
-            ?: throw IllegalArgumentException("Map not found")
+        val deleted = mapRepository.removeMap(id)
+        if (!deleted) {
+            throw NotFoundException("Map $id not found")
+        }
 
-        mapRepository.removeMap(map)
     }
 
     suspend fun create(map: Map): Map {
+        if (map.width <= 0 || map.height <= 0) {
+            throw ValidationException("Map dimensions must be positive")
+        }
+
         return mapRepository.addMap(map)
     }
 
     suspend fun update(map: Map): Map {
-
-        val existingMap = mapRepository.mapById(map.id!!)
-            ?: throw IllegalArgumentException("Map not found")
 
         val wallBlocks = wallBlockRepository.wallBlocksByMap(map.id!!)
         val departments = departmentRepository.departmentsByMap(map.id!!)
@@ -59,7 +63,7 @@ class MapService(
         )
 
         if (!canResize) {
-            throw IllegalArgumentException("Map resizing would cause collision")
+            throw ValidationException("Map resizing would cause collision")
         }
 
         return mapRepository.updateMap(map)
@@ -79,7 +83,7 @@ class MapService(
             )
 
         if (pythonResponse.boxes.isEmpty()) {
-            throw IllegalArgumentException(
+            throw NotFoundException(
                 "No boxes detected"
             )
         }
@@ -111,18 +115,18 @@ class MapService(
     }
     fun generateDebugFloorPlan(
         departments: List<DepartmentResponse>,
-        mapWidth: Int,
-        mapHeight: Int
+        mapWidth: Double,
+        mapHeight: Double
     ) {
 
-        val scale = 20
+        val scale = 40
 
         val widthPx = mapWidth * scale
         val heightPx = mapHeight * scale
 
         val image = BufferedImage(
-            widthPx,
-            heightPx,
+            widthPx.toInt(),
+            heightPx.toInt(),
             BufferedImage.TYPE_INT_RGB
         )
 
@@ -130,14 +134,19 @@ class MapService(
 
         // háttér
         g.color = Color.WHITE
-        g.fillRect(0, 0, widthPx, heightPx)
+        g.fillRect(0, 0, widthPx.toInt(), heightPx.toInt())
+
+        g.setRenderingHint(
+            RenderingHints.KEY_TEXT_ANTIALIASING,
+            RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+        )
 
         g.font = Font(
             "Arial",
             Font.BOLD,
-            14
+            30
         )
-
+        g.stroke = BasicStroke(5f)
         departments.forEach { department ->
 
             val x =

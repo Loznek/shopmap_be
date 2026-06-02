@@ -1,5 +1,9 @@
+package com.example.shoppingList
 
-
+import UserRepository
+import com.example.exception.AuthenticationException
+import com.example.exception.NotFoundException
+import com.example.exception.ValidationException
 import com.example.plugins.FirebaseUserPrincipal
 
 import com.example.model.entity.ShoppingList
@@ -20,7 +24,7 @@ class ShoppingListService(
 
         val user =
             userRepository.getByFirebaseUid(principal.uid)
-                ?: throw IllegalStateException("User not found")
+                ?: throw AuthenticationException("User not found")
 
         return shoppingListRepository
             .getShoppingListsByUser(user.id)
@@ -33,14 +37,16 @@ class ShoppingListService(
 
         val user =
             userRepository.getByFirebaseUid(principal.uid)
-                ?: throw IllegalStateException("User not found")
+                ?: throw AuthenticationException("User not found")
 
         val shoppingList =
             shoppingListRepository.getShoppingList(listId)
-                ?: throw NoSuchElementException()
+                ?: throw NotFoundException(
+                    "Shopping list $listId not found"
+                )
 
         if (shoppingList.userId != user.id)
-            throw IllegalAccessException()
+            throw AuthenticationException("Access denied")
 
         return shoppingList
     }
@@ -51,9 +57,16 @@ class ShoppingListService(
         items: List<ShoppingListItem>
     ): ShoppingList {
 
+        if (name.isBlank()) {
+
+            throw ValidationException(
+                "Shopping list name cannot be empty"
+            )
+        }
+
         val user =
             userRepository.getByFirebaseUid(principal.uid)
-                ?: throw IllegalStateException("User not found")
+                ?: throw AuthenticationException("User not found")
 
         val list =
             shoppingListRepository.addShoppingList(
@@ -95,4 +108,5 @@ class ShoppingListService(
 
         shoppingListRepository.deleteShoppingList(listId)
     }
+
 }
