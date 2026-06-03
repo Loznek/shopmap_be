@@ -4,7 +4,7 @@ info:
   description: "com_example_ktor_db_app API"
   version: "1.0.0"
 servers:
-  - url: "http://127.0.0.1:8080"
+  - url: /
 paths:
   /calculate-route:
     post:
