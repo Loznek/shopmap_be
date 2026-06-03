@@ -84,7 +84,7 @@ fun Application.configureRouting() {
             }
         }
 
-        swaggerUI(path = "swagger-ui", swaggerFile = "resources/com_example_ktor_db_app-openapi_6.yaml")
+        swaggerUI(path = "swagger-ui", swaggerFile = "com_example_ktor_db_app-openapi_6.yaml")
 
         shoppingListRoutes(shoppingListController)
         userRoutes(userController)
