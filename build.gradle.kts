@@ -61,6 +61,7 @@ dependencies {
     implementation("io.ktor:ktor-server-auth")
     implementation("io.ktor:ktor-server-auth-jwt")
     implementation("com.google.firebase:firebase-admin:9.4.3")
+    implementation("io.ktor:ktor-server-cors-jvm:3.4.3")
 
     ///implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
     //implementation("com.google.firebase:firebase-analytics")

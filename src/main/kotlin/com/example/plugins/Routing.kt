@@ -28,11 +28,8 @@ import com.example.users.userRoutes
 import com.example.wallblocks.wallBlockRoutes
 import io.ktor.client.*
 import io.ktor.client.request.*
-import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.plugins.statuspages.*
 import kotlinx.serialization.json.Json
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.io.File
 import kotlin.collections.Map
@@ -87,7 +84,7 @@ fun Application.configureRouting() {
             }
         }
 
-        swaggerUI(path = "swagger-ui", swaggerFile = "com_example_ktor_db_app-openapi_6.yaml")
+        swaggerUI(path = "swagger-ui", swaggerFile = "resources/com_example_ktor_db_app-openapi_6.yaml")
 
         shoppingListRoutes(shoppingListController)
         userRoutes(userController)

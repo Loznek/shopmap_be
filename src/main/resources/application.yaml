@@ -4,3 +4,18 @@ ktor:
             - com.example.ApplicationKt.module
     deployment:
         port: 8080
+
+
+google:
+    apiKey: ${GOOGLE_API_KEY}
+    documentAi:
+        credentialsFile: ${DOCAI_CREDENTIALS_JSON}
+
+python:
+    processor:
+        baseUrl: ${PYTHON_PROCESSOR_BASE_URL}
+openai:
+    apiKey: ${OPENAI_API_KEY}
+
+firebase:
+    credentialsFile: ${FIREBASE_CREDENTIALS_FILE}

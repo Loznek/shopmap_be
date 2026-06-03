@@ -25,7 +25,8 @@ fun Application.configureKoin() {
 
                 "python.processor.baseUrl" to environment.config
                     .property("python.processor.baseUrl")
-                    .getString()
+                    .getString(),
+
             )
         )
 

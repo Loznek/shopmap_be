@@ -10,10 +10,24 @@ import kotlinx.coroutines.*
 import org.jetbrains.exposed.sql.*
 
 fun configureDatabases() {
+
+    val dbUrl =
+        System.getenv("DB_URL")
+            ?: error("DB_URL is missing")
+
+    val dbUser =
+        System.getenv("DB_USER")
+            ?: error("DB_USER is missing")
+
+    val dbPassword =
+        System.getenv("DB_PASSWORD")
+            ?: error("DB_PASSWORD is missing")
+
     Database.connect(
-        "jdbc:postgresql://localhost:5432/shopdb",
-        user = "postgres",
-        password = "123456"
+        url = dbUrl,
+        driver = "org.postgresql.Driver",
+        user = dbUser,
+        password = dbPassword
     )
 }
 

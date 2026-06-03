@@ -37,6 +37,9 @@ out/
 
 
 ###security files
-/src/main/resources/application.yaml
-/src/main/resources/onlab-test-be-ff5644707fa7.json
-/src/main/resources/shopmap-1afca-firebase-adminsdk-fbsvc-2473bb1dca.json
+.env
+
+credentials/
+
+
+

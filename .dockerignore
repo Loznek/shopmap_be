@@ -1,0 +1,10 @@
+.gradle
+.idea
+.kotlin
+
+.git
+.gitignore
+
+storePictures
+
+debug_*.png

@@ -9,6 +9,7 @@ import com.google.cloud.documentai.v1.DocumentProcessorServiceSettings
 import com.google.cloud.documentai.v1.ProcessRequest
 import com.google.cloud.documentai.v1.RawDocument
 import com.google.protobuf.ByteString
+import java.io.FileInputStream
 
 class GoogleDocumentAiProvider(
     private val credentialsFile: String
@@ -22,12 +23,16 @@ class GoogleDocumentAiProvider(
     private val settings: DocumentProcessorServiceSettings
 
     init {
-
+        /*
         val credentialsStream =
             javaClass.classLoader.getResourceAsStream(credentialsFile)
                 ?: throw ExternalServiceException(
                     "Credential file not found: $credentialsFile"
                 )
+        */
+        val credentialsStream =
+            FileInputStream(credentialsFile)
+
 
         val credentials =
             GoogleCredentials.fromStream(credentialsStream)
