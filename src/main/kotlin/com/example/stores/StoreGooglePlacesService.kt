@@ -11,7 +11,9 @@ import com.example.model.repository.GoogleMapsInfoRepository
 import com.example.model.repository.OpeningHoursRepository
 import com.example.model.repository.StorePictureRepository
 import com.example.model.repository.StoreRepository
+import com.example.stores.google.OpeningHoursResponse
 import com.example.stores.google.PlaceDetailsResponse
+import com.example.stores.google.StorePlaceDetailsResponse
 
 class StoreGooglePlacesService(
     private val storeRepository: StoreRepository,
@@ -22,7 +24,7 @@ class StoreGooglePlacesService(
     private val photoDownloader: PhotoDownloader
 ) {
 
-    suspend fun fetchAndStore(storeId: Int): PlaceDetailsResponse {
+    suspend fun fetchAndStore(storeId: Int): StorePlaceDetailsResponse {
 
 
         // 1. Load store
@@ -39,7 +41,7 @@ class StoreGooglePlacesService(
         // 2. Check if already imported
         val existing = googleMapsInfoRepository.getByStoreId(store.id!!)
         if (existing != null) {
-            return googlePlacesClient.getPlaceDetails(existing.placeId)
+            return loadFromDatabase(store.id)
         }
 
         // 3. Search Google Places
@@ -125,10 +127,51 @@ class StoreGooglePlacesService(
 
 
         // 10. Return Google response
-        return detailsResponse
+        //return detailsResponse
+        return loadFromDatabase(
+            store.id
+        )
     }
 
     private fun formatTime(hour: Int, minute: Int): String {
         return "$hour:${minute.toString().padStart(2, '0')}"
     }
+
+
+    private suspend fun loadFromDatabase(
+        storeId: Int
+    ): StorePlaceDetailsResponse {
+
+        val info =
+            googleMapsInfoRepository
+                .getByStoreId(storeId)
+                ?: throw IllegalStateException()
+
+        val openingHours =
+            openingHoursRepository
+                .getByStoreId(storeId)
+
+        val pictures =
+            pictureRepository
+                .getByStoreId(storeId)
+
+        return StorePlaceDetailsResponse(
+            phoneNumber = info.phoneNumber,
+            websiteUri = info.websiteUri,
+            googleMapsUri = info.googleMapsUri,
+            rating = info.rating,
+            userRatingCount = info.userRatingCount,
+            hasParking = info.hasParking,
+            wheelchairAccessible = info.wheelchairAccessible,
+            openingHours = openingHours.map {
+                OpeningHoursResponse(
+                    day = it.day,
+                    openTime = it.openTime,
+                    closeTime = it.closeTime
+                )
+            },
+            imagePaths = pictures.map { it.path }
+        )
+    }
+
 }
