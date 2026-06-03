@@ -75,6 +75,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio")
     implementation("io.ktor:ktor-client-content-negotiation")
     implementation("io.ktor:ktor-serialization-kotlinx-json")
+    implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.29")
 
     testImplementation("io.ktor:ktor-server-test-host-jvm")
     testImplementation(kotlin("test"))

@@ -66,13 +66,28 @@ fun Application.configureRouting() {
 
 
         openAPI(path = "openapi") {
-            info = OpenApiInfo("My API", "1.0")
+            info = OpenApiInfo(
+                title = "Store Route Optimization API",
+                version = "1.0.0",
+                description =
+                    """
+            API for demonstrating:
+            - Shopping list management
+            - OCR product recognition
+            - Route optimization algorithms
+            - Google Places integration
+            
+            Recommended demo flow:
+            1. Login
+            2. OCR
+            3. Route generation
+            """)
             source = OpenApiDocSource.Routing {
                 routingRoot.descendants()
             }
         }
 
-        swaggerUI(path = "swagger-ui", swaggerFile = "openapi")
+        swaggerUI(path = "swagger-ui", swaggerFile = "com_example_ktor_db_app-openapi_6.yaml")
 
         shoppingListRoutes(shoppingListController)
         userRoutes(userController)
