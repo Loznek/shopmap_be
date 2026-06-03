@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN ./gradlew shadowJar --no-daemon
+RUN gradle shadowJar --no-daemon
 
 FROM eclipse-temurin:21-jre
 
