@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY build/libs/*.jar app.jar
 
-COPY credentials ./credentials
 
 EXPOSE 8080
 
