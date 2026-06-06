@@ -42,7 +42,7 @@ class GoogleDocumentAiProvider(
         credentials.refreshIfExpired()
         println(credentials.accessToken?.tokenValue?.take(20))
         println("Access token: ${credentials.accessToken != null}")
-
+        println("Document AI endpoint: $location-documentai.googleapis.com:443")
         settings =
             DocumentProcessorServiceSettings.newBuilder()
                 .setCredentialsProvider(
@@ -68,6 +68,8 @@ class GoogleDocumentAiProvider(
         try {
 
             DocumentProcessorServiceClient.create(settings).use { client ->
+
+                println("Client created")
                 val document = RawDocument.newBuilder()
                     .setContent(ByteString.copyFrom(fileBytes))
                     .setMimeType("image/jpeg")
