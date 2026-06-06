@@ -62,15 +62,6 @@ class NavigationService(
         if (tills.isEmpty()) {
             throw IllegalArgumentException("No tills found for map")
         }
-/*
-
-        val relevantDepartments =
-            departments.filter { it.id in destinationDepartmentIds }
-
-        val destinationPoints = relevantDepartments.map {
-            ((it.startX + it.width - 1).toInt()) to it.startY.toInt()
-        }
-*/
 
         val departmentMap =
             departments
@@ -191,7 +182,7 @@ class NavigationService(
         val path = finalPath.map {
             it.first / 2.0 to it.second / 2.0
         }
-        generateDebugFloorPlan(
+        /*generateDebugFloorPlan(
             departments = departments.map { it.toResponse() },
             route = path,
             destinationPoints = destinationPoints.map {
@@ -199,17 +190,9 @@ class NavigationService(
             },
             mapWidth = map.width,
             mapHeight = map.height
-        )
+        )*/
 
         return path
-
-        /*
-        return heldKarpSolver.solve(
-            walkablePoints = walkablePoints,
-            destinations = destinationPoints,
-            start = start,
-            end = end
-        )*/
     }
 
 
@@ -312,7 +295,7 @@ class NavigationService(
             g.drawString(
                 department.name,
                 x + 5,
-                y + 30
+                y + 55
             )
         }
 
@@ -338,18 +321,15 @@ class NavigationService(
             }
         }
 
-        // ---------------------------
-        // Destination points
-        // ---------------------------
-        g.color = Color.MAGENTA
+        g.color = Color.ORANGE
 
         destinationPoints.forEach {
 
             g.fillOval(
-                (it.first * scale).toInt() - 8,
-                (it.second * scale).toInt() - 8,
-                16,
-                16
+                (it.first * scale).toInt() - 16,
+                (it.second * scale).toInt() - 16,
+                32,
+                32
             )
         }
 

@@ -16,7 +16,7 @@ class UserService(
             ?: repository.create(
                 firebaseUid = principal.uid,
                 email = principal.email,
-                displayName = principal.displayName
+                displayName = principal.displayName ?: "No UserName"
             )
     }
 }

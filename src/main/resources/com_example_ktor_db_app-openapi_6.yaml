@@ -6,18 +6,34 @@ info:
 servers:
   - url: /
 paths:
-  /calculate-route:
+  /store:
+    get:
+      summary: "1. Get all stores"
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/StoreResponse"
     post:
+      summary: "2. Create a new store"
       description: ""
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RoutePlanningRequest"
+              $ref: "#/components/schemas/CreateStoreRequest"
+            example:
+              name: "Eger Aldi"
+              location: "Mátyás Király út 138, Eger"
         required: true
       responses:
-        "404":
-          description: "Not Found"
+        "400":
+          description: "Bad Request"
           content:
             '*/*':
               schema:
@@ -27,14 +43,166 @@ paths:
                   description: ""
                   value:
                     message: "null"
-                    status: 404
+                    status: 400
                     timestamp: "null"
-                Example#2:
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StoreResponse"
+    put:
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateStoreRequest"
+        required: true
+      responses:
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StoreResponse"
+  /maps:
+    post:
+      summary: "3. Create a new store map"
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMapRequest"
+            example:
+              width: 80
+              height: 70
+              entranceX: 40
+              entranceY: 0
+              exitX: 40
+              exitY: 70
+              storeId: Created Id
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
                   description: ""
                   value:
                     message: "null"
-                    status: 404
+                    status: 400
                     timestamp: "null"
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MapResponse"
+    put:
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateMapRequest"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MapResponse"
+  /tills:
+    post:
+      summary: "4. Create till area"
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTillRequest"
+            example:
+              mapId: Created Map Id
+              startX: 20
+              startY: 60
+              width: 40
+              height: 5
+        required: true
+      responses:
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TillResponse"
+    put:
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTillRequest"
+        required: true
+      responses:
         "500":
           description: "Internal Server Error"
           content:
@@ -60,6 +228,19 @@ paths:
                     message: "Internal server error"
                     status: 500
                     timestamp: "null"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
         "422":
           description: "Unprocessable Entity"
           content:
@@ -73,37 +254,19 @@ paths:
                     message: "null"
                     status: 422
                     timestamp: "null"
-                Example#2:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 422
-                    timestamp: "null"
-                Example#3:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 422
-                    timestamp: "null"
-                Example#4:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 422
-                    timestamp: "null"
         "200":
           description: "OK"
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/RoutePlanResponse"
+                $ref: "#/components/schemas/TillResponse"
   /departments:
     post:
-      summary: Create department
+      summary: "5. Create departments"
 
       description: |
         Creates a new department on the selected store map.
-
+        Leirni, hogy 
         Validation rules:
         - Department must fit inside the map boundaries
         - Department must not overlap existing objects
@@ -119,13 +282,28 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateDepartmentRequest"
-            example:
-              mapId: 3
-              name: "Bakery"
-              startX: 115.0
-              startY: 25.5
-              width: 53.0
-              height: 24.5
+            examples:
+              Invalid Position:
+                summary: "Badly placed department example"
+
+                value:
+                  mapId: Created Map Id
+                  name: "Pékáru"
+                  startX: 25.0
+                  startY: 55.5
+                  width: 10.0
+                  height: 10.5
+
+              Valid Position:
+
+                summary: "Well placed department example"
+                value:
+                  mapId: Created Map Id
+                  name: "Pékáru"
+                  startX: 10.0
+                  startY: 10.5
+                  width: 10.0
+                  height: 10.5
       responses:
         "500":
           description: "Internal Server Error"
@@ -256,6 +434,895 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/DepartmentResponse"
+  /wall-blocks:
+    post:
+      summary: "6. Create wall blocks"
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateWallBlockRequest"
+            examples:
+              Invalid Position:
+
+                summary: "Badly placed wallblock example"
+                value:
+                  mapId: Created Map Id
+                  startX: 0.0
+                  startY: 25
+                  width: 80.0
+                  height: 10
+
+              Valid Position:
+
+                summary: "Well placed wall block example"
+                value:
+                  mapId: Created Map Id
+                  startX: 35.0
+                  startY: 35.5
+                  width: 5.0
+                  height: 5.5
+        required: true
+      responses:
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+                Example#3:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+        "422":
+          description: "Unprocessable Entity"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 422
+                    timestamp: "null"
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/WallBlockResponse"
+    put:
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateWallBlockRequest"
+        required: true
+      responses:
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+                Example#3:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+        "422":
+          description: "Unprocessable Entity"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 422
+                    timestamp: "null"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/WallBlockResponse"
+  /products:
+    post:
+      summary: "7. Create products"
+      description: 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProductRequest"
+
+            example:
+              name: "Bread"
+              size: "1 kg"
+              departmentId: Created Department id
+              position: "RIGHT"
+              storeId: Created Store Id
+              price: 799.99
+
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProductResponse"
+    put:
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProductRequest"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProductResponse"
+  /me:
+    get:
+      security:
+        - FirebaseAuth: [ ]
+      summary: "8. Check login"
+      description: ""
+      responses:
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AppUserResponse"
+  /shopping-lists:
+    get:
+      security:
+        - FirebaseAuth: [ ]
+      description: ""
+
+      responses:
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 401
+                    timestamp: "null"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ShoppingList"
+    post:
+      security:
+        - FirebaseAuth: [ ]
+      summary: "9. Create shopping list"
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateShoppingListRequest"
+            example:
+                name: "Weekly Bread"
+                items:
+                    - shoppingItemName: "Milk"
+                      attributes: "2l"
+                    - shoppingItemName: "Bread"
+                      attributes: "1kg"
+        required: true
+      responses:
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 401
+                    timestamp: "null"
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ShoppingList"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+  /store/{storeId}/shopping-lists/{shoppingListId}/matches:
+    get:
+      security:
+        - FirebaseAuth: [ ]
+      summary: "10. Get available products from list"
+      description: "Use created Store Id, and created Shopping List Id in the query"
+      parameters:
+        - name: "storeId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+        - name: "shoppingListId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ShoppingListMatchesResponse"
+  /calculate-route:
+    post:
+      summary: "11. Run a Held-Karp route calcutaion algorithm"
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoutePlanningRequest"
+            example:
+                mapId: 4
+
+                products:
+                  - articleNo: 31
+                    departmentId: 29
+                    position: LEFT
+
+                  - articleNo: 29
+                    departmentId: 27
+                    position: RIGHT
+
+                  - articleNo: 34
+                    departmentId: 31
+                    position: TOP
+
+                  - articleNo: 38
+                    departmentId: 33
+                    position: TOP
+
+                  - articleNo: 35
+                    departmentId: 32
+                    position: BOTTOM
+
+                  - articleNo: 32
+                    departmentId: 30
+                    position: RIGHT
+
+                  - articleNo: 30
+                    departmentId: 28
+                    position: RIGHT
+
+                  - articleNo: 33
+                    departmentId: 30
+                    position: LEFT
+
+                  - articleNo: 36
+                    departmentId: 30
+                    position: TOP
+
+                  - articleNo: 37
+                    departmentId: 28
+                    position: TOP
+        required: true
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 404
+                    timestamp: "null"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 404
+                    timestamp: "null"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+                Example#3:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+        "422":
+          description: "Unprocessable Entity"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 422
+                    timestamp: "null"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 422
+                    timestamp: "null"
+                Example#3:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 422
+                    timestamp: "null"
+                Example#4:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 422
+                    timestamp: "null"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RoutePlanResponse"
+  /ocr/shopping-list:
+    post:
+      summary: "12. Test Ocr-Shopping list item conversion"
+      description:
+        The Ocr - shopping list item conversion can be tested e.g. by uploading this image
+
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - image
+              properties:
+                image:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+        "502":
+          description: "Bad Gateway"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 502
+                    timestamp: "null"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 404
+                    timestamp: "null"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/CreateShoppingListItemRequest"
+  /recipes/ingredients:
+    post:
+      summary: "13. Get ingredients for a chosen meal"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecipeRequest"
+            example:
+              mealName: "Pasta Carbonara"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+        "502":
+          description: "Bad Gateway"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 502
+                    timestamp: "null"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 502
+                    timestamp: "null"
+                Example#3:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 502
+                    timestamp: "null"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/IngredientResponse"
+  /sales/{store}:
+    get:
+      summary: "14. Get sales info for a store-chain. Eg.: Aldi, Tesco, Lidl"
+      parameters:
+        - name: "store"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+                Example#2:
+                  value: "Store is required"
+        "502":
+          description: "Bad Gateway"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 502
+                    timestamp: "null"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 502
+                    timestamp: "null"
+                Example#3:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 502
+                    timestamp: "null"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SalesResponse"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /maps/import-by-image:
+    post:
+      summary: "15. The function can be tested with an uploaded image e.g.: "
+      description: ""
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - mapWidth
+                - mapHeight
+                - mapId
+              properties:
+                file:
+                  type: string
+                  format: binary
+
+                mapWidth:
+                  type: number
+
+                mapHeight:
+                  type: number
+
+                mapId:
+                  type: integer
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+                Example#3:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+                Example#4:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+                Example#5:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+                Example#6:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+        "502":
+          description: "Bad Gateway"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 502
+                    timestamp: "null"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/DepartmentResponse"
+  /store/{id}/place-details:
+    get:
+      summary: "16. Get the details for the given store"
+      description: ""
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+                Example#3:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+                Example#4:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+        "502":
+          description: "Bad Gateway"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 502
+                    timestamp: "null"
+                Example#2:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 502
+                    timestamp: "null"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StorePlaceDetailsResponse"
+                
+  
   /departments/{id}:
     delete:
       description: ""
@@ -384,63 +1451,6 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/DepartmentResponse"
-  /maps:
-    post:
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateMapRequest"
-        required: true
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "201":
-          description: "Created"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/MapResponse"
-    put:
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateMapRequest"
-        required: true
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/MapResponse"
   /maps/{id}:
     delete:
       description: ""
@@ -524,269 +1534,6 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/MapResponse"
-  /maps/import-by-image:
-    post:
-      description: ""
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              required:
-                - file
-                - mapWidth
-                - mapHeight
-                - mapId
-              properties:
-                file:
-                  type: string
-                  format: binary
-
-                mapWidth:
-                  type: number
-
-                mapHeight:
-                  type: number
-
-                mapId:
-                  type: integer
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-                Example#2:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-                Example#3:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-                Example#4:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-                Example#5:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-                Example#6:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "502":
-          description: "Bad Gateway"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 502
-                    timestamp: "null"
-        "500":
-          description: "Internal Server Error"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-        "201":
-          description: "Created"
-          content:
-            '*/*':
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/DepartmentResponse"
-  /me:
-    get:
-      description: ""
-      responses:
-        "401":
-          description: "Unauthorized"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/AppUserResponse"
-  /ocr/shopping-list:
-    post:
-      description: "get {\n            controller.extractText(call)\n        }"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: "array"
-              items:
-                type: "string"
-                format: "byte"
-        required: true
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "500":
-          description: "Internal Server Error"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-        "502":
-          description: "Bad Gateway"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 502
-                    timestamp: "null"
-        "404":
-          description: "Not Found"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 404
-                    timestamp: "null"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/CreateShoppingListItemRequest"
-  /products:
-    post:
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateProductRequest"
-        required: true
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-                Example#2:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "201":
-          description: "Created"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ProductResponse"
-    put:
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateProductRequest"
-        required: true
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-                Example#2:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ProductResponse"
   /products/{articleNo}:
     delete:
       description: ""
@@ -889,192 +1636,10 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/ProductResponse"
-  /recipes/ingredients:
-    post:
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RecipeRequest"
-        required: true
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "502":
-          description: "Bad Gateway"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 502
-                    timestamp: "null"
-                Example#2:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 502
-                    timestamp: "null"
-                Example#3:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 502
-                    timestamp: "null"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/IngredientResponse"
-  /sales/{store}:
-    get:
-      description: ""
-      parameters:
-        - name: "store"
-          in: "path"
-          required: true
-          schema:
-            type: "string"
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-                Example#2:
-                  value: "Store is required"
-        "502":
-          description: "Bad Gateway"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 502
-                    timestamp: "null"
-                Example#2:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 502
-                    timestamp: "null"
-                Example#3:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 502
-                    timestamp: "null"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/SalesResponse"
-        "500":
-          description: "Internal Server Error"
-          content:
-            '*/*':
-              schema:
-                type: "string"
-  /shopping-lists:
-    get:
-      description: ""
-      responses:
-        "401":
-          description: "Unauthorized"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 401
-                    timestamp: "null"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/ShoppingList"
-    post:
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateShoppingListRequest"
-        required: true
-      responses:
-        "401":
-          description: "Unauthorized"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 401
-                    timestamp: "null"
-        "201":
-          description: "Created"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ShoppingList"
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
   /shopping-lists/{id}:
     delete:
+      security:
+        - FirebaseAuth: [ ]
       description: ""
       parameters:
         - name: "id"
@@ -1127,6 +1692,8 @@ paths:
               schema:
                 type: "object"
     get:
+      security:
+        - FirebaseAuth: [ ]
       description: ""
       parameters:
         - name: "id"
@@ -1179,419 +1746,6 @@ paths:
                     message: "Internal server error"
                     status: 500
                     timestamp: "null"
-  /store:
-    get:
-      description: ""
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/StoreResponse"
-    post:
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateStoreRequest"
-        required: true
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "201":
-          description: "Created"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/StoreResponse"
-    put:
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateStoreRequest"
-        required: true
-      responses:
-        "500":
-          description: "Internal Server Error"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/StoreResponse"
-  /store/{id}:
-    delete:
-      description: ""
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "500":
-          description: "Internal Server Error"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-        "204":
-          description: "No Content"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-    get:
-      description: ""
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "500":
-          description: "Internal Server Error"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/StoreResponse"
-  /store/{id}/component-details:
-    get:
-      description: ""
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "500":
-          description: "Internal Server Error"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/StoreDetailsResponse"
-  /store/{id}/place-details:
-    get:
-      description: ""
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-                Example#2:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "500":
-          description: "Internal Server Error"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-                Example#2:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-                Example#3:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-                Example#4:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-        "502":
-          description: "Bad Gateway"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 502
-                    timestamp: "null"
-                Example#2:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 502
-                    timestamp: "null"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/StorePlaceDetailsResponse"
-  /store/{storeId}/shopping-lists/{shoppingListId}/matches:
-    get:
-      description: ""
-      parameters:
-        - name: "storeId"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-        - name: "shoppingListId"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ShoppingListMatchesResponse"
-  /tills:
-    post:
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateTillRequest"
-        required: true
-      responses:
-        "500":
-          description: "Internal Server Error"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "201":
-          description: "Created"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/TillResponse"
-    put:
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateTillRequest"
-        required: true
-      responses:
-        "500":
-          description: "Internal Server Error"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-                Example#2:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-                Example#3:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "422":
-          description: "Unprocessable Entity"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 422
-                    timestamp: "null"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/TillResponse"
   /tills/{id}:
     delete:
       description: ""
@@ -1720,139 +1874,6 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/TillResponse"
-  /wall-blocks:
-    post:
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateWallBlockRequest"
-        required: true
-      responses:
-        "500":
-          description: "Internal Server Error"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-                Example#2:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-                Example#3:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "422":
-          description: "Unprocessable Entity"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 422
-                    timestamp: "null"
-        "201":
-          description: "Created"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/WallBlockResponse"
-    put:
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateWallBlockRequest"
-        required: true
-      responses:
-        "500":
-          description: "Internal Server Error"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-                Example#2:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-                Example#3:
-                  description: ""
-                  value:
-                    message: "Internal server error"
-                    status: 500
-                    timestamp: "null"
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 400
-                    timestamp: "null"
-        "422":
-          description: "Unprocessable Entity"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    message: "null"
-                    status: 422
-                    timestamp: "null"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/WallBlockResponse"
   /wall-blocks/{id}:
     delete:
       description: ""
@@ -1981,7 +2002,138 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/WallBlockResponse"
+  /store/{id}:
+    delete:
+      description: ""
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+        "204":
+          description: "No Content"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    get:
+      description: ""
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StoreResponse"
+  /store/{id}/component-details:
+    get:
+      summary: "Get all store elements"
+      description: ""
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "null"
+                    status: 400
+                    timestamp: "null"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    message: "Internal server error"
+                    status: 500
+                    timestamp: "null"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StoreDetailsResponse"
 components:
+  securitySchemes:
+    FirebaseAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     ErrorResponse:
       type: "object"
@@ -1998,6 +2150,23 @@ components:
         - "message"
         - "status"
         - "timestamp"
+    LoginRequest:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+      required:
+        - "email"
+        - "password"
+    AuthTokenResponse:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+      required:
+        - "token"
     RoutePlanningProductRequest:
       type: "object"
       properties:
@@ -2013,6 +2182,8 @@ components:
         - "articleNo"
         - "departmentId"
         - "position"
+    Map_String:
+      type: "string"
     RoutePlanningRequest:
       type: "object"
       properties:

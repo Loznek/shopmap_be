@@ -15,8 +15,3 @@ data class CreateShoppingListItemRequest(
 )
 
 
-data class ShoppingListItemRequest(
-    val id: Int,
-    val shoppingItemName: String,
-    val attributes: String
-)

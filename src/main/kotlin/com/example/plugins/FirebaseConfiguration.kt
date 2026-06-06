@@ -15,29 +15,12 @@ object FirebaseConfiguration {
             }"
         )
 
-        /*
-
 
         val credentialsFile =
             System.getenv("FIREBASE_CREDENTIALS_FILE")
                 ?: error("FIREBASE_CREDENTIALS_FILE is missing")
 
-        val stream =
-            FirebaseConfiguration::class.java
-                .getResourceAsStream(credentialsFile)
-                ?: error("firebase-service-account.json not found")
-        */
 
-        val credentialsFile =
-            System.getenv("FIREBASE_CREDENTIALS_FILE")
-                ?: error("FIREBASE_CREDENTIALS_FILE is missing")
-
-        /*
-        val stream =
-            FileInputStream(credentialsFile)
-
-
-         */
         val stream =
             ByteArrayInputStream(
                 credentialsFile.toByteArray()

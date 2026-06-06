@@ -5,11 +5,9 @@ import com.example.sales.dto.SalesResponse
 
 class SalesService(
     private val flyerScraper: FlyerScraper,
-    private val productParser: ProductParser
-) {
 
+) {
     suspend fun getSales(storeName: String): SalesResponse {
         return flyerScraper.getSales(storeName)
-
     }
 }

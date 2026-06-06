@@ -13,7 +13,7 @@ class RouteOptimizerFactory(
         destinationCount: Int
     ): RouteOptimizer {
 
-        return if (destinationCount <= 14) {
+        return if (destinationCount <= 20) {
             heldKarpSolver
         } else {
             nearestNeighborSolver

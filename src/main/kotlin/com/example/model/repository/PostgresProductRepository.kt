@@ -61,8 +61,8 @@ class PostgresProductRepository : ProductRepository {
 
     override suspend fun removeProductById(articleNo: Int):Boolean  =
         suspendTransaction {
-            val rowsDeleted = DepartmentTable.deleteWhere {
-                DepartmentTable.id eq articleNo
+            val rowsDeleted = ProductTable.deleteWhere {
+                ProductTable.id eq articleNo
             }
              rowsDeleted == 1
         }

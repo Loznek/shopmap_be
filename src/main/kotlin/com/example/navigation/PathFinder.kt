@@ -11,8 +11,6 @@ class PathFinder {
     )
 
 
-
-
     fun bfsShortestPath(
         walkablePoints: Set<Pair<Int, Int>>,
         start: Pair<Int, Int>,
@@ -39,6 +37,38 @@ class PathFinder {
 
         return emptyList()
     }
+
+    fun dfsPathExist(
+        walkablePoints: Set<Pair<Int, Int>>,
+        start: Pair<Int, Int>,
+        end: Pair<Int, Int>
+    ): Boolean {
+        val stack = ArrayDeque<Pair<Int, Int>>()
+        val visited = mutableSetOf<Pair<Int, Int>>()
+
+        stack.add(start)
+        visited.add(start)
+
+        while (stack.isNotEmpty()) {
+            val current = stack.removeLast()
+
+            if (current == end) {
+                return true
+            }
+
+            for ((dx, dy) in DIRECTIONS) {
+                val next = current.first + dx to current.second + dy
+
+                if (next in walkablePoints && next !in visited) {
+                    visited.add(next)
+                    stack.add(next)
+                }
+            }
+        }
+
+        return false
+    }
+
 
     fun computeFullPath(
         walkablePoints: Set<Pair<Int, Int>>,

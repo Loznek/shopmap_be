@@ -99,7 +99,7 @@ class MapService(
                     mapId = request.mapId
                 )
             }
-        generateDebugFloorPlan( departments, request.mapWidth, request.mapHeight )
+        //generateDebugFloorPlan( departments, request.mapWidth, request.mapHeight )
         return pythonResponse.boxes
                 .map { box ->
                     DepartmentResponse(
@@ -119,7 +119,7 @@ class MapService(
         mapHeight: Double
     ) {
 
-        val scale = 40
+        val scale = 12
 
         val widthPx = mapWidth * scale
         val heightPx = mapHeight * scale
@@ -144,9 +144,9 @@ class MapService(
         g.font = Font(
             "Arial",
             Font.BOLD,
-            30
+            12
         )
-        g.stroke = BasicStroke(5f)
+        g.stroke = BasicStroke(7f)
         departments.forEach { department ->
 
             val x =
@@ -172,12 +172,12 @@ class MapService(
             )
 
             // text
-            g.color = Color.BLUE
+            g.color = Color.RED
 
             g.drawString(
                 department.name,
-                x + 5,
-                y + 20
+                x + 20,
+                y + 30
             )
         }
 

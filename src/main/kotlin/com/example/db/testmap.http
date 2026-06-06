@@ -271,6 +271,18 @@ Content-Type: application/json
   "storeId": 3,
   "price": 199.99
 }
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+"name": "Enyhe ásványvíz",
+"size": "1.5L",
+"departmentId": 23,
+"position": "RIGHT",
+"storeId": 3,
+"price": 199.99
+}
 
 ###
 POST {{host}}/products
@@ -285,7 +297,19 @@ Content-Type: application/json
   "price": 799.99
 }
 
+###
 
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Folpakk",
+  "size": "25m",
+  "departmentId": 24,
+  "position": "LEFT",
+  "storeId": 3,
+  "price": 799.99
+}
 
 
 ###
@@ -382,8 +406,442 @@ Content-Type: application/json
       "departmentId": 23,
       "position": "LEFT"
     }
+
+
+
   ]
 }
+###
+POST {{host}}/store
+Content-Type: application/json
+
+{
+  "name": "Navigate Test Shop Reopening",
+  "location": "Navigateland, Algo st. 1-3, 1234"
+}
+
+
+###
+POST {{host}}/maps
+Content-Type: application/json
+
+{
+  "width": 80,
+  "height": 70,
+  "entranceX": 0.0,
+  "entranceY": 40,
+  "exitX": 70,
+  "exitY": 40,
+  "storeId": 4
+}
+
+###
+POST {{host}}/tills
+Content-Type: application/json
+
+{
+  "mapId": 4,
+  "startX": 20,
+  "startY": 60,
+  "width": 40,
+  "height": 5
+}
+
+
+
+
+###
+POST {{host}}/departments
+Content-Type: application/json
+
+{
+  "mapId": 4,
+  "name": "Tejtermék",
+  "startX": 8.0,
+  "startY": 8.0,
+  "width": 5.0,
+  "height": 5.0
+}
+
+###
+POST {{host}}/departments
+Content-Type: application/json
+
+{
+"mapId": 4,
+"name": "Pékáru",
+"startX": 60.0,
+"startY": 10.0,
+"width": 6.0,
+"height": 40
+}
+
+###
+POST {{host}}/departments
+Content-Type: application/json
+
+{
+  "mapId": 4,
+  "name": "Zöldség és gyümölcs",
+  "startX": 15.0,
+  "startY": 20.0,
+  "width": 20.0,
+  "height": 15.0
+}
+
+###
+POST {{host}}/departments
+Content-Type: application/json
+
+{
+  "mapId": 4,
+  "name": "Hús",
+  "startX": 30.0,
+  "startY": 40.0,
+  "width": 10.0,
+  "height": 10.0
+}
+
+###
+
+POST {{host}}/departments
+Content-Type: application/json
+
+{
+  "mapId": 4,
+  "name": "Társasjáték",
+  "startX": 37.0,
+  "startY": 30.0,
+  "width": 5.0,
+  "height": 6.0
+}
+
+###
+
+POST {{host}}/departments
+Content-Type: application/json
+
+{
+  "mapId": 4,
+  "name": "Fagyasztott élelmiszer",
+  "startX": 45.0,
+  "startY": 50.0,
+  "width": 10.0,
+  "height": 5.0
+}
+
+###
+POST {{host}}/departments
+Content-Type: application/json
+
+{
+  "mapId": 4,
+  "name": "Kávé és Tea",
+  "startX": 45,
+  "startY": 25,
+  "width": 10,
+  "height": 20
+}
+
+
+###
+
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Tej",
+  "size": "20m",
+  "departmentId": 27,
+  "position": "RIGHT",
+  "storeId": 4,
+  "price": 799.99
+}
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+"name": "Társasjáték",
+"size": "20m",
+"departmentId": 33,
+"position": "TOP",
+"storeId": 4,
+"price": 799.99
+}
+
+###
+
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Kenyér",
+  "size": "20m",
+  "departmentId": 28,
+  "position": "RIGHT",
+  "storeId": 4,
+  "price": 799.99
+}
+
+###
+
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Alma",
+  "size": "20m",
+  "departmentId": 29,
+  "position": "LEFT",
+  "storeId": 4,
+  "price": 799.99
+}
+
+###
+
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Csirkemell",
+  "size": "20m",
+  "departmentId": 30,
+  "position": "RIGHT",
+  "storeId": 4,
+  "price": 799.99
+}
+
+###
+
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Hátszín",
+  "size": "20m",
+  "departmentId": 30,
+  "position": "LEFT",
+  "storeId": 4,
+  "price": 799.99
+}
+
+###
+
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Halrudacska",
+  "size": "20m",
+  "departmentId": 31,
+  "position": "TOP",
+  "storeId": 4,
+  "price": 799.99
+}
+
+###
+
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Kávé",
+  "size": "20m",
+  "departmentId": 32,
+  "position": "BOTTOM",
+  "storeId": 4,
+  "price": 799.99
+}
+
+###
+
+POST {{host}}/products
+Content-Type: application/json
+
+{
+  "name": "Zsemle",
+  "size": "20m",
+  "departmentId": 30,
+  "position": "TOP",
+  "storeId": 4,
+  "price": 799.99
+}
+###
+POST {{host}}/products
+Content-Type: application/json
+
+{
+"name": "Steak",
+"size": "20m",
+"departmentId": 28,
+"position": "TOP",
+"storeId": 4,
+"price": 799.99
+}
+
+###
+POST {{host}}/calculate-route
+Content-Type: application/json
+
+{
+  "mapId": 4,
+  "products": [
+    {
+      "articleNo": 31,
+      "departmentId": 29,
+      "position": "LEFT"
+    },
+    {
+      "articleNo": 29,
+      "departmentId": 27,
+      "position": "RIGHT"
+    },
+    {
+      "articleNo": 34,
+      "departmentId": 31,
+      "position": "TOP"
+    },
+    {
+      "articleNo": 38,
+      "departmentId": 33,
+      "position": "TOP"
+    },
+    {
+      "articleNo": 35,
+      "departmentId": 32,
+      "position": "BOTTOM"
+    },
+    {
+      "articleNo": 32,
+      "departmentId": 30,
+      "position": "RIGHT"
+    },
+    {
+      "articleNo": 30,
+      "departmentId": 28,
+      "position": "RIGHT"
+    },
+    {
+      "articleNo": 33,
+      "departmentId": 30,
+      "position": "LEFT"
+    },
+    {
+      "articleNo": 36,
+      "departmentId": 30,
+      "position": "TOP"
+    },
+    {
+      "articleNo": 37,
+      "departmentId": 28,
+      "position": "TOP"
+    }
+
+
+
+
+
+  ]
+}
+
+###
+
+{
+      "articleNo": 15,
+      "departmentId": 14,
+      "position": "BOTTOM"
+    },
+    {
+      "articleNo": 5,
+      "departmentId": 4,
+      "position": "RIGHT"
+    },
+    {
+      "articleNo": 12,
+      "departmentId": 11,
+      "position": "LEFT"
+    },
+    {
+      "articleNo": 10,
+      "departmentId": 9,
+      "position": "TOP"
+    }
+,
+{
+      "articleNo": 14,
+      "departmentId": 13,
+      "position": "TOP"
+    },
+    {
+      "articleNo": 17,
+      "departmentId": 16,
+      "position": "RIGHT"
+    },
+    {
+      "articleNo": 11,
+      "departmentId": 10,
+      "position": "BOTTOM"
+    },
+    {
+      "articleNo": 13,
+"departmentId": 12,
+"position": "RIGHT"
+}
+
+{
+      "articleNo": 6,
+      "departmentId": 5,
+      "position": "TOP"
+    },
+    {
+      "articleNo": 7,
+      "departmentId": 6,
+      "position": "BOTTOM"
+    },
+    {
+      "articleNo": 8,
+      "departmentId": 7,
+      "position": "LEFT"
+    },
+    {
+      "articleNo": 16,
+      "departmentId": 15,
+      "position": "LEFT"
+    }
+,
+{
+      "articleNo": 21,
+      "departmentId": 20,
+      "position": "RIGHT"
+    },
+    {
+      "articleNo": 22,
+      "departmentId": 21,
+      "position": "TOP"
+    },
+    {
+      "articleNo": 23,
+      "departmentId": 22,
+      "position": "BOTTOM"
+    },
+     {
+      "articleNo": 25,
+"departmentId": 24,
+"position": "RIGHT"
+}
+
+
+{
+      "articleNo": 27,
+      "departmentId": 24,
+      "position": "LEFT"
+    },
+    {
+      "articleNo": 28,
+      "departmentId": 23,
+      "position": "RIGHT"
+    }
 
 ###
 
@@ -414,3 +872,14 @@ Content-Type: application/json
 
 ###
 DELETE {{host}}/departments/26
+
+
+####
+
+POST {{host}}/store
+Content-Type: application/json
+
+{
+  "name": "Navigate Test Shop Reopening",
+  "location": "Navigateland, Algo st. 1-3, 1234"
+}

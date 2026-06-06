@@ -41,4 +41,6 @@ val controllerModule = module {
     singleOf(::UserController)
 
     singleOf(::ShoppingListController)
+
+
 }

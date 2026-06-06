@@ -80,10 +80,8 @@ class FlyerScraper(
 
         val start =
             today.with(
-                TemporalAdjusters.nextOrSame(
                     DayOfWeek.THURSDAY
                 )
-            )
 
         val end = start.plusDays(6)
 

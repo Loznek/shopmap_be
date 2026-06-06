@@ -24,16 +24,7 @@ class GoogleDocumentAiProvider(
     private val settings: DocumentProcessorServiceSettings
 
     init {
-        /*
-        val credentialsStream =
-            javaClass.classLoader.getResourceAsStream(credentialsFile)
-                ?: throw ExternalServiceException(
-                    "Credential file not found: $credentialsFile"
-                )
 
-        val credentialsStream =
-            FileInputStream(credentialsFile)
-            */
 
         val credentialsStream =
             ByteArrayInputStream(
@@ -73,16 +64,6 @@ class GoogleDocumentAiProvider(
 
         val processorName =
             "projects/$projectId/locations/$location/processors/$processorId"
-        /*
-                val endpoint = "$location-documentai.googleapis.com:443"
-
-                val settings = DocumentProcessorServiceSettings.newBuilder()
-                    .setCredentialsProvider(
-                        FixedCredentialsProvider.create(credentials)
-                    )
-                    .setEndpoint(endpoint)
-                    .build()
-                */
 
         try {
 

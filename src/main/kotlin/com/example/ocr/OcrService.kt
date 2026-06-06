@@ -1,6 +1,6 @@
 package com.example.ocr
 
-import com.example.DTO.ShopList
+
 import com.example.exception.ValidationException
 import com.example.ocr.parser.ShoppingListParser
 import com.example.ocr.providers.GoogleDocumentAiProvider
@@ -13,10 +13,6 @@ class OcrService(
     private val googleProvider: GoogleDocumentAiProvider,
     private val shoppingListParser: ShoppingListParser
 ) {
-
-    fun extractTextWithTesseract(file: File): String {
-        return tesseractProvider.extractText(file)
-    }
 
     fun extractShoppingListWithGoogle(fileBytes: ByteArray): List<CreateShoppingListItemRequest> {
         if (fileBytes.isEmpty()) {

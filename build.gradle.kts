@@ -79,8 +79,10 @@ dependencies {
     implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.29")
 
     testImplementation("io.ktor:ktor-server-test-host-jvm")
+    testImplementation("com.h2database:h2")
     testImplementation(kotlin("test"))
     testImplementation("io.mockk:mockk:1.13.10")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
 
 
 }

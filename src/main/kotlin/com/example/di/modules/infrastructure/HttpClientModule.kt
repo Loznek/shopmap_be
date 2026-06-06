@@ -3,6 +3,7 @@ package com.example.di.modules.infrastructure
 
 
 import com.example.maps.PythonMapProcessorClient
+
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -31,4 +32,5 @@ val httpClientModule = module {
             pythonEndpoint = getProperty( "python.processor.baseUrl" )
         )
     }
+
 }

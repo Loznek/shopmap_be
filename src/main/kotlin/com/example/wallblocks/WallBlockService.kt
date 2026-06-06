@@ -11,6 +11,7 @@ import com.example.model.repository.MapRepository
 import com.example.model.repository.TillRepository
 import com.example.model.repository.WallBlockRepository
 import com.example.navigation.GridBuilder
+import com.example.navigation.PathFinder
 import com.example.navigation.PathValidator
 import com.example.navigation.toGrid
 import com.example.tills.dto.toResponse
@@ -26,7 +27,7 @@ class WallBlockService(
     private val tillRepository: TillRepository,
     private val mapRepository: MapRepository,
     private val gridBuilder: GridBuilder,
-    private val pathValidator: PathValidator
+    private val pathFinder: PathFinder
 ) {
 
     suspend fun get(wallBlockId:Int):WallBlock {
@@ -102,7 +103,7 @@ class WallBlockService(
             (tills[0].startX + tills[0].width / 2).toGrid() to
                     (tills[0].startY + tills[0].height / 2).toGrid()
 
-        val isReachable = pathValidator.pathExists(
+        val isReachable = pathFinder.dfsPathExist(
             walkablePoints,
             entrance,
             tillPoint
@@ -161,7 +162,7 @@ class WallBlockService(
             (tills[0].startX + tills[0].width / 2).toGrid() to
                     (tills[0].startY + tills[0].height / 2).toGrid()
 
-        val isReachable = pathValidator.pathExists(
+        val isReachable = pathFinder.dfsPathExist(
             walkablePoints,
             entrance,
             tillPoint

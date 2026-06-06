@@ -12,6 +12,7 @@ import com.example.model.repository.MapRepository
 import com.example.model.repository.TillRepository
 import com.example.model.repository.WallBlockRepository
 import com.example.navigation.GridBuilder
+import com.example.navigation.PathFinder
 import com.example.navigation.PathValidator
 import com.example.navigation.toGrid
 
@@ -21,7 +22,7 @@ class TillService(
     private val departmentRepository: DepartmentRepository,
     private val mapRepository: MapRepository,
     private val gridBuilder: GridBuilder,
-    private val pathValidator: PathValidator
+    private val pathFinder: PathFinder
 ) {
 
     suspend fun get(id: Int): Till {
@@ -113,7 +114,7 @@ class TillService(
             (till.startX + till.width / 2).toGrid() to
                     (till.startY + till.height / 2).toGrid()
 
-        val isReachable = pathValidator.pathExists(
+        val isReachable = pathFinder.dfsPathExist(
             walkablePoints,
             entrance,
             tillPoint
