@@ -1132,10 +1132,10 @@ paths:
     post:
       summary: "15. The function can be tested with an uploaded image e.g.: "
       description: |
-        The function can be tested with an uploaded image e.g. by uploading the first image below.
+        The function can be tested with an uploaded image e.g. by uploading the first image below with sizes 100x75
         The second picture shows the reconstructed map.
         ![Map example for testing](https://raw.githubusercontent.com/Loznek/shopmap_be/refs/heads/main/src/main/resources/SwaggerTestResources/egeraldi.jpg)
-        https://raw.githubusercontent.com/Loznek/shopmap_be/refs/heads/main/src/main/resources/SwaggerTestResources/lista_uj.jpg
+        ![Reconstructed map example](https://raw.githubusercontent.com/Loznek/shopmap_be/refs/heads/main/src/main/resources/SwaggerTestResources/debug_floorplan.png)
       requestBody:
         required: true
         content:
