@@ -169,7 +169,7 @@ class WallBlockService(
         )
 
         if (!isReachable) {
-            throw ComputationException("Wall blocks access to tills")
+            throw ComputationException("WallBlock blocks access to tills")
         }
 
         return wallBlockRepository.updateWallBlock(wallBlock)
