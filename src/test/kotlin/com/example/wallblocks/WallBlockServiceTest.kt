@@ -11,6 +11,7 @@ import com.example.model.repository.MapRepository
 import com.example.model.repository.TillRepository
 import com.example.model.repository.WallBlockRepository
 import com.example.navigation.GridBuilder
+import com.example.navigation.PathFinder
 import com.example.navigation.PathValidator
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
@@ -33,8 +34,8 @@ class WallBlockServiceTest {
     private val gridBuilder =
         mockk<GridBuilder>()
 
-    private val pathValidator =
-        mockk<PathValidator>()
+    private val pathFinder =
+        mockk<PathFinder>()
 
     private val service =
         WallBlockService(
@@ -43,7 +44,7 @@ class WallBlockServiceTest {
             tillRepository,
             mapRepository,
             gridBuilder,
-            pathValidator
+            pathFinder
         )
 
     @Test
@@ -130,7 +131,7 @@ class WallBlockServiceTest {
         } returns emptySet()
 
         every {
-            pathValidator.pathExists(
+            pathFinder.dfsPathExist(
                 any(),
                 any(),
                 any()
@@ -165,7 +166,7 @@ class WallBlockServiceTest {
         )
 
         every {
-            pathValidator.pathExists(
+            pathFinder.dfsPathExist(
                 any(),
                 any(),
                 any()
@@ -220,7 +221,7 @@ class WallBlockServiceTest {
         } returns emptySet()
 
         every {
-            pathValidator.pathExists(
+            pathFinder.dfsPathExist(
                 any(),
                 any(),
                 any()
@@ -255,7 +256,7 @@ class WallBlockServiceTest {
         )
 
         every {
-            pathValidator.pathExists(
+            pathFinder.dfsPathExist(
                 any(),
                 any(),
                 any()
