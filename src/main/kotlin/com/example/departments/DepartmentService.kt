@@ -104,11 +104,9 @@ class DepartmentService(
             tillPoint
         )
 
-
         if (!isReachable) {
             throw ComputationException("Department blocks access to tills")
         }
-
 
         return departmentRepository.addDepartment(department)
     }

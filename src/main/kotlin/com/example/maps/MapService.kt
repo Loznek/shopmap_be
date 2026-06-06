@@ -119,7 +119,7 @@ class MapService(
         mapHeight: Double
     ) {
 
-        val scale = 12
+        val scale = 11
 
         val widthPx = mapWidth * scale
         val heightPx = mapHeight * scale
@@ -177,7 +177,7 @@ class MapService(
             g.drawString(
                 department.name,
                 x + 20,
-                y + 30
+                y + 15
             )
         }
 

@@ -805,48 +805,48 @@ paths:
             schema:
               $ref: "#/components/schemas/RoutePlanningRequest"
             example:
-                mapId: 4
+              mapId: 2
 
-                products:
-                  - articleNo: 31
-                    departmentId: 29
-                    position: LEFT
+              products:
+                - articleNo: 7
+                  departmentId: 3
+                  position: LEFT
 
-                  - articleNo: 29
-                    departmentId: 27
-                    position: RIGHT
+                - articleNo: 4
+                  departmentId: 1
+                  position: RIGHT
 
-                  - articleNo: 34
-                    departmentId: 31
-                    position: TOP
+                - articleNo: 10
+                  departmentId: 6
+                  position: TOP
 
-                  - articleNo: 38
-                    departmentId: 33
-                    position: TOP
+                - articleNo: 5
+                  departmentId: 5
+                  position: TOP
 
-                  - articleNo: 35
-                    departmentId: 32
-                    position: BOTTOM
+                - articleNo: 19
+                  departmentId: 7
+                  position: BOTTOM
 
-                  - articleNo: 32
-                    departmentId: 30
-                    position: RIGHT
+                - articleNo: 8
+                  departmentId: 4
+                  position: RIGHT
 
-                  - articleNo: 30
-                    departmentId: 28
-                    position: RIGHT
+                - articleNo: 6
+                  departmentId: 2
+                  position: RIGHT
 
-                  - articleNo: 33
-                    departmentId: 30
-                    position: LEFT
+                - articleNo: 9
+                  departmentId: 4
+                  position: LEFT
 
-                  - articleNo: 36
-                    departmentId: 30
-                    position: TOP
+                - articleNo: 14
+                  departmentId: 4
+                  position: TOP
 
-                  - articleNo: 37
-                    departmentId: 28
-                    position: TOP
+                - articleNo: 18
+                  departmentId: 2
+                  position: TOP
         required: true
       responses:
         "404":
