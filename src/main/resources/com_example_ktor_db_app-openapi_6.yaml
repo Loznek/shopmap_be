@@ -269,7 +269,7 @@ paths:
       description: |
         Creates a new department on the selected store map.
         For the new department, the mapId of the previously created store should be used.
-        On of the samples, represents a wrongly places department.
+        One of the samples, represents a wrongly places department.
       requestBody:
         required: true
         content:
@@ -433,7 +433,7 @@ paths:
       summary: "6. Create wall blocks"
       description: |
         For the new wall block, the mapId of the previously created store should be used.
-        On of the samples, represents a wrongly places department.
+        One of the samples, represents a wrongly places department.
       requestBody:
         content:
           application/json:
@@ -1209,7 +1209,8 @@ paths:
         The second picture shows the reconstructed map.
         <a href="https://raw.githubusercontent.com/Loznek/shopmap_be/refs/heads/main/src/main/resources/SwaggerTestResources/egeraldi.jpg" target="_blank">
           Map for testing
-        </a>
+        </a>,
+        
         <a href="https://raw.githubusercontent.com/Loznek/shopmap_be/refs/heads/main/src/main/resources/SwaggerTestResources/debug_floorplan.png" target="_blank">
           The reconstructed map
         </a>
@@ -1319,7 +1320,8 @@ paths:
   /store/{id}/place-details:
     get:
       summary: "16. Get the details for the given store"
-      description: ""
+      description: |
+        The previously created store id should be used.
       parameters:
         - name: "id"
           in: "path"
