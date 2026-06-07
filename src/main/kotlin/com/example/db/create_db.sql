@@ -1,5 +1,5 @@
 
--- Create Store table
+
 CREATE TABLE store (
                        id SERIAL PRIMARY KEY,
                        name TEXT,
@@ -8,7 +8,7 @@ CREATE TABLE store (
 );
 
 
--- Create Map table
+
 CREATE TABLE map (
                      id SERIAL PRIMARY KEY,
                      width DOUBLE PRECISION,
@@ -20,7 +20,7 @@ CREATE TABLE map (
                      store_id INT UNIQUE REFERENCES Store(id)
 );
 
--- Create Department table
+
 CREATE TABLE department (
                             id SERIAL PRIMARY KEY,
                             map_id INT REFERENCES map(id),
@@ -31,13 +31,10 @@ CREATE TABLE department (
                             start_y DOUBLE PRECISION
 );
 
--- Create an index on Department's foreign key (map_id)
+
 CREATE INDEX idx_department_map_id ON department(map_id);
 
--- Create an index on Store's foreign key (map_id)
--- CREATE INDEX idx_store_map_id ON Store(map_id);
 
--- Create till table
 CREATE TABLE till (
                       id SERIAL PRIMARY KEY,
                       map_id INT REFERENCES Map(Id),
@@ -47,10 +44,10 @@ CREATE TABLE till (
                       start_y DOUBLE PRECISION
 );
 
--- Create an index on till's foreign key (map_id)
+
 CREATE INDEX idx_till_map_id ON till(map_id);
 
--- Create Wall_Block table
+
 CREATE TABLE wall_block (
                             id SERIAL PRIMARY KEY,
                             map_id INT REFERENCES Map(Id),
@@ -60,7 +57,7 @@ CREATE TABLE wall_block (
                             start_y DOUBLE PRECISION
 );
 
--- Create an index on Wall_Block's foreign key (map_id)
+
 CREATE INDEX idx_wall_block_map_id ON wall_block(map_id);
 
 CREATE TABLE google_maps_info
@@ -143,7 +140,7 @@ CREATE TYPE product_position AS ENUM (
     'BOTTOM'
 );
 
--- Create Product table
+
 CREATE TABLE product (
                          article_no SERIAL PRIMARY KEY,
                          name TEXT,
@@ -154,9 +151,9 @@ CREATE TABLE product (
                          price DOUBLE PRECISION
 );
 
--- Index on store_id
+
 CREATE INDEX idx_product_store_id ON product(store_id);
 
--- Optional index on department_id
+
 CREATE INDEX idx_product_department_id ON product(department_id);
 

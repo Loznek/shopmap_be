@@ -16,24 +16,6 @@ class PythonMapProcessorClient(
     private val pythonEndpoint: String
 ) {
 
-    /*
-    suspend fun processImage(
-        imagePath: String,
-        mapWidth: Int,
-        mapHeight: Int
-    ): ProcessImageResponse {
-        return httpClient.post("http://localhost:8001/process") {
-            contentType(ContentType.Application.Json)
-            setBody(
-                PythonRequest(
-                    image_path = imagePath,
-                    map_width = mapWidth,
-                    map_height = mapHeight
-                )
-            )
-        }.body()
-    }
-    */
 
         suspend fun processImage(
             imageBytes: ByteArray,

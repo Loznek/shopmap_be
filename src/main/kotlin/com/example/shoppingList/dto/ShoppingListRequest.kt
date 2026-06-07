@@ -15,3 +15,11 @@ data class CreateShoppingListItemRequest(
 )
 
 
+@Serializable
+data class UpdateShoppingListRequest(
+    val id: Int,
+    val name: String,
+    val items: List<CreateShoppingListItemRequest>
+)
+
+

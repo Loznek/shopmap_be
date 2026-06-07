@@ -3,6 +3,7 @@ package com.example.shoppingList
 
 import com.example.plugins.FirebaseUserPrincipal
 import com.example.shoppingList.dto.CreateShoppingListRequest
+import com.example.shoppingList.dto.UpdateShoppingListRequest
 import io.ktor.http.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
@@ -99,6 +100,26 @@ fun Route.shoppingListRoutes(
 
                 call.respond(
                     HttpStatusCode.NoContent
+                )
+            }
+
+            put {
+
+                val principal =
+                    call.authentication
+                        .principal<FirebaseUserPrincipal>()
+                        ?: return@put call.respond(
+                            HttpStatusCode.Unauthorized
+                        )
+
+                val request =
+                    call.receive<UpdateShoppingListRequest>()
+
+                call.respond(
+                    controller.updateList(
+                        principal,
+                        request
+                    )
                 )
             }
         }

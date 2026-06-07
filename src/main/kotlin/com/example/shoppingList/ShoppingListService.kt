@@ -109,4 +109,62 @@ class ShoppingListService(
         shoppingListRepository.deleteShoppingList(listId)
     }
 
+    suspend fun updateList(
+        principal: FirebaseUserPrincipal,
+        listId: Int,
+        name: String,
+        items: List<ShoppingListItem>
+    ): ShoppingList {
+
+        if (name.isBlank()) {
+            throw ValidationException(
+                "Shopping list name cannot be empty"
+            )
+        }
+
+        val user =
+            userRepository.getByFirebaseUid(principal.uid)
+                ?: throw AuthenticationException(
+                    "User not found"
+                )
+
+        val existing =
+            shoppingListRepository.getShoppingList(listId)
+                ?: throw NotFoundException(
+                    "Shopping list $listId not found"
+                )
+
+        if (existing.userId != user.id) {
+            throw AuthenticationException(
+                "Access denied"
+            )
+        }
+
+        val updated =
+            shoppingListRepository.updateShoppingList(
+                existing.copy(
+                    name = name
+                )
+            )
+
+        shoppingListItemRepository
+            .getShoppingListItems(listId)
+            .forEach {
+                shoppingListItemRepository
+                    .deleteShoppingListItem(it.itemId!!)
+            }
+
+        items.forEach {
+            shoppingListItemRepository
+                .addShoppingListItem(
+                    it.copy(
+                        itemId = null,
+                        shoppingListId = listId
+                    )
+                )
+        }
+
+        return updated
+    }
+
 }

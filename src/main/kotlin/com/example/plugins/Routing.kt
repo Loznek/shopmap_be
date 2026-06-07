@@ -69,16 +69,6 @@ fun Application.configureRouting() {
                 version = "1.0.0",
                 description =
                     """
-            API for demonstrating:
-            - Shopping list management
-            - OCR product recognition
-            - Route optimization algorithms
-            - Google Places integration
-            
-            Recommended demo flow:
-            1. Login
-            2. OCR
-            3. Route generation
             """)
             source = OpenApiDocSource.Routing {
                 routingRoot.descendants()
