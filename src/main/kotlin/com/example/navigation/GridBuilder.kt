@@ -26,20 +26,20 @@ class GridBuilder {
                 val isInWall = wallBlocks
                     .filter { it.id != excludeWallId }
                     .any { wall ->
-                        x in wall.startX.toGrid() until (wall.startX + wall.width).toGrid() &&
-                                y in wall.startY.toGrid() until (wall.startY + wall.height).toGrid()
+                        x in wall.startX.toGrid() until (wall.startX + wall.width+0.5).toGrid() &&
+                                y in wall.startY.toGrid() until (wall.startY + wall.height+0.5).toGrid()
                     }
 
                 val isInDepartment = departments
                     .filter { it.id != excludeDepartmentId }
                     .any { dep ->
-                        x in dep.startX.toGrid() until (dep.startX + dep.width).toGrid() &&
-                                y in dep.startY.toGrid() until (dep.startY + dep.height).toGrid()
+                        x in dep.startX.toGrid() until (dep.startX + dep.width+0.5).toGrid() &&
+                                y in dep.startY.toGrid() until (dep.startY + dep.height+0.5).toGrid()
                     }
 
                 val isInNewObject = newRect?.let {
-                    x in it.x.toGrid() until (it.x + it.width).toGrid() &&
-                            y in it.y.toGrid() until (it.y + it.height).toGrid()
+                    x in it.x.toGrid() until (it.x + it.width+0.5).toGrid() &&
+                            y in it.y.toGrid() until (it.y + it.height+0.5).toGrid()
                 } ?: false
 
                 if (!isInWall && !isInDepartment && !isInNewObject) {

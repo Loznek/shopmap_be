@@ -5,6 +5,7 @@ class NearestNeighborSolver (
     private val twoOptSolver: TwoOptSolver
 ): RouteOptimizer {
 
+
     override fun solveOrder(
         distances: Array<IntArray>,
         destinationCount: Int,

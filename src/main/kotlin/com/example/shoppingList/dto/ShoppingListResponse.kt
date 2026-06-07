@@ -1,3 +1,5 @@
+package com.example.shoppingList.dto
+
 import kotlinx.serialization.Serializable
 
 @Serializable

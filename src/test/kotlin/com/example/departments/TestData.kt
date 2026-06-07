@@ -1,7 +1,7 @@
 package com.example.departments
 
 
-import AppUser
+import com.example.model.entity.AppUser
 import com.example.model.entity.Department
 import com.example.model.entity.Map
 import com.example.model.entity.Product

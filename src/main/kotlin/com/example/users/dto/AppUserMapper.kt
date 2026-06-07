@@ -1,8 +1,6 @@
 package com.example.users.dto
 
-import AppUser
-import AppUserResponse
-
+import com.example.model.entity.AppUser
 
 
 fun AppUser.toResponse() = AppUserResponse(

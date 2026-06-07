@@ -63,6 +63,49 @@ class TwoOptSolverTest {
     }
 
     @Test
+    fun `optimize improves route when better swap exists`() {
+
+        val distances = arrayOf(
+            intArrayOf(0, 1, 100, 100, 1),
+            intArrayOf(1, 0, 1, 100, 100),
+            intArrayOf(100, 1, 0, 1, 100),
+            intArrayOf(100, 100, 1, 0, 1),
+            intArrayOf(1, 100, 100, 1, 0)
+        )
+
+        val route =
+            mutableListOf(
+                0,
+                2,
+                1,
+                3,
+                4
+            )
+
+        val originalCost =
+            routeCost(
+                route,
+                distances
+            )
+
+        val optimized =
+            solver.optimize(
+                route.toMutableList(),
+                distances
+            )
+
+        val optimizedCost =
+            routeCost(
+                optimized,
+                distances
+            )
+
+        assertTrue(
+            optimizedCost < originalCost
+        )
+    }
+
+    @Test
     fun `optimize never worsens route cost`() {
 
         val distances = arrayOf(

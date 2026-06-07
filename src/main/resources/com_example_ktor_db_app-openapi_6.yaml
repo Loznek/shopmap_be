@@ -1,7 +1,7 @@
 openapi: "3.1.0"
 info:
-  title: "com_example_ktor_db_app API"
-  description: "com_example_ktor_db_app API"
+  title: "SHOPMAP API"
+  description: "SHOMAPA API"
   version: "1.0.0"
 servers:
   - url: /
@@ -82,7 +82,8 @@ paths:
   /maps:
     post:
       summary: "3. Create a new store map"
-      description: ""
+      description: |
+        For the new map, the storeId of the previously created store should be used.
       requestBody:
         content:
           application/json:
@@ -148,7 +149,8 @@ paths:
   /tills:
     post:
       summary: "4. Create till area"
-      description: ""
+      description: |
+        For the new till, the mapId of the previously created store should be used.
       requestBody:
         content:
           application/json:
@@ -266,7 +268,8 @@ paths:
 
       description: |
         Creates a new department on the selected store map.
-
+        For the new department, the mapId of the previously created store should be used.
+        On of the samples, represents a wrongly places department.
       requestBody:
         required: true
         content:
@@ -428,7 +431,9 @@ paths:
   /wall-blocks:
     post:
       summary: "6. Create wall blocks"
-      description: ""
+      description: |
+        For the new wall block, the mapId of the previously created store should be used.
+        On of the samples, represents a wrongly places department.
       requestBody:
         content:
           application/json:
@@ -708,7 +713,7 @@ paths:
     post:
       security:
         - FirebaseAuth: [ ]
-      summary: "9. Create shopping list"
+      summary: "9. Create a new shopping list"
       description: ""
       requestBody:
         content:
@@ -791,9 +796,11 @@ paths:
       summary: "11. Run a Held-Karp route calcutaion algorithm"
       description: |
         The Held-Karp function running on 10 given products through 7 departments. 
-        The calculated route is 250 meters long.
+        The calculated route is 251 meters long.
         The picture below visualizes the path with yellow dots.
-        ![Department Example](https://fastly.picsum.photos/id/26/200/300.jpg?hmac=E9i_aIqa_ifLvxqI2b1QTLCnhGQYJ83IpvaDfFM54bU)
+        <a href="https://raw.githubusercontent.com/Loznek/shopmap_be/refs/heads/main/src/main/resources/SwaggerTestResources/debug_route_floorplan.png" target="_blank">
+          The optimal route
+        </a>
 
       requestBody:
         content:
@@ -931,9 +938,11 @@ paths:
       summary: "12. Test Ocr-Shopping list item conversion"
       description: |
         The Ocr - shopping list item conversion can be tested e.g. by uploading this image.
-      
-        ![List example for testing](https://raw.githubusercontent.com/Loznek/shopmap_be/refs/heads/main/src/main/resources/SwaggerTestResources/lista_uj.jpg)
         
+        <a href="https://raw.githubusercontent.com/Loznek/shopmap_be/refs/heads/main/src/main/resources/SwaggerTestResources/lista_uj.jpg" target="_blank">
+          Open sample image
+        </a>
+    
 
       requestBody:
         content:
@@ -1134,8 +1143,13 @@ paths:
       description: |
         The function can be tested with an uploaded image e.g. by uploading the first image below with sizes 100x75
         The second picture shows the reconstructed map.
-        ![Map example for testing](https://raw.githubusercontent.com/Loznek/shopmap_be/refs/heads/main/src/main/resources/SwaggerTestResources/egeraldi.jpg)
-        ![Reconstructed map example](https://raw.githubusercontent.com/Loznek/shopmap_be/refs/heads/main/src/main/resources/SwaggerTestResources/debug_floorplan.png)
+        <a href="https://raw.githubusercontent.com/Loznek/shopmap_be/refs/heads/main/src/main/resources/SwaggerTestResources/egeraldi.jpg" target="_blank">
+          Map for testing
+        </a>
+        <a href="https://raw.githubusercontent.com/Loznek/shopmap_be/refs/heads/main/src/main/resources/SwaggerTestResources/debug_floorplan.png" target="_blank">
+          The reconstructed map
+        </a>
+        
       requestBody:
         required: true
         content:

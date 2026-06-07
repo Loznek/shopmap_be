@@ -1,5 +1,5 @@
 package com.example.users
-import AppUserResponse
+import com.example.users.dto.AppUserResponse
 import com.example.plugins.FirebaseUserPrincipal
 import com.example.users.dto.toResponse
 

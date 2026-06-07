@@ -1,6 +1,6 @@
 package com.example.stores.dto
 
-import ShoppingListItemResponse
+import com.example.shoppingList.dto.ShoppingListItemResponse
 import com.example.model.entity.Department
 import com.example.model.entity.Map
 import com.example.model.entity.Store

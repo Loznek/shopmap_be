@@ -1,4 +1,7 @@
+package com.example.model.repository
+
 import com.example.db.mapping.suspendTransaction
+import com.example.model.entity.AppUser
 import com.example.model.mapping.AppUserDAO
 import com.example.model.mapping.AppUserTable
 import com.example.model.mapping.daoToModel

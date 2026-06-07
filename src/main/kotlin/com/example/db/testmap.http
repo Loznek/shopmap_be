@@ -1,6 +1,6 @@
 @host=http://localhost:8080
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -26,7 +26,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -39,7 +39,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -52,7 +52,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -65,7 +65,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -78,7 +78,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -91,7 +91,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -104,7 +104,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -117,7 +117,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -130,7 +130,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -143,7 +143,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -156,7 +156,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -169,7 +169,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -182,7 +182,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -195,7 +195,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -208,7 +208,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -221,7 +221,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -234,7 +234,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -247,7 +247,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -260,7 +260,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -272,7 +272,7 @@ Content-Type: application/json
   "price": 199.99
 }
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -285,7 +285,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -299,7 +299,7 @@ Content-Type: application/json
 
 ###
 
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -315,7 +315,7 @@ Content-Type: application/json
 ###
 
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
@@ -370,7 +370,7 @@ GET http://localhost:8080/store/3/shopping-lists/4/matches
 ###
 
 ###
-POST {{host}}/calculate-route
+POST {{remoteHost}}/calculate-route
 Content-Type: application/json
 
 {
@@ -412,7 +412,11 @@ Content-Type: application/json
   ]
 }
 ###
-POST {{host}}/store
+@remoteHost=https://shopmapbe-production.up.railway.app
+
+
+
+POST {{remoteHost}}/store
 Content-Type: application/json
 
 {
@@ -422,25 +426,25 @@ Content-Type: application/json
 
 
 ###
-POST {{host}}/maps
+POST {{remoteHost}}/maps
 Content-Type: application/json
 
 {
   "width": 80,
   "height": 70,
-  "entranceX": 0.0,
-  "entranceY": 40,
-  "exitX": 70,
-  "exitY": 40,
-  "storeId": 4
+  "entranceX": 40,
+  "entranceY": 0,
+  "exitX": 40,
+  "exitY": 70,
+  "storeId": 2
 }
 
 ###
-POST {{host}}/tills
+POST {{remoteHost}}/tills
 Content-Type: application/json
 
 {
-  "mapId": 4,
+  "mapId": 2,
   "startX": 20,
   "startY": 60,
   "width": 40,
@@ -451,11 +455,11 @@ Content-Type: application/json
 
 
 ###
-POST {{host}}/departments
+POST {{remoteHost}}/departments
 Content-Type: application/json
 
 {
-  "mapId": 4,
+  "mapId": 2,
   "name": "Tejtermék",
   "startX": 8.0,
   "startY": 8.0,
@@ -464,11 +468,11 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/departments
+POST {{remoteHost}}/departments
 Content-Type: application/json
 
 {
-"mapId": 4,
+"mapId": 2,
 "name": "Pékáru",
 "startX": 60.0,
 "startY": 10.0,
@@ -477,11 +481,11 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/departments
+POST {{remoteHost}}/departments
 Content-Type: application/json
 
 {
-  "mapId": 4,
+  "mapId": 2,
   "name": "Zöldség és gyümölcs",
   "startX": 15.0,
   "startY": 20.0,
@@ -490,11 +494,11 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/departments
+POST {{remoteHost}}/departments
 Content-Type: application/json
 
 {
-  "mapId": 4,
+  "mapId": 2,
   "name": "Hús",
   "startX": 30.0,
   "startY": 40.0,
@@ -504,11 +508,11 @@ Content-Type: application/json
 
 ###
 
-POST {{host}}/departments
+POST {{remoteHost}}/departments
 Content-Type: application/json
 
 {
-  "mapId": 4,
+  "mapId": 2,
   "name": "Társasjáték",
   "startX": 37.0,
   "startY": 30.0,
@@ -518,11 +522,11 @@ Content-Type: application/json
 
 ###
 
-POST {{host}}/departments
+POST {{remoteHost}}/departments
 Content-Type: application/json
 
 {
-  "mapId": 4,
+  "mapId": 2,
   "name": "Fagyasztott élelmiszer",
   "startX": 45.0,
   "startY": 50.0,
@@ -531,11 +535,11 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/departments
+POST {{remoteHost}}/departments
 Content-Type: application/json
 
 {
-  "mapId": 4,
+  "mapId": 2,
   "name": "Kávé és Tea",
   "startX": 45,
   "startY": 25,
@@ -546,147 +550,146 @@ Content-Type: application/json
 
 ###
 
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
   "name": "Tej",
-  "size": "20m",
-  "departmentId": 27,
+  "size": "200ml",
+  "departmentId": 1,
   "position": "RIGHT",
-  "storeId": 4,
-  "price": 799.99
+  "storeId": 2,
+  "price": 299.99
 }
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
 "name": "Társasjáték",
 "size": "20m",
-"departmentId": 33,
+"departmentId": 5,
 "position": "TOP",
-"storeId": 4,
+"storeId": 2,
 "price": 799.99
 }
 
 ###
 
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
   "name": "Kenyér",
   "size": "20m",
-  "departmentId": 28,
+  "departmentId": 2,
   "position": "RIGHT",
-  "storeId": 4,
+  "storeId": 2,
   "price": 799.99
 }
 
 ###
 
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
   "name": "Alma",
   "size": "20m",
-  "departmentId": 29,
+  "departmentId": 3,
   "position": "LEFT",
-  "storeId": 4,
+  "storeId": 2,
   "price": 799.99
 }
 
 ###
 
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
   "name": "Csirkemell",
   "size": "20m",
-  "departmentId": 30,
+  "departmentId": 4,
   "position": "RIGHT",
-  "storeId": 4,
+  "storeId": 2,
   "price": 799.99
 }
 
 ###
 
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
   "name": "Hátszín",
   "size": "20m",
-  "departmentId": 30,
+  "departmentId": 4,
   "position": "LEFT",
-  "storeId": 4,
+  "storeId": 2,
   "price": 799.99
 }
 
 ###
 
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
   "name": "Halrudacska",
   "size": "20m",
-  "departmentId": 31,
+  "departmentId": 6,
   "position": "TOP",
-  "storeId": 4,
+  "storeId": 2,
   "price": 799.99
 }
 
 ###
 
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
   "name": "Kávé",
   "size": "20m",
-  "departmentId": 32,
+  "departmentId": 7,
   "position": "BOTTOM",
-  "storeId": 4,
+  "storeId": 2,
   "price": 799.99
 }
 
 ###
 
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
   "name": "Zsemle",
   "size": "20m",
-  "departmentId": 30,
+  "departmentId": 4,
   "position": "TOP",
-  "storeId": 4,
+  "storeId": 2,
   "price": 799.99
 }
 ###
-POST {{host}}/products
+POST {{remoteHost}}/products
 Content-Type: application/json
 
 {
 "name": "Steak",
 "size": "20m",
-"departmentId": 28,
+"departmentId": 2,
 "position": "TOP",
-"storeId": 4,
+"storeId": 2,
 "price": 799.99
 }
-
 ###
 POST {{host}}/calculate-route
 Content-Type: application/json
 
 {
-  "mapId": 4,
-  "products": [
+    "mapId": 4,
+    "products": [
     {
       "articleNo": 31,
       "departmentId": 29,
@@ -735,6 +738,72 @@ Content-Type: application/json
     {
       "articleNo": 37,
       "departmentId": 28,
+      "position": "TOP"
+    }
+
+  ]
+}
+
+
+###
+Kérlek ezt is formázd át úgy
+
+
+###
+POST {{remoteHost}}/calculate-route
+Content-Type: application/json
+
+{
+  "mapId": 2,
+  "products": [
+    {
+      "articleNo": 7,
+      "departmentId": 3,
+      "position": "LEFT"
+    },
+    {
+      "articleNo": 4,
+      "departmentId": 1,
+      "position": "RIGHT"
+    },
+    {
+      "articleNo": 10,
+      "departmentId": 6,
+      "position": "TOP"
+    },
+    {
+      "articleNo": 5,
+      "departmentId": 5,
+      "position": "TOP"
+    },
+    {
+      "articleNo": 19,
+      "departmentId": 7,
+      "position": "BOTTOM"
+    },
+    {
+      "articleNo": 8,
+      "departmentId": 4,
+      "position": "RIGHT"
+    },
+    {
+      "articleNo": 6,
+      "departmentId": 2,
+      "position": "RIGHT"
+    },
+    {
+      "articleNo": 9,
+      "departmentId": 4,
+      "position": "LEFT"
+    },
+    {
+      "articleNo": 14,
+      "departmentId": 4,
+      "position": "TOP"
+    },
+    {
+      "articleNo": 18,
+      "departmentId": 2,
       "position": "TOP"
     }
 
@@ -845,7 +914,7 @@ Content-Type: application/json
 
 ###
 
-POST {{host}}/departments
+POST {{remoteHost}}/departments
 Content-Type: application/json
 
 {
@@ -858,7 +927,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/departments
+POST {{remoteHost}}/departments
 Content-Type: application/json
 
 {
@@ -871,12 +940,12 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{host}}/departments/26
+DELETE {{remoteHost}}/departments/26
 
 
 ####
 
-POST {{host}}/store
+POST {{remoteHost}}/store
 Content-Type: application/json
 
 {

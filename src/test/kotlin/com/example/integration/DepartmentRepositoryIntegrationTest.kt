@@ -2,7 +2,9 @@ package com.example.repository
 
 import com.example.db.mapping.DepartmentTable
 import com.example.db.mapping.MapTable
+import com.example.db.mapping.ProductTable
 import com.example.db.mapping.StoreTable
+import com.example.integration.TestDatabaseConfig
 import com.example.model.entity.Department
 import com.example.model.entity.Map
 import com.example.model.entity.Store
@@ -30,14 +32,14 @@ class DepartmentRepositoryIntegrationTest {
     fun setup() {
 
         Database.connect(
-            url = "jdbc:postgresql://localhost:5432/shopmaptest",
-            driver = "org.postgresql.Driver",
-            user = "postgres",
-            password = "123456"
+            url = TestDatabaseConfig.URL,
+            driver = TestDatabaseConfig.DRIVER,
+            user = TestDatabaseConfig.USER,
+            password = TestDatabaseConfig.PASSWORD
         )
 
         transaction {
-
+            ProductTable.deleteAll()
             DepartmentTable.deleteAll()
             MapTable.deleteAll()
             StoreTable.deleteAll()
@@ -272,6 +274,9 @@ class DepartmentRepositoryIntegrationTest {
             loaded
         )
     }
+
+
+
 
     private var storeCounter = 0
 

@@ -1,6 +1,6 @@
 package com.example.shoppingList
 
-import UserRepository
+import com.example.model.repository.UserRepository
 import com.example.departments.TestData
 import com.example.exception.AuthenticationException
 import com.example.exception.NotFoundException

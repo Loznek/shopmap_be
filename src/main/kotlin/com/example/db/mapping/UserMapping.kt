@@ -1,6 +1,6 @@
 package com.example.model.mapping
 
-import AppUser
+import com.example.model.entity.AppUser
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID

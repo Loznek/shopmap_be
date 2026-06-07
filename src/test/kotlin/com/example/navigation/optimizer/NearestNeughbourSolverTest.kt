@@ -1,10 +1,7 @@
-package com.example.navigation.Optimizer
+package com.example.navigation.optimizer
 
-import com.example.navigation.optimizer.NearestNeighborSolver
-import com.example.navigation.optimizer.TwoOptSolver
 import io.mockk.every
 import io.mockk.mockk
-import kotlin.collections.get
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

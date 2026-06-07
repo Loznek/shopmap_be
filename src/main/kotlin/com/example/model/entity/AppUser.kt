@@ -1,3 +1,5 @@
+package com.example.model.entity
+
 data class AppUser(
     val id: Int,
     val firebaseUid: String,

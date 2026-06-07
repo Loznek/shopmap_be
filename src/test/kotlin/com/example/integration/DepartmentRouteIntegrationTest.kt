@@ -1,5 +1,9 @@
-package com.example.departments
+package com.example.integration
 
+import com.example.departments.DepartmentController
+import com.example.departments.DepartmentService
+import com.example.departments.TestData
+import com.example.departments.departmentRoutes
 import com.example.departments.dto.DepartmentResponse
 import com.example.plugins.configureExceptionHandling
 import com.example.plugins.configureSerialization

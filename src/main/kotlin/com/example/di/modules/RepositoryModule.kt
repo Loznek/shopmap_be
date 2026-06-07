@@ -1,7 +1,7 @@
 package com.example.di.modules
 
-import PostgresUserRepository
-import UserRepository
+import com.example.model.repository.PostgresUserRepository
+import com.example.model.repository.UserRepository
 
 import com.example.model.repository.*
 

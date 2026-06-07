@@ -1,3 +1,5 @@
+package com.example.users.dto
+
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -1,7 +1,7 @@
 package com.example.users
 
-import AppUser
-import UserRepository
+import com.example.model.entity.AppUser
+import com.example.model.repository.UserRepository
 import com.example.plugins.FirebaseUserPrincipal
 
 class UserService(

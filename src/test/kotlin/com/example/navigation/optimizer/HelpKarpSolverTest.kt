@@ -1,6 +1,5 @@
-package com.example.navigation.Optimizer
+package com.example.navigation.optimizer
 
-import com.example.navigation.optimizer.HeldKarpSolver
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
